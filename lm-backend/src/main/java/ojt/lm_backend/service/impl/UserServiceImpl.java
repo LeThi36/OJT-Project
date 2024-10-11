@@ -32,19 +32,43 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("user not exists with id: "+id));
-        userRepository.deleteById(id);
-        return "Delete User successfully";
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null){
+            return "can find this user to delete";
+        }else {
+            userRepository.deleteById(id);
+            return "Delete User successfully";
+        }
     }
 
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {
-        User user = userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("user not exists with id: "+id));
-        user.setAddress(userDto.getAddress());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setRole(user.getRole());
-        user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        User updatedUser = userRepository.save(user);
-        return modelMapper.map(updatedUser,UserDto.class);
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null){
+            return null;
+        } else {
+            user.setAddress(userDto.getAddress());
+            user.setPhoneNumber(userDto.getPhoneNumber());
+            user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            User updatedUser = userRepository.save(user);
+            return modelMapper.map(updatedUser, UserDto.class);
+        }
     }
+
+    @Override
+    public List<UserDto> findByNameContaining(String username) {
+        List<User> users = userRepository.findByUsernameContaining(username);
+        return users.stream().map(u -> modelMapper.map(u, UserDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDto getUserById(Long id){
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null){
+            return null;
+        } else {
+            return modelMapper.map(user,UserDto.class);
+        }
+    }
+
 }

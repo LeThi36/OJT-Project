@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ojt.lm_backend.LMenum.BookStatus;
 
 import java.sql.Timestamp;
 
@@ -12,13 +13,15 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDto {
-    private Integer bookId;
+    private int bookId;
     private String title;
-    private String categoryName;
-    private String authorName;
-    private Integer publicationYear;
-    private Integer copies;
-    private Integer availableCopies;
+    private int categoryId;
+    private int authorId;
+    private int publisherId;
+    private int publicationYear;
+    private int copies;
+    private int availableCopies;
+    private BookStatus status;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }

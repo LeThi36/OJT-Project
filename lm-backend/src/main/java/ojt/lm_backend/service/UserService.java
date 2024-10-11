@@ -8,4 +8,6 @@ public interface UserService {
     List<UserDto> getAllUser();
     String deleteUser(Long id);
     UserDto updateUser(Long id, UserDto userDto);
+    List<UserDto> findByNameContaining(String username);
+    UserDto getUserById(Long id);
 }

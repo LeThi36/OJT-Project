@@ -1,4 +1,7 @@
 package ojt.lm_backend.repository;
 
-public interface AuthorRepository {
+import ojt.lm_backend.entity.Author;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AuthorRepository extends JpaRepository<Author,Integer> {
 }

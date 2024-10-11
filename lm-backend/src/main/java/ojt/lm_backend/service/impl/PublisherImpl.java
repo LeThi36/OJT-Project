@@ -1,4 +1,6 @@
 package ojt.lm_backend.service.impl;
 
-public class PublisherImpl {
+import ojt.lm_backend.service.PublisherService;
+
+public class PublisherImpl implements PublisherService {
 }

@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(author -> {
                     author.requestMatchers("/api/auth/login").permitAll();
                     author.requestMatchers("/api/auth/register").permitAll();
+                    author.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll();
                     author.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults());

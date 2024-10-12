@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin("*")
 public class UserController {
     private UserService userService;
 
@@ -47,12 +48,12 @@ public class UserController {
 
     @GetMapping("{id}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<?> getUserById(@PathVariable Long id){
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
         UserDto userDto = userService.getUserById(id);
-        if(userDto == null){
-            return new ResponseEntity<>("can not find this user",HttpStatus.OK);
+        if (userDto == null) {
+            return new ResponseEntity<>("can not find this user", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(userDto,HttpStatus.OK);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
         }
     }
 

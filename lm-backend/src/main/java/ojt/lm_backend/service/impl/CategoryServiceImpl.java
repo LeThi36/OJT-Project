@@ -8,6 +8,9 @@ import ojt.lm_backend.service.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -21,5 +24,11 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = modelMapper.map(categoryDto,Category.class);
         Category savedCategory = categoryRepository.save(category);
         return modelMapper.map(savedCategory,CategoryDto.class);
+    }
+
+    @Override
+    public List<CategoryDto> getAllCategory() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream().map(c->modelMapper.map(c,CategoryDto.class)).collect(Collectors.toList());
     }
 }

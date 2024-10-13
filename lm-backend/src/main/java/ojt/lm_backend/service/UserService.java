@@ -10,4 +10,5 @@ public interface UserService {
     UserDto updateUser(Long id, UserDto userDto);
     List<UserDto> findByNameContaining(String username);
     UserDto getUserById(Long id);
+    Long userCount();
 }

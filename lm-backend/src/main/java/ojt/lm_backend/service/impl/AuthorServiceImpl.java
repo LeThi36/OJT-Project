@@ -22,4 +22,9 @@ public class AuthorServiceImpl implements AuthorService {
         List<Author> authors =  authorRepository.findAll();
         return authors.stream().map(a -> modelMapper.map(a,AuthorDto.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public Long countAuthor() {
+        return authorRepository.count();
+    }
 }

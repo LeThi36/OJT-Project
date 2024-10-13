@@ -21,7 +21,7 @@ function AdminComopnent() {
         <>
             <AuthenticatedRoute>
                 <SidebarComopnent />
-                <div className="md:ml-64 lg:m-auto sm:ml-64 py-2 w-full">
+                <div className="ml-80 py-2 w-auto mt-6 mr-16">
                     <Routes>
                         <Route path="user" element={<UserTableComponent />} />
                         <Route path='user/:id' element={<UserProfileComponent />} />

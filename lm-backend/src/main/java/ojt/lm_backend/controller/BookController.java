@@ -49,4 +49,11 @@ public class BookController {
         String message = bookService.deleteBook(id);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
+
+    @GetMapping("/count")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Long> countBook(){
+        Long count = bookService.countBook();
+        return new ResponseEntity<>(count,HttpStatus.OK);
+    }
 }

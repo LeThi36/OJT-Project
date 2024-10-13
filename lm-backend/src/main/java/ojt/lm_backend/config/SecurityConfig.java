@@ -39,6 +39,10 @@ public class SecurityConfig {
                     author.requestMatchers("/api/auth/login").permitAll();
                     author.requestMatchers("/api/auth/register").permitAll();
                     author.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll();
+                    author.requestMatchers("/api/user/count").permitAll();
+                    author.requestMatchers("/api/author/count").permitAll();
+                    author.requestMatchers("/api/book/count").permitAll();
+                    author.requestMatchers("/api/category").permitAll();
                     author.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults());

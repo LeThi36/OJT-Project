@@ -27,7 +27,7 @@ function NavbarComponent() {
                                     <a href="#" className="flex items-center">Pages</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href="#" className="flex items-center">Account</a>
+                                    <a href="/category" className="flex items-center">Category</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <a href="#" className="flex items-center">Blocks</a>

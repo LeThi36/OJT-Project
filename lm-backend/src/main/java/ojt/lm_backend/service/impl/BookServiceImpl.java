@@ -82,4 +82,9 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    @Override
+    public Long countBook() {
+        return bookRepository.count();
+    }
+
 }

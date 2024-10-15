@@ -38,12 +38,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto getBookById(int id) {
+    public BookDetailDto getBookById(int id) {
         Book book = bookRepository.findById(id).orElse(null);
         if (book == null) {
             return null;
         }
-        return modelMapper.map(book, BookDto.class);
+        return modelMapper.map(book, BookDetailDto.class);
     }
 
     @Override

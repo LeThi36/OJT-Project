@@ -29,11 +29,11 @@ public class BookController {
     @GetMapping("{id}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<?> findBookById(@PathVariable int id) {
-        BookDto book = bookService.getBookById(id);
+        BookDetailDto book = bookService.getBookById(id);
         if (book == null) {
             return new ResponseEntity<>("book not found", HttpStatus.OK);
         } else {
-            return new ResponseEntity<BookDto>(book, HttpStatus.OK);
+            return new ResponseEntity<BookDetailDto>(book, HttpStatus.OK);
         }
     }
 

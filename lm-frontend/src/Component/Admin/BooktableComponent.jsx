@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { deleteBook, getAllBook } from '../../Services/BookService';
 import { useQuery, useQueryClient } from 'react-query';
+import { Link } from 'react-router-dom';
 
 function BooktableComponent() {
 
@@ -26,7 +27,7 @@ function BooktableComponent() {
 
     const handleDelete = async (bookId) => {
         await deleteBook(bookId);
-        queryClient.invalidateQueries("books"); 
+        queryClient.invalidateQueries("books");
     };
 
     return (
@@ -34,8 +35,9 @@ function BooktableComponent() {
             <div className="flex-grow border-2 border-gray-200 border-dashed rounded-lg">
                 <div className="relative overflow-x-auto w-full">
                     <table className="w-full text-sm text-left text-gray-500">
-                        <caption class="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2">
+                        <caption class="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2 ">
                             Books
+                            <Link class="ms-4 font-bold text-emerald-400 " to='add-new-book'>add new Book!</Link>
                         </caption>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
@@ -61,13 +63,13 @@ function BooktableComponent() {
                                     publication Year
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    publication Year
+                                    Status
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    publication Year
+                                    Created At
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    publication Year
+                                    Updated At
                                 </th>
                                 <th>
 
@@ -79,7 +81,9 @@ function BooktableComponent() {
                                 return (
                                     <tr key={b.bookId}>
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {b.title}
+                                            <Link to={`${b.bookId}`}>
+                                                {b.title}
+                                            </Link>
                                         </th>
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                             {b.category}
@@ -109,7 +113,7 @@ function BooktableComponent() {
                                             {formatDateTime(b.updatedAt)}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <button onClick={()=> handleDelete(b.bookId)} class="font-bold text-red-600">Delete Book</button>
+                                            <button onClick={() => handleDelete(b.bookId)} class="font-bold text-red-600">Delete Book</button>
                                         </td>
                                     </tr>
                                 );

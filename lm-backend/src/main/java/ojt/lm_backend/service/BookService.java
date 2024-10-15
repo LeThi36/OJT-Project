@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface BookService {
     List<BookDetailDto> getAllBooks();
 
-    BookDto getBookById(int id);
+    BookDetailDto getBookById(int id);
 
     BookDto addNewBook(BookDto bookDto);
 

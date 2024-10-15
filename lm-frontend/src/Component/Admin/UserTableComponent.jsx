@@ -2,20 +2,18 @@ import React, { useEffect, useState } from 'react'
 import SidebarComopnent from './SidebarComopnent'
 import { getAllUser } from '../../Services/UserService'
 import { Link } from 'react-router-dom'
+import { useQuery } from 'react-query'
 
 function UserTableComponent() {
 
-  const [users, setUsers] = useState([])
+  const { data: users, isLoading } = useQuery({
+    queryFn: () => getAllUser().then(response => response.data),
+    queryKey: ["users"]
+  })
 
-  useEffect(() => {
-    getAllUser().then(response => {
-      setUsers(response.data)
-      console.log(response.data);
-
-    }).catch(error => {
-      alert(error)
-    })
-  }, [])
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
 
   return (
     <div >
@@ -47,9 +45,9 @@ function UserTableComponent() {
                   <tr key={u.userId}>
                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                       <Link to={`/admin/user/${u.userId}`}>
-                      {u.username}
+                        {u.username}
                       </Link>
-                      
+
                     </th>
                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                       {u.email}

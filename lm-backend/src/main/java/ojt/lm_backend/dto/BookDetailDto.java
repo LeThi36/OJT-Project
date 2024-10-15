@@ -8,15 +8,17 @@ import ojt.lm_backend.LMenum.BookStatus;
 
 import java.sql.Timestamp;
 
-@Getter
-@Setter
 @AllArgsConstructor
+@Setter
+@Getter
 @NoArgsConstructor
-public class BookDto {
+public class BookDetailDto {
+
+    private int bookId;
     private String title;
-    private int categoryId;
-    private int authorId;
-    private int publisherId;
+    private String category;
+    private String author;
+    private String publisher;
     private int publicationYear;
     private int copies;
     private int availableCopies;

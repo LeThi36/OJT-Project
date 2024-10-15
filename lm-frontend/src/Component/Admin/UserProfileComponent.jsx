@@ -1,35 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getUserById } from '../../Services/UserService'
+import { useQuery } from 'react-query'
 
 function UserProfileComponent() {
     const { id } = useParams()
-    const [username, setUsername] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [email, setEmail] = useState('')
-    const [address, setAddress] = useState('')
-    const [role, setRole] = useState('')
-    const [createAt, setCreateAt] = useState('')
-    const [updateAt, setUpdateAt] = useState('')
 
+    const { data: user, isLoading } = useQuery({
+        queryFn: () => getUserById(id).then(response => response.data),
+        queryKey: ["user"]
+    })
 
-    useEffect(() => {
-        if (id) {
-            getUserById(id).then(response => {
-                setUsername(response.data.username)
-                setEmail(response.data.email)
-                setPhoneNumber(response.data.phoneNumber)
-                setAddress(response.data.address)
-                setRole(response.data.roleName)
-                setCreateAt(response.data.createdAt)
-                setUpdateAt(response.data.updatedAt)
-                console.log(response.data);
+    if (isLoading) {
+        return <p>Loading...</p>
+    }
 
-            }).catch(error => {
-                alert(error)
-            })
-        }
-    }, [id])
 
     function formatDateTime(isoString) {
         const date = new Date(isoString);
@@ -45,10 +30,10 @@ function UserProfileComponent() {
             <div className="bg-white w-2/3 shadow overflow-hidden sm:rounded-lg mx-auto">
                 <div className="px-4 py-5 sm:px-6">
                     <h3 className="text-center text-lg leading-6 font-medium text-gray-900">
-                        {username} Profile
+                        {user.username} Profile
                     </h3>
                     <p className="mt-1 text-sm text-gray-500 text-center">
-                        Details and informations about {username}.
+                        Details and informations about {user.username}.
                     </p>
                 </div>
                 <div className="border-t border-gray-200">
@@ -58,7 +43,7 @@ function UserProfileComponent() {
                                 Email
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
-                                {email}
+                                {user.email}
                             </dd>
                         </div>
                         <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
@@ -66,7 +51,7 @@ function UserProfileComponent() {
                                 Address
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
-                                {address}
+                                {user.address}
                             </dd>
                         </div>
                         <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
@@ -74,7 +59,7 @@ function UserProfileComponent() {
                                 Phone number
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
-                                {phoneNumber}
+                                {user.phoneNumber}
                             </dd>
                         </div>
                         <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
@@ -82,7 +67,7 @@ function UserProfileComponent() {
                                 Role
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
-                                {role}
+                                {user.roleName}
                             </dd>
                         </div>
                         <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
@@ -90,7 +75,7 @@ function UserProfileComponent() {
                                 User Created At
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
-                                {formatDateTime(createAt)}
+                                {formatDateTime(user.createAt)}
                             </dd>
                         </div>
                         <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
@@ -98,7 +83,7 @@ function UserProfileComponent() {
                                 User Profile Updated At
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
-                                {formatDateTime(updateAt)}
+                                {formatDateTime(user.updateAt)}
                             </dd>
                         </div>
                     </dl>

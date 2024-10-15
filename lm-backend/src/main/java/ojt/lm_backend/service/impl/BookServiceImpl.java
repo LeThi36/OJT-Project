@@ -1,13 +1,11 @@
 package ojt.lm_backend.service.impl;
 
 import lombok.AllArgsConstructor;
+import ojt.lm_backend.dto.BookDetailDto;
 import ojt.lm_backend.dto.BookDto;
-import ojt.lm_backend.entity.Book;
+import ojt.lm_backend.entity.*;
 import ojt.lm_backend.exception.LMAPIException;
-import ojt.lm_backend.repository.AuthorRepository;
-import ojt.lm_backend.repository.BookRepository;
-import ojt.lm_backend.repository.CategoryRepository;
-import ojt.lm_backend.repository.PublisherRepository;
+import ojt.lm_backend.repository.*;
 import ojt.lm_backend.service.BookService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -26,13 +24,17 @@ public class BookServiceImpl implements BookService {
     private AuthorRepository authorRepository;
     private CategoryRepository categoryRepository;
     private PublisherRepository publisherRepository;
+    private BookFavoriteRepository bookFavoriteRepository;
+    private BookReservationRepository bookReservationRepository;
+    private BookReviewRepository bookReviewRepository;
+    private BorrowRecordRepository borrowRecordRepository;
 
     private ModelMapper modelMapper;
 
     @Override
-    public List<BookDto> getAllBooks() {
+    public List<BookDetailDto> getAllBooks() {
         List<Book> books = bookRepository.findAll();
-        return books.stream().map(b -> modelMapper.map(b, BookDto.class)).collect(Collectors.toList());
+        return books.stream().map(b -> modelMapper.map(b, BookDetailDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -77,6 +79,22 @@ public class BookServiceImpl implements BookService {
         if (book == null) {
             return "can not find this book to delete";
         } else {
+            List<BookFavorite> bookFavorites = bookFavoriteRepository.findByBookId(id);
+            if (!bookFavorites.isEmpty()) {
+                bookFavoriteRepository.deleteAll(bookFavorites);
+            }
+            List<BookReservation> bookReservations = bookReservationRepository.findByBookId(id);
+            if (!bookReservations.isEmpty()) {
+                bookReservationRepository.deleteAll(bookReservations);
+            }
+            List<BookReview> bookReview = bookReviewRepository.findByBookId(id);
+            if (!bookReview.isEmpty()) {
+                bookReviewRepository.deleteAll(bookReview);
+            }
+            List<BorrowRecord> borrowRecords = borrowRecordRepository.findByBookId(id);
+            if (!borrowRecords.isEmpty()) {
+                borrowRecordRepository.deleteAll(borrowRecords);
+            }
             bookRepository.deleteById(id);
             return "deleted successfully";
         }

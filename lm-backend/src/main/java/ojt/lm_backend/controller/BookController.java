@@ -1,6 +1,7 @@
 package ojt.lm_backend.controller;
 
 import lombok.AllArgsConstructor;
+import ojt.lm_backend.dto.BookDetailDto;
 import ojt.lm_backend.dto.BookDto;
 import ojt.lm_backend.service.BookService;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,8 @@ public class BookController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<List<BookDto>> getAllBook() {
-        List<BookDto> books = bookService.getAllBooks();
+    public ResponseEntity<List<BookDetailDto>> getAllBook() {
+        List<BookDetailDto> books = bookService.getAllBooks();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 

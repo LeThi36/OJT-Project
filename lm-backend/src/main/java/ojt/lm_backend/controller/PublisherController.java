@@ -6,10 +6,7 @@ import ojt.lm_backend.service.PublisherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,4 +23,21 @@ public class PublisherController {
         return new ResponseEntity<>(publisherService.getAllPublisher(), HttpStatus.OK);
     }
 
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PublisherDto> addNewPublisher(@RequestBody PublisherDto publisherDto){
+        return new ResponseEntity<>(publisherService.addNewPublisher(publisherDto),HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<PublisherDto> getPublisherById(@PathVariable int id){
+        return new ResponseEntity<>(publisherService.getPublisherById(id),HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN','USER')")
+    public ResponseEntity<String> deletePublisherById(@PathVariable int id){
+        return new ResponseEntity<>(publisherService.deletePublisher(id),HttpStatus.OK);
+    }
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 @Getter
@@ -20,4 +22,7 @@ public class Category {
 
     @Column(name = "category_name", nullable = false, length = 100)
     private String categoryName;
+
+    @OneToMany(mappedBy = "category")
+    private List<Book> books;
 }

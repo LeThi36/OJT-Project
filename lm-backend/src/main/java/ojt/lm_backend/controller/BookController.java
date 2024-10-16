@@ -57,4 +57,12 @@ public class BookController {
         Long count = bookService.countBook();
         return new ResponseEntity<>(count,HttpStatus.OK);
     }
+
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BookDto> updateBook(@RequestBody BookDto bookDto,
+                                              @PathVariable int id){
+        BookDto bookDto1 = bookService.updateBook(id, bookDto);
+        return new ResponseEntity<>(bookDto1,HttpStatus.OK);
+    }
 }

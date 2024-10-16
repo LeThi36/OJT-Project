@@ -105,4 +105,23 @@ public class BookServiceImpl implements BookService {
         return bookRepository.count();
     }
 
+    @Override
+    public BookDto updateBook(int id, BookDto bookDto) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if(book != null) {
+            book.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            book.setAuthor(authorRepository.findById(bookDto.getAuthorId()).orElse(null));
+            book.setStatus(bookDto.getStatus());
+            book.setTitle(bookDto.getTitle());
+            book.setCopies(bookDto.getCopies());
+            book.setCategory(categoryRepository.findById(bookDto.getCategoryId()).orElse(null));
+            book.setPublisher(publisherRepository.findById(bookDto.getPublisherId()).orElse(null));
+            book.setPublicationYear(bookDto.getPublicationYear());
+            book.setAvailableCopies(book.getAvailableCopies());
+            bookRepository.save(book);
+            return modelMapper.map(book,BookDto.class);
+        }
+        return null;
+    }
+
 }

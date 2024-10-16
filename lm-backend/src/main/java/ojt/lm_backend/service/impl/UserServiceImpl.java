@@ -2,8 +2,10 @@ package ojt.lm_backend.service.impl;
 
 import lombok.AllArgsConstructor;
 import ojt.lm_backend.dto.UserDto;
+import ojt.lm_backend.entity.Role;
 import ojt.lm_backend.entity.User;
 import ojt.lm_backend.exception.ResourceNotFoundException;
+import ojt.lm_backend.repository.RoleRepository;
 import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
     private ModelMapper modelMapper;
 
@@ -75,5 +78,30 @@ public class UserServiceImpl implements UserService {
     public Long userCount() {
         return userRepository.count();
     }
+
+    @Override
+    public UserDto updateRoleLib(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null){
+            Role role1 = roleRepository.findByRoleName("ROLE_LIBRARIAN");
+            user.setRole(role1);
+            userRepository.save(user);
+            return modelMapper.map(user,UserDto.class);
+        }
+        return null;
+    }
+
+    @Override
+    public UserDto updateRoleUse(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if(user != null){
+            Role role1 = roleRepository.findByRoleName("ROLE_USER");
+            user.setRole(role1);
+            userRepository.save(user);
+            return modelMapper.map(user,UserDto.class);
+        }
+        return null;
+    }
+
 
 }

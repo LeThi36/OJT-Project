@@ -11,4 +11,6 @@ public interface UserService {
     List<UserDto> findByNameContaining(String username);
     UserDto getUserById(Long id);
     Long userCount();
+    UserDto updateRoleLib(Long id);
+    UserDto updateRoleUse(Long id);
 }

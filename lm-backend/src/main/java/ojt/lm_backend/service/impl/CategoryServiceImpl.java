@@ -31,4 +31,10 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream().map(c->modelMapper.map(c,CategoryDto.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public CategoryDto getCategoryById(int id) {
+        Category category = categoryRepository.findById(id).orElse(null);
+        return modelMapper.map(category,CategoryDto.class);
+    }
 }

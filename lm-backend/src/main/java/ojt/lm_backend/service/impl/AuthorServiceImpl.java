@@ -27,4 +27,37 @@ public class AuthorServiceImpl implements AuthorService {
     public Long countAuthor() {
         return authorRepository.count();
     }
+
+    @Override
+    public AuthorDto addAuthor(AuthorDto authorDto) {
+        Author author = new Author();
+        author.setAuthorName(authorDto.getAuthorName());
+        authorRepository.save(author);
+        return modelMapper.map(author,AuthorDto.class);
+    }
+
+    @Override
+    public String deleteAuthor(int id) {
+        Author author = authorRepository.findById(id).orElse(null);
+        if(author == null){
+            return "cannot delete author";
+        }
+        return "author deleted successfully";
+    }
+
+    @Override
+    public AuthorDto updateAuthor(AuthorDto authorDto,int id) {
+        Author author = authorRepository.findById(id).orElse(null);
+        if(author == null){
+            return null;
+        }
+        author.setAuthorName(authorDto.getAuthorName());
+        return modelMapper.map(author,AuthorDto.class);
+    }
+
+    @Override
+    public AuthorDto getAuthorById(int id) {
+        Author author = authorRepository.findById(id).orElse(null);
+        return modelMapper.map(author,AuthorDto.class);
+    }
 }

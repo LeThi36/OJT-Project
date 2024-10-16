@@ -63,4 +63,16 @@ public class UserController {
         Long count = userService.userCount();
         return new ResponseEntity<>(count,HttpStatus.OK);
     }
+
+    @PatchMapping("{id}/librarian")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDto> updateRoleLib(@PathVariable Long id){
+        return new ResponseEntity<>(userService.updateRoleLib(id),HttpStatus.OK);
+    }
+
+    @PatchMapping("{id}/user")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDto> updateRoleUse(@PathVariable Long id){
+        return new ResponseEntity<>(userService.updateRoleUse(id),HttpStatus.OK);
+    }
 }

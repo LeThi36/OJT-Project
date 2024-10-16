@@ -16,4 +16,6 @@ public interface BookService {
     String deleteBook(int id);
 
     Long countBook();
+
+    BookDto updateBook(int id,BookDto bookDto);
 }

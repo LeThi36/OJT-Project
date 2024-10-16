@@ -30,4 +30,10 @@ public class CategoryController {
         List<CategoryDto> categoryDtos = categoryService.getAllCategory();
         return new ResponseEntity<>(categoryDtos,HttpStatus.OK);
     }
+
+    @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable int id){
+        return new ResponseEntity<>(categoryService.getCategoryById(id),HttpStatus.OK);
+    }
 }

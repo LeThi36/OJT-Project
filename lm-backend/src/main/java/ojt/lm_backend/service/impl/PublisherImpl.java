@@ -25,4 +25,30 @@ public class PublisherImpl implements PublisherService {
         List<Publisher> publishers = publisherRepository.findAll();
         return publishers.stream().map(p -> modelMapper.map(p,PublisherDto.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public PublisherDto addNewPublisher(PublisherDto publisherDto) {
+        Publisher publisher = new Publisher();
+        publisher.setPublisherName(publisherDto.getPublisherName());
+        publisher.setAddress(publisherDto.getAddress());
+        publisher.setPhoneNumber(publisherDto.getPhoneNumber());
+        publisherRepository.save(publisher);
+        return modelMapper.map(publisher,PublisherDto.class);
+    }
+
+    @Override
+    public PublisherDto getPublisherById(int id) {
+        Publisher publisher = publisherRepository.findById(id).orElse(null);
+        return modelMapper.map(publisher,PublisherDto.class);
+    }
+
+    @Override
+    public String deletePublisher(int id) {
+        Publisher publisher = publisherRepository.findById(id).orElse(null);
+        if(publisher == null){
+            return "cannot delete this publisher";
+        }
+        publisherRepository.deleteById(id);
+        return "deleted publisher successfully";
+    }
 }

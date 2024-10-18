@@ -36,4 +36,10 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable int id){
         return new ResponseEntity<>(categoryService.getCategoryById(id),HttpStatus.OK);
     }
+
+    @GetMapping("/count")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Long> countCategory(){
+        return new ResponseEntity<>(categoryService.countCategory(),HttpStatus.OK);
+    }
 }

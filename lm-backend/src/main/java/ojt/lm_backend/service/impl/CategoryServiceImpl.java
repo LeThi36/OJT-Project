@@ -37,4 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElse(null);
         return modelMapper.map(category,CategoryDto.class);
     }
+
+    @Override
+    public Long countCategory() {
+        return categoryRepository.count();
+    }
 }

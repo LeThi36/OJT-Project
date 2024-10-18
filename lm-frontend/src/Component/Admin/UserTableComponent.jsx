@@ -20,7 +20,7 @@ function UserTableComponent() {
       <div className="flex-grow border-2 border-gray-200 border-dashed rounded-lg">
         <div className="relative overflow-x-auto w-full">
           <table className="w-full text-sm text-left text-gray-500">
-            <caption class="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2">
+            <caption className="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2">
               Users
             </caption>
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">

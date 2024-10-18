@@ -9,10 +9,6 @@ function CategoryComponent() {
     useEffect(() => {
         getAllCategory().then(response => {
             setCategory(response.data)
-            console.log(response.data);
-
-        }).catch(error => {
-            console.error(error);
 
         })
     }, [])
@@ -40,7 +36,7 @@ function CategoryComponent() {
 
                                                     </svg>
                                                 </div>
-                                                <h2 className="text-gray-900 text-lg title-font font-medium">{c.categoryName}</h2>
+                                                <h2 className="text-gray-900 text-lg title-font font-medium"  key={c.categoryId}>{c.categoryName}</h2>
                                             </div>
                                             <div className="flex-grow">
 

@@ -14,6 +14,10 @@ import UserProfileComponent from './Component/Admin/UserProfileComponent'
 import BooktableComponent from './Component/Admin/BooktableComponent'
 import BookDetailComponent from './Component/Admin/BookDetailComponent'
 import BookFormComponent from './Component/Admin/BookFormComponent'
+import CategoryTableComponent from './Component/Admin/CategoryTableComponent'
+import CategoryDetailComponent from './Component/Admin/CategoryDetailComponent'
+import AuthorTableComponent from './Component/Admin/AuthorTableComponent'
+import AuthorDetailCoponent from './Component/Admin/AuthorDetailCoponent'
 
 
 
@@ -58,6 +62,10 @@ function App() {
                   <Route path='book' element={<BooktableComponent />}/>
                   <Route path='book/:id' element={<BookDetailComponent />}/>
                   <Route path='book/add-new-book' element={<BookFormComponent />}/>
+                  <Route path='category' element={<CategoryTableComponent />}/>
+                  <Route path='category/:id' element={<CategoryDetailComponent />}/>
+                  <Route path='author' element={<AuthorTableComponent />}/>
+                  <Route path='author/:id' element={<AuthorDetailCoponent />}/>
                 </Routes>
               </div>
             </AuthenticatedRoute>

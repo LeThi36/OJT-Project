@@ -43,6 +43,7 @@ public class SecurityConfig {
                     author.requestMatchers("/api/author/count").permitAll();
                     author.requestMatchers("/api/book/count").permitAll();
                     author.requestMatchers("/api/category").permitAll();
+                    author.requestMatchers("/api/category/count").permitAll();
                     author.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults());

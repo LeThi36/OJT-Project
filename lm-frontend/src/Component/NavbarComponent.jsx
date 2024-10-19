@@ -24,7 +24,7 @@ function NavbarComponent() {
                         <div className="hidden lg:block">
                             <ul className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href="#" className="flex items-center">Pages</a>
+                                    <a href="/books" className="flex items-center">Books</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <a href="/category" className="flex items-center">Category</a>
@@ -43,7 +43,7 @@ function NavbarComponent() {
                         <div className="hidden lg:block">
                             <ul className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href="#" className="flex items-center">Account</a>
+                                    <a href="/user/3" className="flex items-center">Account</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <button onClick={handleLogout} className="flex items-center">Logout</button>

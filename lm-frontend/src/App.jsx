@@ -18,6 +18,9 @@ import CategoryTableComponent from './Component/Admin/CategoryTableComponent'
 import CategoryDetailComponent from './Component/Admin/CategoryDetailComponent'
 import AuthorTableComponent from './Component/Admin/AuthorTableComponent'
 import AuthorDetailCoponent from './Component/Admin/AuthorDetailCoponent'
+import BooksCardComponent from './Component/User/BooksCardComponent'
+import CategoryBooksComponent from './Component/User/CategoryBooksComponent'
+import BookComponent from './Component/User/BookComponent'
 
 
 
@@ -51,7 +54,11 @@ function App() {
           <Route path='/register' element={<Register />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/' element={<LandingpageComoponent />}></Route>
+          <Route path='/books' element={<BooksCardComponent />}></Route>
+          <Route path='/books/:id' element={<BookComponent />}></Route>
           <Route path='/category' element={<CategoryComponent />}></Route>
+          <Route path='/category/:id' element={<CategoryBooksComponent />}></Route>
+          <Route path='/user/:id' element={<UserProfileComponent />}></Route>
           <Route path='/admin/*' element={
             <AuthenticatedRoute>
               <SidebarComopnent />

@@ -21,6 +21,8 @@ import AuthorDetailCoponent from './Component/Admin/AuthorDetailCoponent'
 import BooksCardComponent from './Component/User/BooksCardComponent'
 import CategoryBooksComponent from './Component/User/CategoryBooksComponent'
 import BookComponent from './Component/User/BookComponent'
+import CartComponent from './Component/User/CartComponent'
+import BorrowRecordTableComponent from './Component/Admin/BorrowRecordTableComponent'
 
 
 
@@ -54,6 +56,7 @@ function App() {
           <Route path='/register' element={<Register />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/' element={<LandingpageComoponent />}></Route>
+          <Route path='/cart' element={<CartComponent />}></Route>
           <Route path='/books' element={<BooksCardComponent />}></Route>
           <Route path='/books/:id' element={<BookComponent />}></Route>
           <Route path='/category' element={<CategoryComponent />}></Route>
@@ -73,6 +76,7 @@ function App() {
                   <Route path='category/:id' element={<CategoryDetailComponent />}/>
                   <Route path='author' element={<AuthorTableComponent />}/>
                   <Route path='author/:id' element={<AuthorDetailCoponent />}/>
+                  <Route path='borrow' element={<BorrowRecordTableComponent />}/>
                 </Routes>
               </div>
             </AuthenticatedRoute>

@@ -42,8 +42,8 @@ public class Book {
     @Column(name = "copies", nullable = false, columnDefinition = "INT DEFAULT 1")
     private Integer copies;
 
-    @Column(name = "available_copies", nullable = false, columnDefinition = "INT DEFAULT 1")
-    private Integer availableCopies;
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @Column(name = "status", nullable = false, columnDefinition = "ENUM('new', 'used', 'damaged') DEFAULT 'new'")
     @Enumerated(EnumType.STRING)

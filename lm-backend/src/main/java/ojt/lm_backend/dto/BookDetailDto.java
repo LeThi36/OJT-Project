@@ -21,7 +21,7 @@ public class BookDetailDto {
     private String publisher;
     private int publicationYear;
     private int copies;
-    private int availableCopies;
+    private String description;
     private BookStatus status;
     private Timestamp createdAt;
     private Timestamp updatedAt;

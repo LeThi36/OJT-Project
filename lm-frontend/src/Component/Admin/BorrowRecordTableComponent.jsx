@@ -1,35 +1,18 @@
-import { deleteBook, getAllBook } from '../../Services/BookService';
-import { Link } from 'react-router-dom';
+import React from 'react'
 import { useQuery } from 'react-query';
+import { getAllBorrowRecord } from '../../Services/BorrowRecordService';
+import { Link } from 'react-router-dom';
 
-function BooktableComponent({ data, title }) {
+function BorrowRecordTableComponent() {
 
-    if(!data){
-        const { data: books, isLoading } = useQuery({
-            queryFn: () => getAllBook().then(response => response.data),
-            queryKey: ["books"]
-        })
-        data = books
-        if (isLoading) {
-            return <div>Loading...</div>;
-        }
-        
+    const { data: borrow, isLoading } = useQuery({
+        queryFn: () => getAllBorrowRecord().then(response => response.data),
+        queryKey: ["borrow"]
+    })
+
+    if (isLoading) {
+        return <p>Loading...</p>
     }
-
-
-    function formatDateTime(isoString) {
-        const date = new Date(isoString);
-
-        const formattedDate = date.toLocaleDateString('en-GB');
-        const formattedTime = date.toLocaleTimeString('en-GB');
-
-        return `${formattedDate} ${formattedTime}`;
-    }
-
-    const handleDelete = async (bookId) => {
-        await deleteBook(bookId);
-        queryClient.invalidateQueries("books");
-    };
 
     return (
         <div >
@@ -37,80 +20,68 @@ function BooktableComponent({ data, title }) {
                 <div className="relative overflow-x-auto w-full">
                     <table className="w-full text-sm text-left text-gray-500">
                         <caption className="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2 ">
-                            {
-                                title ? title : "Books"
-                            }
-                            <Link className="ms-4 font-bold text-emerald-400 " to='/admin/book/add-new-book'>add new Book!</Link>
+                            Book Borrow Record
+                            {/* <Link className="ms-4 font-bold text-emerald-400 " to='/admin/book/add-new-book'>add new Book!</Link> */}
                         </caption>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
-                                    Title
+                                    User name
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Category
+                                    Email
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Author
+                                    Book Title
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Publisher
+                                    Borrow Date
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Publication Year
+                                    Due Date
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Copies
+                                    Return Date
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Status
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Created At
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Updated At
-                                </th>
-                                <th>
-
+                                    Fine
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map(b => {
+                            {borrow.map(b => {
                                 return (
-                                    <tr key={b.bookId}>
+                                    <tr key={b.borrowId}>
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            <Link to={`/admin/book/${b.bookId}`}>
-                                                {b.title}
+                                            <Link to={`/admin/user/${b.user.userId}`}>
+                                                {b.user.username}
                                             </Link>
                                         </th>
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {b.category}
+                                            {b.user.email}
                                         </th>
-                                        <td className="px-6 py-4">
-                                            {b.author}
+                                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                            <Link to={`/admin/book/${b.book ? b.book.bookId : ''}`}>
+                                                {b.book ? b.book.title : 'N/A'}
+                                            </Link>
                                         </td>
                                         <td className="px-6 py-4">
-                                            {b.publisher}
+                                            {b.borrowDate}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {b.publicationYear}
+                                            {b.dueDate}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {b.copies}
+                                            {b.returnDate}
                                         </td>
                                         <td className="px-6 py-4">
                                             {b.status}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {formatDateTime(b.createdAt)}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {formatDateTime(b.updatedAt)}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <button onClick={() => handleDelete(b.bookId)} class="font-bold text-red-600">Delete Book</button>
+                                            {b.fine}
                                         </td>
                                     </tr>
                                 );
@@ -123,4 +94,4 @@ function BooktableComponent({ data, title }) {
     )
 }
 
-export default BooktableComponent
+export default BorrowRecordTableComponent

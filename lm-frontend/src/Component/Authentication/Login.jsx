@@ -28,7 +28,7 @@
                     navigate('/admin')
                 }
                 if (role == "ROLE_USER") {
-                    navigate('/home')
+                    navigate('/')
                 }
 
                 

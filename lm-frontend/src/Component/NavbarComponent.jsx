@@ -46,6 +46,9 @@ function NavbarComponent() {
                                     <a href="/user/3" className="flex items-center">Account</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
+                                    <a href="/cart" className="flex items-center">Cart</a>
+                                </li>
+                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <button onClick={handleLogout} className="flex items-center">Logout</button>
                                 </li>
                             </ul>

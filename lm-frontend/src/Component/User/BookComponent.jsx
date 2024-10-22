@@ -2,6 +2,7 @@ import React from 'react'
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { getBookById } from '../../Services/BookService';
+import { getLoggedInUser } from '../../Services/AuthService';
 
 function BookComponent() {
 
@@ -15,6 +16,25 @@ function BookComponent() {
 
     if (isLoading) {
         return <div>Loading...</div>;
+    }
+
+    const handelCart = (book, redirect) => {
+        const cart = JSON.parse(localStorage.getItem('cart')) || []
+        const existed = cart.find(item => item.bookId === book.bookId)
+        if (existed) {
+            cart.map(item => {
+                if (item.bookId === book.bookId)
+                    return alert('book already add')
+                return item
+            })
+        } else {
+            localStorage.setItem('cart', JSON.stringify([...cart, { ...book }]))
+            alert('Book added to cart')
+        }
+        if (redirect) {
+            console.log('add to cart product', product)
+            navigate('/cart')
+        }
     }
 
     return (
@@ -69,8 +89,8 @@ function BookComponent() {
                             <span className="title-font font-medium text-2xl text-gray-900">$</span>
                             <div className="flex">
                                 <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2">Buy it now</button>
-                                <button className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-600 hover:text-white rounded">Add to cart</button>
-                            </div> 
+                                <button className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-600 hover:text-white rounded" onClick={() => handelCart(book)}>Add to cart</button>
+                            </div>
 
                             <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                                 <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">

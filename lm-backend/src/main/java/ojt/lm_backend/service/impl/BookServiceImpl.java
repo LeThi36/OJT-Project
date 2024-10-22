@@ -24,7 +24,6 @@ public class BookServiceImpl implements BookService {
     private AuthorRepository authorRepository;
     private CategoryRepository categoryRepository;
     private PublisherRepository publisherRepository;
-    private BookFavoriteRepository bookFavoriteRepository;
     private BookReservationRepository bookReservationRepository;
     private BookReviewRepository bookReviewRepository;
     private BorrowRecordRepository borrowRecordRepository;
@@ -64,7 +63,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new LMAPIException(HttpStatus.BAD_REQUEST, "can not find this category")));
         book.setPublicationYear(bookDto.getPublicationYear());
         book.setCopies(bookDto.getCopies());
-        book.setAvailableCopies(bookDto.getAvailableCopies());
+        book.setDescription(bookDto.getDescription());
         book.setStatus(bookDto.getStatus());
         book.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         book.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -79,10 +78,6 @@ public class BookServiceImpl implements BookService {
         if (book == null) {
             return "can not find this book to delete";
         } else {
-            List<BookFavorite> bookFavorites = bookFavoriteRepository.findByBookId(id);
-            if (!bookFavorites.isEmpty()) {
-                bookFavoriteRepository.deleteAll(bookFavorites);
-            }
             List<BookReservation> bookReservations = bookReservationRepository.findByBookId(id);
             if (!bookReservations.isEmpty()) {
                 bookReservationRepository.deleteAll(bookReservations);
@@ -117,7 +112,7 @@ public class BookServiceImpl implements BookService {
             book.setCategory(categoryRepository.findById(bookDto.getCategoryId()).orElse(null));
             book.setPublisher(publisherRepository.findById(bookDto.getPublisherId()).orElse(null));
             book.setPublicationYear(bookDto.getPublicationYear());
-            book.setAvailableCopies(book.getAvailableCopies());
+            book.setDescription(book.getDescription());
             bookRepository.save(book);
             return modelMapper.map(book,BookDto.class);
         }

@@ -23,6 +23,7 @@ import CategoryBooksComponent from './Component/User/CategoryBooksComponent'
 import BookComponent from './Component/User/BookComponent'
 import CartComponent from './Component/User/CartComponent'
 import BorrowRecordTableComponent from './Component/Admin/BorrowRecordTableComponent'
+import FavoriteBookComponent from './Component/User/FavoriteBookComponent'
 
 
 
@@ -57,6 +58,7 @@ function App() {
           <Route path='/login' element={<Login />}></Route>
           <Route path='/' element={<LandingpageComoponent />}></Route>
           <Route path='/cart' element={<CartComponent />}></Route>
+          <Route path='/favorite' element={<FavoriteBookComponent />}></Route>
           <Route path='/books' element={<BooksCardComponent />}></Route>
           <Route path='/books/:id' element={<BookComponent />}></Route>
           <Route path='/category' element={<CategoryComponent />}></Route>

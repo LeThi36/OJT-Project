@@ -30,7 +30,7 @@ function NavbarComponent() {
                                     <a href="/category" className="flex items-center">Category</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href="#" className="flex items-center">Blocks</a>
+                                    <a href="/favorite" className="flex items-center">Favortie books</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <a href="#" className="flex items-center">Docs</a>

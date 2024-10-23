@@ -3,8 +3,10 @@ import BooksComponent from './BooksComponent';
 import { useQuery } from 'react-query';
 import { getAllBook } from '../../Services/BookService';
 import CategoryComponent from './CategoryComponent';
+import { Link } from 'react-router-dom';
 
 function BooksCardComponent() {
+
   const { data: books, isLoading } = useQuery({
     queryFn: () => getAllBook().then(response => response.data),
     queryKey: ["books"]

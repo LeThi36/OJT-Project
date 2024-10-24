@@ -1,17 +1,16 @@
 package ojt.lm_backend.service.impl;
 
 import lombok.AllArgsConstructor;
-import ojt.lm_backend.dto.JwtAuthResponse;
-import ojt.lm_backend.dto.LoginDto;
-import ojt.lm_backend.dto.RegisterDto;
-import ojt.lm_backend.dto.UserDto;
+import ojt.lm_backend.dto.*;
 import ojt.lm_backend.entity.Role;
 import ojt.lm_backend.entity.User;
 import ojt.lm_backend.exception.LMAPIException;
 import ojt.lm_backend.repository.RoleRepository;
 import ojt.lm_backend.repository.UserRepository;
+import ojt.lm_backend.security.GoogleAuthenticationToken;
 import ojt.lm_backend.security.JwtTokenProvider;
 import ojt.lm_backend.service.AuthService;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -93,5 +93,63 @@ public class AuthServiceImpl implements AuthService {
     public UserDto account(String name) {
         Optional<User> userOptional = userRepository.findByUsernameOrEmail(name,name);
         return modelMapper.map(userOptional, UserDto.class);
+    }
+
+    @Override
+    public JwtAuthResponse loginWithGoogle(AuthRequestDto authRequestDto) {
+        String credential = authRequestDto.getCredential();
+        String email = extractEmailFromCredential(credential);
+
+        Authentication authentication = new GoogleAuthenticationToken(email);
+        Authentication authenticated = authenticationManager.authenticate(authentication);
+
+        SecurityContextHolder.getContext().setAuthentication(authenticated);
+        String token = jwtTokenProvider.generateToken(authenticated);
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(email,email);
+
+
+        String role = null;
+        if (userOptional.isPresent()) {
+            User loggedInUser = userOptional.get();
+
+            if (loggedInUser.getRole() != null && loggedInUser.getRole().getRoleName() != null) {
+                role = loggedInUser.getRole().getRoleName();
+            }
+        }
+
+        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setRole(role);
+        jwtAuthResponse.setAccessToken(token);
+        User user = userOptional.orElseThrow(()->new RuntimeException("aaa"));
+        System.out.println(user.getRole().getRoleName());
+        return jwtAuthResponse;
+    }
+
+    private String extractEmailFromCredential(String credential) {
+        try {
+            String[] parts = credential.split("\\.");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid JWT token structure");
+            }
+
+            String payload = parts[1];
+            String decodedPayload = decodeBase64Url(payload);
+
+            // Parse the JSON
+            JSONObject jsonObject = new JSONObject(decodedPayload);
+            return jsonObject.getString("email");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Handle errors appropriately
+        }
+    }
+
+    private String decodeBase64Url(String base64Url) {
+        String base64 = base64Url.replace('-', '+').replace('_', '/');
+        switch (base64.length() % 4) {
+            case 2: base64 += "=="; break;
+            case 3: base64 += "="; break;
+        }
+        return new String(Base64.getDecoder().decode(base64));
     }
 }

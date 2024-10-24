@@ -29,6 +29,7 @@ import FavoriteBookComponent from './Component/User/FavoriteBookComponent'
 
 function App() {
 
+
   function AuthenticatedRoute({ children }) {
 
     const isAuth = isUserLoggedIn();
@@ -51,40 +52,40 @@ function App() {
 
   return (
     <>
-      
-        <NavbarComponent />
-        <Routes>
-          <Route path='/register' element={<Register />}></Route>
-          <Route path='/login' element={<Login />}></Route>
-          <Route path='/' element={<LandingpageComoponent />}></Route>
-          <Route path='/cart' element={<CartComponent />}></Route>
-          <Route path='/favorite' element={<FavoriteBookComponent />}></Route>
-          <Route path='/books' element={<BooksCardComponent />}></Route>
-          <Route path='/books/:id' element={<BookComponent />}></Route>
-          <Route path='/category' element={<CategoryComponent />}></Route>
-          <Route path='/category/:id' element={<CategoryBooksComponent />}></Route>
-          <Route path='/user/:id' element={<UserProfileComponent />}></Route>
-          <Route path='/admin/*' element={
-            <AuthenticatedRoute>
-              <SidebarComopnent />
-              <div className="ml-80 py-2 w-auto mt-6 mr-16">
-                <Routes>
-                  <Route path="user" element={<UserTableComponent />} />
-                  <Route path='user/:id' element={<UserProfileComponent />} />
-                  <Route path='book' element={<BooktableComponent />}/>
-                  <Route path='book/:id' element={<BookDetailComponent />}/>
-                  <Route path='book/add-new-book' element={<BookFormComponent />}/>
-                  <Route path='category' element={<CategoryTableComponent />}/>
-                  <Route path='category/:id' element={<CategoryDetailComponent />}/>
-                  <Route path='author' element={<AuthorTableComponent />}/>
-                  <Route path='author/:id' element={<AuthorDetailCoponent />}/>
-                  <Route path='borrow' element={<BorrowRecordTableComponent />}/>
-                </Routes>
-              </div>
-            </AuthenticatedRoute>
-          } />
-        </Routes>
-        <FooterComponent />
+
+      <NavbarComponent />
+      <Routes>
+        <Route path='/register' element={<Register />}></Route>
+        <Route path='/login' element={<Login />}></Route>
+        <Route path='/' element={<LandingpageComoponent />}></Route>
+        <Route path='/cart' element={<CartComponent />}></Route>
+        <Route path='/favorite' element={<FavoriteBookComponent />}></Route>
+        <Route path='/books' element={<BooksCardComponent />}></Route>
+        <Route path='/books/:id' element={<BookComponent />}></Route>
+        <Route path='/category' element={<CategoryComponent />}></Route>
+        <Route path='/category/:id' element={<CategoryBooksComponent />}></Route>
+        <Route path='/user/:id' element={<UserProfileComponent />}></Route>
+        <Route path='/admin/*' element={
+          <AuthenticatedRoute>
+            <SidebarComopnent />
+            <div className="ml-80 py-2 w-auto mt-6 mr-16">
+              <Routes>
+                <Route path="user" element={<UserTableComponent />} />
+                <Route path='user/:id' element={<UserProfileComponent />} />
+                <Route path='book' element={<BooktableComponent />} />
+                <Route path='book/:id' element={<BookDetailComponent />} />
+                <Route path='book/add-new-book' element={<BookFormComponent />} />
+                <Route path='category' element={<CategoryTableComponent />} />
+                <Route path='category/:id' element={<CategoryDetailComponent />} />
+                <Route path='author' element={<AuthorTableComponent />} />
+                <Route path='author/:id' element={<AuthorDetailCoponent />} />
+                <Route path='borrow' element={<BorrowRecordTableComponent />} />
+              </Routes>
+            </div>
+          </AuthenticatedRoute>
+        } />
+      </Routes>
+      <FooterComponent />
     </>
   )
 }

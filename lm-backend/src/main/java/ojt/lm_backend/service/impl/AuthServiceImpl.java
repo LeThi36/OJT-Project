@@ -2,6 +2,7 @@ package ojt.lm_backend.service.impl;
 
 import lombok.AllArgsConstructor;
 import ojt.lm_backend.dto.*;
+import ojt.lm_backend.entity.EmailDetail;
 import ojt.lm_backend.entity.Role;
 import ojt.lm_backend.entity.User;
 import ojt.lm_backend.exception.LMAPIException;
@@ -10,6 +11,7 @@ import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.security.GoogleAuthenticationToken;
 import ojt.lm_backend.security.JwtTokenProvider;
 import ojt.lm_backend.service.AuthService;
+import ojt.lm_backend.service.EmailService;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -32,6 +35,7 @@ public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider jwtTokenProvider;
     private PasswordEncoder passwordEncoder;
+    private EmailService emailService;
 
     private ModelMapper modelMapper;
 
@@ -61,37 +65,40 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtAuthResponse login(LoginDto loginDto) {
 
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
+        String username = null;
+        long userID = 0;
+        String role = null;
+        if (userOptional.isPresent()) {
+            User loggedInUser = userOptional.get();
+            username = loggedInUser.getUsername();
+            userID = loggedInUser.getUserId();
+            if (loggedInUser.getRole() != null && loggedInUser.getRole().getRoleName() != null) {
+                role = loggedInUser.getRole().getRoleName();
+            }
+        }
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(),
+                username,
                 loginDto.getPassword()
         ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtTokenProvider.generateToken(authentication);
 
-        Optional<User> userOptional = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
-
-
-        String role = null;
-        if (userOptional.isPresent()) {
-            User loggedInUser = userOptional.get();
-
-            if (loggedInUser.getRole() != null && loggedInUser.getRole().getRoleName() != null) {
-                role = loggedInUser.getRole().getRoleName();
-            }
-        }
-
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
         jwtAuthResponse.setRole(role);
+        jwtAuthResponse.setUserId(userID);
         jwtAuthResponse.setAccessToken(token);
-        User u = userOptional.orElseThrow(()->new RuntimeException("aaa"));
-        System.out.println(u.getRole().getRoleName());
+        User u = userOptional.orElseThrow(() -> new RuntimeException("aaa"));
+        System.out.println(userID+" "+role);
         return jwtAuthResponse;
     }
-//test security
+
+    //test security
     @Override
     public UserDto account(String name) {
-        Optional<User> userOptional = userRepository.findByUsernameOrEmail(name,name);
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(name, name);
         return modelMapper.map(userOptional, UserDto.class);
     }
 
@@ -100,29 +107,62 @@ public class AuthServiceImpl implements AuthService {
         String credential = authRequestDto.getCredential();
         String email = extractEmailFromCredential(credential);
 
+
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(email, email);
+
+        long userId = 0;
+        String role = null;
+        if (userOptional.isPresent()) {
+            User loggedInUser = userOptional.get();
+            userId = loggedInUser.getUserId();
+            if (loggedInUser.getRole() != null && loggedInUser.getRole().getRoleName() != null) {
+                role = loggedInUser.getRole().getRoleName();
+            }
+        } else {
+            User newUser = new User();
+            newUser.setEmail(email);
+            Role userRole = roleRepository.findByRoleName("ROLE_USER");
+            newUser.setRole(userRole);
+            String passwordRandom = usingRandomUUID();
+            newUser.setPasswordHash(passwordEncoder.encode(passwordRandom));
+            String[] arrStr = email.split("@");
+            newUser.setUsername(arrStr[0]);
+            userRepository.save(newUser);
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setRecipient(email);
+            emailDetail.setMsgBody("your password is: " + passwordRandom);
+            emailDetail.setSubject("Welcome " + email + " to our project");
+            emailService.sendSimpleEmail(emailDetail);
+            role = newUser.getRole().getRoleName();
+        }
         Authentication authentication = new GoogleAuthenticationToken(email);
         Authentication authenticated = authenticationManager.authenticate(authentication);
 
         SecurityContextHolder.getContext().setAuthentication(authenticated);
         String token = jwtTokenProvider.generateToken(authenticated);
-        Optional<User> userOptional = userRepository.findByUsernameOrEmail(email,email);
-
-
-        String role = null;
-        if (userOptional.isPresent()) {
-            User loggedInUser = userOptional.get();
-
-            if (loggedInUser.getRole() != null && loggedInUser.getRole().getRoleName() != null) {
-                role = loggedInUser.getRole().getRoleName();
-            }
-        }
 
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setUserId(userId);
         jwtAuthResponse.setRole(role);
         jwtAuthResponse.setAccessToken(token);
-        User user = userOptional.orElseThrow(()->new RuntimeException("aaa"));
-        System.out.println(user.getRole().getRoleName());
+        System.out.println(userId+" "+role);
         return jwtAuthResponse;
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
+        User user = userRepository.findByUsernameOrEmail(changePasswordRequestDto.getEmail(), changePasswordRequestDto.getEmail()).orElse(null);
+        if (user != null) {
+            if (passwordEncoder.matches(changePasswordRequestDto.getOldPassword(), user.getPasswordHash())) {
+                user.setPasswordHash(passwordEncoder.encode(changePasswordRequestDto.getNewPassword()));
+            } else {
+                return "old password not match";
+            }
+        } else {
+            return changePasswordRequestDto.getEmail() + " email not found";
+        }
+        userRepository.save(user);
+        return "change password successfully";
     }
 
     private String extractEmailFromCredential(String credential) {
@@ -147,9 +187,18 @@ public class AuthServiceImpl implements AuthService {
     private String decodeBase64Url(String base64Url) {
         String base64 = base64Url.replace('-', '+').replace('_', '/');
         switch (base64.length() % 4) {
-            case 2: base64 += "=="; break;
-            case 3: base64 += "="; break;
+            case 2:
+                base64 += "==";
+                break;
+            case 3:
+                base64 += "=";
+                break;
         }
         return new String(Base64.getDecoder().decode(base64));
+    }
+
+    private String usingRandomUUID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString().replaceAll("_", "");
     }
 }

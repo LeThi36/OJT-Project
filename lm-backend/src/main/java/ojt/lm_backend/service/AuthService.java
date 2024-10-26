@@ -9,4 +9,5 @@ public interface AuthService {
     UserDto account (String name);
 
     JwtAuthResponse loginWithGoogle(AuthRequestDto authRequestDto);
+    String changePassword(ChangePasswordRequestDto changePasswordRequestDto);
 }

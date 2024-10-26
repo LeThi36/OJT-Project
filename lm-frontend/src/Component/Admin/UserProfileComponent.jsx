@@ -26,7 +26,7 @@ function UserProfileComponent() {
       }
 
     return (
-        <div className='w-full'>
+        <div className='w-full mt-16'>
             <div className="bg-white w-2/3 shadow overflow-hidden sm:rounded-lg mx-auto">
                 <div className="px-4 py-5 sm:px-6">
                     <h3 className="text-center text-lg leading-6 font-medium text-gray-900">
@@ -35,6 +35,9 @@ function UserProfileComponent() {
                     <p className="mt-1 text-sm text-gray-500 text-center">
                         Details and informations about {user.username}.
                     </p>
+                    <a href='/change-password' className="mt-1 text-grey-900 font-semibold capitalize text-start">
+                        Change password
+                    </a>
                 </div>
                 <div className="border-t border-gray-200">
                     <dl>

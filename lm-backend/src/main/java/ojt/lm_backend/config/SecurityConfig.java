@@ -47,11 +47,13 @@ public class SecurityConfig {
                     author.requestMatchers("/api/auth/login").permitAll();
                     author.requestMatchers("/api/auth/login/google").permitAll();
                     author.requestMatchers("/api/auth/register").permitAll();
+                    author.requestMatchers("/api/auth/change-password").permitAll();
                     author.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll();
                     author.requestMatchers("/api/user/count").permitAll();
                     author.requestMatchers("/api/author/count").permitAll();
                     author.requestMatchers("/api/book/count").permitAll();
                     author.requestMatchers("/api/category").permitAll();
+                    author.requestMatchers("/api/sendmail").permitAll();
                     author.requestMatchers("/api/category/count").permitAll();
                     author.requestMatchers("/api/category/book/*").permitAll();
                     author.anyRequest().authenticated();

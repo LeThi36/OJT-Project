@@ -22,10 +22,10 @@ function Login() {
 
         loginAPICALL(usernameOrEmail, password).then(response => {
             const token = 'Bearer ' + response.data.accessToken
-
+            const userId = response.data.userId
             const role = response.data.role
             storeToken(token)
-            saveLoggedInUser(usernameOrEmail, role)
+            saveLoggedInUser(usernameOrEmail, role, userId)
             console.log(response.data);
 
 
@@ -56,18 +56,19 @@ function Login() {
         }).then(response =>{
             console.log(response.data);
             const role = response.data.role
+            const userId = response.data.userId
             const token = 'Bearer ' + response.data.accessToken
             storeToken(token)
-            saveLoggedInUser(usernameOrEmail, role)
+            saveLoggedInUser(usernameOrEmail, role, userId)
             console.log(response.data);
 
 
-            if (role == "ROLE_ADMIN") {
-                navigate('/admin')
-            }
-            if (role == "ROLE_USER") {
-                navigate('/')
-            }
+            // if (role == "ROLE_ADMIN") {
+            //     navigate('/admin')
+            // }
+            // if (role == "ROLE_USER") {
+            //     navigate('/')
+            // }
 
         }).catch(error =>{
             console.error(error);
@@ -133,7 +134,7 @@ function Login() {
                                             </label>
                                         </div>
                                         <div>
-                                            <a className="font-bold text-sm text-neutral-500 hover:text-orange-800" href="#password-request">
+                                            <a className="font-bold text-sm text-neutral-500 hover:text-orange-800" href="/change-password">
                                                 forgot password
                                             </a>
                                         </div>

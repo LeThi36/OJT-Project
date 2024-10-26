@@ -6,6 +6,8 @@ export const loginAPICALL = (usernameOrEmail, password) => axios.post(AUTH_REST_
 
 export const registerAPICall = (registerObj) => axios.post(AUTH_REST_API_BASE_URL + '/register', registerObj)
 
+export const changePasswordAPICall = (obj) => axios.post(AUTH_REST_API_BASE_URL + '/change-password', obj)
+
 export const storeToken = (token) => {
     localStorage.setItem("token", token)
 }
@@ -14,9 +16,10 @@ export const getToken = () => {
     return localStorage.getItem("token")
 }
 
-export const saveLoggedInUser = (username, role) => {
+export const saveLoggedInUser = (username, role, userId) => {
     sessionStorage.setItem("authenticatedUser", username)
     sessionStorage.setItem("role", role)
+    sessionStorage.setItem("userId", userId)
 }
 
 export const isUserLoggedIn = () => {
@@ -47,4 +50,8 @@ export const isAdminUser = () => {
         return false
     }
 
+}
+
+export const getUserId = () => {
+    return sessionStorage.getItem("userId")
 }

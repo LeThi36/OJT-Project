@@ -42,4 +42,9 @@ public class AuthController {
         return new ResponseEntity<>(jwtAuthResponse,HttpStatus.OK);
     }
 
+    @PostMapping("/change-password")
+    public ResponseEntity<String> ChangePassword(@RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
+        return new ResponseEntity<>(authService.changePassword(changePasswordRequestDto), HttpStatus.OK);
+    }
+
 }

@@ -24,6 +24,7 @@ import BookComponent from './Component/User/BookComponent'
 import CartComponent from './Component/User/CartComponent'
 import BorrowRecordTableComponent from './Component/Admin/BorrowRecordTableComponent'
 import FavoriteBookComponent from './Component/User/FavoriteBookComponent'
+import ChangePasswordComponent from './Component/Authentication/ChangePasswordComponent'
 
 
 
@@ -57,6 +58,7 @@ function App() {
       <Routes>
         <Route path='/register' element={<Register />}></Route>
         <Route path='/login' element={<Login />}></Route>
+        <Route path='/change-password' element={<ChangePasswordComponent />}></Route>
         <Route path='/' element={<LandingpageComoponent />}></Route>
         <Route path='/cart' element={<CartComponent />}></Route>
         <Route path='/favorite' element={<FavoriteBookComponent />}></Route>

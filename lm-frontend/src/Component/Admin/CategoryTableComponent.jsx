@@ -10,6 +10,9 @@ function CategoryTableComponent() {
         queryKey: ["categories"]
     })
 
+    console.log(categories);
+    
+
     if (isLoading) {
         return <p>Loading...</p>
     }

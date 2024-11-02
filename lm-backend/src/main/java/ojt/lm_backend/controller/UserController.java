@@ -1,13 +1,18 @@
 package ojt.lm_backend.controller;
 
 import lombok.AllArgsConstructor;
+import ojt.lm_backend.dto.ImageUrlResponse;
 import ojt.lm_backend.dto.UserDto;
+import ojt.lm_backend.service.ImageUploadService;
 import ojt.lm_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,6 +21,7 @@ import java.util.List;
 @CrossOrigin("*")
 public class UserController {
     private UserService userService;
+    private ImageUploadService imageUploadService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -74,5 +80,18 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> updateRoleUse(@PathVariable Long id){
         return new ResponseEntity<>(userService.updateRoleUse(id),HttpStatus.OK);
+    }
+
+    @PostMapping("/uploadToGoogleDrive/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public Object handleFileUpload(@RequestParam("image") MultipartFile file,@PathVariable Long id) throws IOException {
+        if (file.isEmpty()) {
+            return "file is empty";
+        }
+        File tempFile = File.createTempFile("temp", null);
+        file.transferTo(tempFile);
+        ImageUrlResponse res = imageUploadService.uploadImageToDrive(tempFile,id);
+        System.out.println(res);
+        return res;
     }
 }

@@ -23,4 +23,5 @@ public class BookDto {
     private BookStatus status;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String imageUrl;
 }

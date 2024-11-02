@@ -63,12 +63,12 @@ function Login() {
             console.log(response.data);
 
 
-            // if (role == "ROLE_ADMIN") {
-            //     navigate('/admin')
-            // }
-            // if (role == "ROLE_USER") {
-            //     navigate('/')
-            // }
+            if (role == "ROLE_ADMIN") {
+                navigate('/admin')
+            }
+            if (role == "ROLE_USER") {
+                navigate('/')
+            }
 
         }).catch(error =>{
             console.error(error);

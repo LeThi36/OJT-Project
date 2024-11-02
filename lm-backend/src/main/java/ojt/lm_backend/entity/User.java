@@ -51,4 +51,7 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }

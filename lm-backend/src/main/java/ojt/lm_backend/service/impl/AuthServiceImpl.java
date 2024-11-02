@@ -107,6 +107,8 @@ public class AuthServiceImpl implements AuthService {
         String credential = authRequestDto.getCredential();
         String email = extractEmailFromCredential(credential);
 
+        User u1 = new User();
+
 
         Optional<User> userOptional = userRepository.findByUsernameOrEmail(email, email);
 
@@ -127,7 +129,9 @@ public class AuthServiceImpl implements AuthService {
             newUser.setPasswordHash(passwordEncoder.encode(passwordRandom));
             String[] arrStr = email.split("@");
             newUser.setUsername(arrStr[0]);
-            userRepository.save(newUser);
+            newUser.setImageUrl("https://drive.google.com/uc?export=view&id=1-qZl9lAHyENk9uZuSJqL232Cr5UlvdUz");
+            u1 = userRepository.save(newUser);
+            System.out.println(u1.getUserId());
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setRecipient(email);
             emailDetail.setMsgBody("your password is: " + passwordRandom);
@@ -142,6 +146,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtTokenProvider.generateToken(authenticated);
 
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        userId = u1.getUserId();
         jwtAuthResponse.setUserId(userId);
         jwtAuthResponse.setRole(role);
         jwtAuthResponse.setAccessToken(token);

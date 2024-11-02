@@ -7,10 +7,12 @@ import ojt.lm_backend.entity.*;
 import ojt.lm_backend.exception.LMAPIException;
 import ojt.lm_backend.repository.*;
 import ojt.lm_backend.service.BookService;
+import ojt.lm_backend.service.ImageUploadService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ public class BookServiceImpl implements BookService {
     private BookReservationRepository bookReservationRepository;
     private BookReviewRepository bookReviewRepository;
     private BorrowRecordRepository borrowRecordRepository;
+    private ImageUploadService imageUploadService;
 
     private ModelMapper modelMapper;
 
@@ -46,7 +49,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto addNewBook(BookDto bookDto) {
+    public BookDto addNewBook(BookDto bookDto, File file) {
         Book book = new Book();
         book.setTitle(bookDto.getTitle());
         book.setCategory(categoryRepository
@@ -67,7 +70,7 @@ public class BookServiceImpl implements BookService {
         book.setStatus(bookDto.getStatus());
         book.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         book.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-
+        book.setImageUrl(imageUploadService.bookImageUrl(file));
         Book savedBook = bookRepository.save(book);
         return modelMapper.map(savedBook, BookDto.class);
     }

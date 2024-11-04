@@ -37,7 +37,7 @@ public class BorrowRecord {
     @Column(name = "return_date")
     private LocalDate returnDate;
 
-    @Column(name = "status", nullable = false, columnDefinition = "ENUM('borrowed', 'returned', 'overdue') DEFAULT 'borrowed'")
+    @Column(name = "status", nullable = false, columnDefinition = "ENUM('borrowed', 'returned', 'PENDING_APPROVAL', 'overdue') DEFAULT 'borrowed'")
     @Enumerated(EnumType.STRING)
     private BorrowStatus status;
 

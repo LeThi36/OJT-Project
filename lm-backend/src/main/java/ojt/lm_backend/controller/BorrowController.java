@@ -1,54 +1,64 @@
 package ojt.lm_backend.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import ojt.lm_backend.dto.request.BorrowRequest;
 import ojt.lm_backend.dto.response.BorrowResponse;
+import ojt.lm_backend.entity.Book;
+import ojt.lm_backend.entity.User;
+import ojt.lm_backend.repository.BookRepository;
+import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.service.BorrowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/borrow")
+@RequiredArgsConstructor
 public class BorrowController {
     @Autowired
-    private BorrowService borrowService;
+    private final BorrowService borrowService;
+    private final UserRepository userRepository;
+    private final BookRepository bookRepository;
 
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<BorrowResponse> createBorrowRecord(@RequestBody BorrowRequest request) {
-        BorrowResponse response = borrowService.createBorrowRecord(request);
-        return ResponseEntity.ok(response);
-    }
 
-    @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<List<BorrowResponse>> getAllBorrowRecords() {
-        List<BorrowResponse> responses = borrowService.getAllBorrowRecords();
-        return ResponseEntity.ok(responses);
+    @PostMapping("/create")
+    public BorrowResponse createBorrowRecord(@RequestBody BorrowRequest request) {
+        return borrowService.createBorrowRecord(request);
     }
 
-    @GetMapping("/{borrowId}")
+
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<BorrowResponse> getBorrowRecordById(@PathVariable Integer borrowId) {
-        BorrowResponse response = borrowService.getBorrowRecordById(borrowId);
-        return ResponseEntity.ok(response);
+    @GetMapping("/history/{userId}")
+    public List<BorrowResponse> getBorrowHistory(@PathVariable Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return borrowService.getBorrowHistory(user);
     }
 
-    @PutMapping("/{borrowId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<BorrowResponse> updateBorrowRecord(@PathVariable Integer borrowId, @RequestBody BorrowRequest request) {
-        BorrowResponse response = borrowService.updateBorrowRecord(borrowId, request);
-        return ResponseEntity.ok(response);
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PutMapping("/update/{borrowId}")
+    public BorrowResponse updateBorrowRecord(@PathVariable Integer borrowId, @RequestBody LocalDate returnDate) {
+        return borrowService.updateBorrowRecord(borrowId, returnDate);
     }
 
-    @DeleteMapping("/{borrowId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteBorrowRecord(@PathVariable Integer borrowId) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping("/admin/update/{borrowId}")
+    public BorrowResponse adminUpdateBorrowRecord(@PathVariable Integer borrowId, @RequestBody BorrowRequest request) {
+        return borrowService.adminUpdateBorrowRecord(borrowId, request);
+    }
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @DeleteMapping("/delete/{borrowId}")
+    public void deleteBorrowRecord(@PathVariable Integer borrowId) {
         borrowService.deleteBorrowRecord(borrowId);
-        return ResponseEntity.noContent().build();
     }
+
+
 }

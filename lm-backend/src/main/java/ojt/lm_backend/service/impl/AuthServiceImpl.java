@@ -59,35 +59,35 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public JwtAuthResponse login(LoginDto loginDto) {
-
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(),
-                loginDto.getPassword()
-        ));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = jwtTokenProvider.generateToken(authentication);
-
-        Optional<User> userOptional = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
-
-
-        String role = null;
-        if (userOptional.isPresent()) {
-            User loggedInUser = userOptional.get();
-
-            if (loggedInUser.getRole() != null && loggedInUser.getRole().getRoleName() != null) {
-                role = loggedInUser.getRole().getRoleName();
+        public JwtAuthResponse login(LoginDto loginDto) {
+    
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    loginDto.getUsernameOrEmail(),
+                    loginDto.getPassword()
+            ));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+    
+            String token = jwtTokenProvider.generateToken(authentication);
+    
+            Optional<User> userOptional = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
+    
+    
+            String role = null;
+            if (userOptional.isPresent()) {
+                User loggedInUser = userOptional.get();
+    
+                if (loggedInUser.getRole() != null && loggedInUser.getRole().getRoleName() != null) {
+                    role = loggedInUser.getRole().getRoleName();
+                }
             }
+    
+            JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+            jwtAuthResponse.setRole(role);
+            jwtAuthResponse.setAccessToken(token);
+            User u = userOptional.orElseThrow(()->new RuntimeException("aaa"));
+            System.out.println(u.getRole().getRoleName());
+            return jwtAuthResponse;
         }
-
-        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
-        jwtAuthResponse.setRole(role);
-        jwtAuthResponse.setAccessToken(token);
-        User u = userOptional.orElseThrow(()->new RuntimeException("aaa"));
-        System.out.println(u.getRole().getRoleName());
-        return jwtAuthResponse;
-    }
 //test security
     @Override
     public UserDto account(String name) {

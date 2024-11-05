@@ -47,4 +47,9 @@ public class AuthController {
         return new ResponseEntity<>(authService.changePassword(changePasswordRequestDto), HttpStatus.OK);
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDto resetPasswordRequestDto){
+        return new ResponseEntity<>(authService.resetPassword(resetPasswordRequestDto),HttpStatus.OK);
+    }
+
 }

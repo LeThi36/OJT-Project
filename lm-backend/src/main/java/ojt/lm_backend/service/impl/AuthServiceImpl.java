@@ -4,14 +4,18 @@ import lombok.AllArgsConstructor;
 import ojt.lm_backend.dto.*;
 import ojt.lm_backend.entity.EmailDetail;
 import ojt.lm_backend.entity.Role;
+import ojt.lm_backend.entity.Token;
 import ojt.lm_backend.entity.User;
 import ojt.lm_backend.exception.LMAPIException;
+import ojt.lm_backend.exception.ResourceNotFoundException;
 import ojt.lm_backend.repository.RoleRepository;
+import ojt.lm_backend.repository.TokenRepository;
 import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.security.GoogleAuthenticationToken;
 import ojt.lm_backend.security.JwtTokenProvider;
 import ojt.lm_backend.service.AuthService;
 import ojt.lm_backend.service.EmailService;
+import ojt.lm_backend.service.TokenService;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -36,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private JwtTokenProvider jwtTokenProvider;
     private PasswordEncoder passwordEncoder;
     private EmailService emailService;
+    private TokenRepository tokenRepository;
 
     private ModelMapper modelMapper;
 
@@ -132,6 +137,7 @@ public class AuthServiceImpl implements AuthService {
             newUser.setImageUrl("https://drive.google.com/uc?export=view&id=1-qZl9lAHyENk9uZuSJqL232Cr5UlvdUz");
             u1 = userRepository.save(newUser);
             System.out.println(u1.getUserId());
+            userId = u1.getUserId();
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setRecipient(email);
             emailDetail.setMsgBody("your password is: " + passwordRandom);
@@ -146,7 +152,6 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtTokenProvider.generateToken(authenticated);
 
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
-        userId = u1.getUserId();
         jwtAuthResponse.setUserId(userId);
         jwtAuthResponse.setRole(role);
         jwtAuthResponse.setAccessToken(token);
@@ -168,6 +173,26 @@ public class AuthServiceImpl implements AuthService {
         }
         userRepository.save(user);
         return "change password successfully";
+    }
+
+    @Override
+    public String resetPassword(ResetPasswordRequestDto resetPasswordRequestDto) {
+        Token token = tokenRepository.findByToken(resetPasswordRequestDto.getToken()).orElseThrow(() -> {
+            throw new ResourceNotFoundException("token not found");
+        });
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        if (now.before(token.getExpiresAt())) {
+            User u = userRepository.findByEmail(resetPasswordRequestDto.getEmail()).orElseThrow(() -> {
+                throw new ResourceNotFoundException("email not found");
+            });
+            u.setPasswordHash(passwordEncoder.encode(resetPasswordRequestDto.getPassword()));
+            userRepository.save(u);
+            token.setUsed(true);
+            tokenRepository.save(token);
+            return "reset password success fully";
+        } else {
+            return "token has been expired";
+        }
     }
 
     private String extractEmailFromCredential(String credential) {

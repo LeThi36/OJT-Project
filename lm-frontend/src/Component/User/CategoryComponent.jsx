@@ -6,7 +6,7 @@ import axios from 'axios'
 
 function CategoryComponent() {
 
-    const { data: category, isLoading } = useQuery({
+    const { data: category, isLoading,isError,error } = useQuery({
         queryKey: ['category'],
         queryFn: () => getAllCategory().then(res => res.data)
     })
@@ -14,6 +14,12 @@ function CategoryComponent() {
 
     if (isLoading) {
         return <p>Loading...</p>
+    }
+
+    if (isError) return <p>Error: {error.message}</p>
+
+    if (!category) {
+        return <p>No categories found.</p>
     }
 
     return (

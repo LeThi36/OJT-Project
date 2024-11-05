@@ -10,4 +10,5 @@ public interface AuthService {
 
     JwtAuthResponse loginWithGoogle(AuthRequestDto authRequestDto);
     String changePassword(ChangePasswordRequestDto changePasswordRequestDto);
+    String resetPassword(ResetPasswordRequestDto resetPasswordRequestDto);
 }

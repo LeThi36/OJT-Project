@@ -8,6 +8,8 @@ export const registerAPICall = (registerObj) => axios.post(AUTH_REST_API_BASE_UR
 
 export const changePasswordAPICall = (obj) => axios.post(AUTH_REST_API_BASE_URL + '/change-password', obj)
 
+export const resetPasswordAPICall = (obj) => axios.post(AUTH_REST_API_BASE_URL + '/reset-password', obj)
+
 export const storeToken = (token) => {
     localStorage.setItem("token", token)
 }

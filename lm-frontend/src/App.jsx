@@ -25,6 +25,8 @@ import CartComponent from './Component/User/CartComponent'
 import BorrowRecordTableComponent from './Component/Admin/BorrowRecordTableComponent'
 import FavoriteBookComponent from './Component/User/FavoriteBookComponent'
 import ChangePasswordComponent from './Component/Authentication/ChangePasswordComponent'
+import ResetPasswordComponent from './Component/Authentication/ResetPasswordComponent'
+import ForgotPasswordComopent from './Component/Authentication/ForgotPasswordComponent'
 
 
 
@@ -59,6 +61,8 @@ function App() {
         <Route path='/register' element={<Register />}></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/change-password' element={<ChangePasswordComponent />}></Route>
+        <Route path='/reset-password-request' element={<ForgotPasswordComopent />}></Route>
+        <Route path='/reset-password/:token' element={<ResetPasswordComponent />}></Route>
         <Route path='/' element={<LandingpageComoponent />}></Route>
         <Route path='/cart' element={<CartComponent />}></Route>
         <Route path='/favorite' element={<FavoriteBookComponent />}></Route>

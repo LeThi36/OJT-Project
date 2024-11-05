@@ -48,6 +48,7 @@ public class SecurityConfig {
                     author.requestMatchers("/api/auth/login/google").permitAll();
                     author.requestMatchers("/api/auth/register").permitAll();
                     author.requestMatchers("/api/auth/change-password").permitAll();
+                    author.requestMatchers("/api/auth/reset-password").permitAll();
                     author.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll();
                     author.requestMatchers("/api/user/count").permitAll();
                     author.requestMatchers("/api/author/count").permitAll();
@@ -56,6 +57,7 @@ public class SecurityConfig {
                     author.requestMatchers("/api/sendmail").permitAll();
                     author.requestMatchers("/api/category/count").permitAll();
                     author.requestMatchers("/api/category/book/*").permitAll();
+                    author.requestMatchers("/api/token/**").permitAll();
                     author.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

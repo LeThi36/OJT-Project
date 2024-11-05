@@ -134,7 +134,7 @@ function Login() {
                                             </label>
                                         </div>
                                         <div>
-                                            <a className="font-bold text-sm text-neutral-500 hover:text-orange-800" href="/change-password">
+                                            <a className="font-bold text-sm text-neutral-500 hover:text-orange-800" href="/reset-password-request">
                                                 forgot password
                                             </a>
                                         </div>

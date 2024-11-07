@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import ojt.lm_backend.dto.BookDetailDto;
 import ojt.lm_backend.dto.BookDto;
+import ojt.lm_backend.dto.BorrowRecordDetailDto;
+import ojt.lm_backend.entity.BorrowRecord;
 import ojt.lm_backend.service.BookService;
+import ojt.lm_backend.service.LostBookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +25,7 @@ import java.util.List;
 public class BookController {
 
     private BookService bookService;
+    private LostBookService lostBookService;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
@@ -77,8 +81,22 @@ public class BookController {
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDto> updateBook(@RequestBody BookDto bookDto,
-                                              @PathVariable int id){
+                                              @PathVariable int id) {
         BookDto bookDto1 = bookService.updateBook(id, bookDto);
-        return new ResponseEntity<>(bookDto1,HttpStatus.OK);
+        return new ResponseEntity<>(bookDto1, HttpStatus.OK);
+    }
+
+    @GetMapping("/lostBook")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<BorrowRecordDetailDto>> getLostBooks() {
+        List<BorrowRecordDetailDto> lostBooks = lostBookService.getLostBooks();
+        return new ResponseEntity<>(lostBooks,HttpStatus.OK);
+    }
+
+    @GetMapping("/updateOverdueToLost")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<BorrowRecordDetailDto>> updateOverdueToLost() {
+        List<BorrowRecordDetailDto> updateOverDueToLost = lostBookService.updateOverDueToLost();
+        return new ResponseEntity<>(updateOverDueToLost,HttpStatus.OK);
     }
 }

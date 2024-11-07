@@ -65,12 +65,14 @@ function BookComponent() {
         }
     }
 
+    const url = book.imageUrl.split('id=')[1]
+
     return (
         <>
             <section className="text-gray-600 body-font overflow-hidden">
                 <div className="container px-5 py-24 mx-auto">
                     <div className="lg:w-4/5 mx-auto flex flex-wrap">
-                        <img alt={book.title} className="lg:w-1/2 w-full lg:h-auto max-h-[600px] h-64 object-contain object-center rounded" src='https://bookstoreromanceday.org/wp-content/uploads/2020/08/book-cover-placeholder.png' />
+                        <img alt={book.title} className="lg:w-1/2 w-full lg:h-auto max-h-[600px] h-64 object-contain object-center rounded" src={`https://drive.google.com/thumbnail?id=${url}&sz=1000`} />
                         <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                             <h2 className="text-sm title-font text-gray-500 tracking-widest uppercase">{book.category}</h2>
                             <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{book.title}</h1>

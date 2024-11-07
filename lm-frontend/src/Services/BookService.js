@@ -10,4 +10,10 @@ export const deleteBook = (id) => axios.delete(BOOK_REST_API_BASE_URL + "/" + id
 
 export const getBookById = (id) => axios.get(BOOK_REST_API_BASE_URL + "/" + id)
 
-export const addNewBook = (book) => axios.post(BOOK_REST_API_BASE_URL, book)
+export const addNewBook = (formData) => {
+    return axios.post(BOOK_REST_API_BASE_URL, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+};

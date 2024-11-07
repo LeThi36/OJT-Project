@@ -11,14 +11,10 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-    private Long userId;
-    private String username;
-    private String email;
-    private String phoneNumber;
-    private String address;
-    private String roleName;
+public class TokenDto {
+    private Long id;
+    private UserDto user;
+    private String token;
     private Timestamp createdAt;
-    private Timestamp updatedAt;
-    private String imageUrl;
+    private Timestamp expiresAt;
 }

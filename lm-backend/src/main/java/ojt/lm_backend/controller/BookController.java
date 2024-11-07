@@ -1,5 +1,6 @@
 package ojt.lm_backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import ojt.lm_backend.dto.BookDetailDto;
 import ojt.lm_backend.dto.BookDto;
@@ -11,7 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -43,9 +47,21 @@ public class BookController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<BookDto> addNewBook(@RequestBody BookDto bookDto){
-        BookDto bookDto1 = bookService.addNewBook(bookDto);
-        return new ResponseEntity<>(bookDto1,HttpStatus.OK);
+    public ResponseEntity<BookDto> addNewBook(@RequestParam("bookDto") String bookDtoJson,
+                                              @RequestParam("image") MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // Parse bookDtoJson thành đối tượng BookDto
+        ObjectMapper objectMapper = new ObjectMapper();
+        BookDto bookDto = objectMapper.readValue(bookDtoJson, BookDto.class);
+
+        // Xử lý file upload
+        File tempFile = File.createTempFile("temp", null);
+        file.transferTo(tempFile);
+        BookDto savedBookDto = bookService.addNewBook(bookDto, tempFile);
+        return new ResponseEntity<>(savedBookDto, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")

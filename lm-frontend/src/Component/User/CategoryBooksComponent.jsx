@@ -24,7 +24,7 @@ function CategoryBooksComponent() {
                 <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">{category.categoryName}</h2>
                 <h1 className="sm:text-3xl text-2xl font-medium title-font text-gray-900">ALL Books of {category.categoryName}</h1>
             </div>
-            <BooksComponent data={category.books} />
+            <BooksComponent key={category.categoryId} data={category.books} />
         </>
     )
 }

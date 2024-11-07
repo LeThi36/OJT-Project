@@ -56,5 +56,7 @@ public class Book {
     @Column(name = "updated_at", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Timestamp updatedAt;
 
+    @Column(name = "image_url")
+    private String imageUrl;
 
 }

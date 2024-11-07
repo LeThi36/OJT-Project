@@ -5,13 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class JwtAuthResponse {
-    private String accessToken;
-    private String tokenType = "Bearer";
-    private String role;
-    private Long userId;
+public class ForgotPasswordRequest {
+    private String email;
 }

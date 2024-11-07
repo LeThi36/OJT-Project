@@ -1,10 +1,7 @@
 package ojt.lm_backend.controller;
 
 import lombok.AllArgsConstructor;
-import ojt.lm_backend.dto.JwtAuthResponse;
-import ojt.lm_backend.dto.LoginDto;
-import ojt.lm_backend.dto.RegisterDto;
-import ojt.lm_backend.dto.UserDto;
+import ojt.lm_backend.dto.*;
 import ojt.lm_backend.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,4 +35,21 @@ public class AuthController {
         UserDto u = authService.account(usernameoremail);
         return new ResponseEntity<>(u,HttpStatus.OK);
     }
+
+    @PostMapping("/login/google")
+    public ResponseEntity<JwtAuthResponse> loginWithGoogle(@RequestBody AuthRequestDto authRequestDto) {
+        JwtAuthResponse jwtAuthResponse = authService.loginWithGoogle(authRequestDto);
+        return new ResponseEntity<>(jwtAuthResponse,HttpStatus.OK);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> ChangePassword(@RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
+        return new ResponseEntity<>(authService.changePassword(changePasswordRequestDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDto resetPasswordRequestDto){
+        return new ResponseEntity<>(authService.resetPassword(resetPasswordRequestDto),HttpStatus.OK);
+    }
+
 }

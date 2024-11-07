@@ -11,9 +11,10 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookFavoriteDto {
-    private int favoriteId;
-    private int userId;
-    private int bookId;
-    private Timestamp addedAt;
+public class TokenDto {
+    private Long id;
+    private UserDto user;
+    private String token;
+    private Timestamp createdAt;
+    private Timestamp expiresAt;
 }

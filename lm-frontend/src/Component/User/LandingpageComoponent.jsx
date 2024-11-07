@@ -1,7 +1,9 @@
 import React from 'react'
-import FooterComponent from '../FooterComponent'
 import CategoryComponent from './CategoryComponent'
 import StarCardComponent from './StarCardComponent'
+import BookDetailComponent from './BookComponent'
+import CartComponent from './CartComponent'
+
 
 function LandingpageComoponent() {
     return (

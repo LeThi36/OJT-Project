@@ -1,5 +1,6 @@
 package ojt.lm_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,8 +43,8 @@ public class Book {
     @Column(name = "copies", nullable = false, columnDefinition = "INT DEFAULT 1")
     private Integer copies;
 
-    @Column(name = "available_copies", nullable = false, columnDefinition = "INT DEFAULT 1")
-    private Integer availableCopies;
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @Column(name = "status", nullable = false, columnDefinition = "ENUM('new', 'used', 'damaged') DEFAULT 'new'")
     @Enumerated(EnumType.STRING)
@@ -55,5 +56,7 @@ public class Book {
     @Column(name = "updated_at", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Timestamp updatedAt;
 
+    @Column(name = "image_url")
+    private String imageUrl;
 
 }

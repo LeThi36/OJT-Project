@@ -9,9 +9,6 @@ axios.interceptors.request.use(function (config) {
     if (token) {
         config.headers['Authorization'] = token;
     }
-
-    console.log(token);
-
     return config;
 }, function (error) {
     // Do something with request error
@@ -23,3 +20,5 @@ export const getAllUser = () => axios.get(USER_REST_API_BASE_URL)
 export const getUserById = (id) => axios.get(USER_REST_API_BASE_URL + '/' + id)
 
 export const userCount = () => axios.get(USER_REST_API_BASE_URL+'/count')
+
+export const getUser = () => axios.get(USER_REST_API_BASE_URL + '/')

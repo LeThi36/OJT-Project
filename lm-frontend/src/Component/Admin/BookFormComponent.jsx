@@ -15,9 +15,11 @@ function BookFormComponent() {
         publisherId: '',
         publicationYear: '',
         copies: '',
-        availableCopies: '',
+        description:'',
         status: ''
     })
+
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const navigate = useNavigate()
 
@@ -41,16 +43,21 @@ function BookFormComponent() {
 
 
 
-    function handleSubmit(e) {
-        e.preventDefault()
-        console.log(book);
-
-        addNewBook(book).then(res => {
-            alert("book add successfully")
-            navigate("/admin")
-        }).catch(error => {
-            console.log(error);
-        })
+    async function handleSubmit(e) {
+        e.preventDefault();
+    
+        const formData = new FormData();
+        formData.append('bookDto', JSON.stringify(book));
+        formData.append('image', selectedImage);
+    
+        try {
+            const response = await addNewBook(formData);
+            console.log(response);
+            alert("Book added successfully!");
+            navigate("/admin");
+        } catch (error) {
+            console.error("Error adding book:", error);
+        }
     }
 
     return (
@@ -125,12 +132,6 @@ function BookFormComponent() {
                         </div>
                         <div className="w-full px-3 sm:w-1/2">
                             <div className="mb-5">
-                                <input onChange={(e) => setBook({ ...book, availableCopies: e.target.value })} value={book.availableCopies} type="text" name="state" id="state" placeholder="Available Copies"
-                                    className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
-                            </div>
-                        </div>
-                        <div className="w-full px-3 sm:w-1/2">
-                            <div className="mb-5">
                                 <select onChange={(e) => setBook({ ...book, status: e.target.value })} name="status" id="status"
                                     className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
                                     <option value="">Select Status</option>
@@ -143,11 +144,28 @@ function BookFormComponent() {
                     </div>
                 </div>
 
+                <div className="mb-5">
+                    <label htmlFor="description" className="mb-3 block text-base font-medium text-[#07074D]">
+                        Description
+                    </label>
+                    <input onChange={(e) => setBook({ ...book, description: e.target.value })} value={book.description} type="text" name="description" id="description" placeholder="Book Title"
+                        className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                </div>
+
+                <div className='mb-5 pt-3'>
+                    <input type='file' className='rounded-md file:mr-3 border w-full text-[#6B7280] font-medium file:font-medium '
+                    onChange={(event) => {
+                        console.log(event.target.files[0]); // Log the selected file
+                        setSelectedImage(event.target.files[0]); // Update the state with the selected file
+                      }}></input>
+                </div>
+
+
                 <div>
                     <button
                         onClick={(e) => handleSubmit(e)}
                         className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-                        Book Appointment
+                        Add new Book
                     </button>
                 </div>
             </div >

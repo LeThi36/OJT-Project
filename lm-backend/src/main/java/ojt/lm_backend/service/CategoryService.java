@@ -8,4 +8,5 @@ public interface CategoryService {
     CategoryDto addCategory(CategoryDto categoryDto);
     List<CategoryDto> getAllCategory();
     CategoryDto getCategoryById(int id);
+    Long countCategory();
 }

@@ -19,7 +19,7 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryDto> addCategory(CategoryDto categoryDto){
+    public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryDto categoryDto){
         CategoryDto categoryDto1 = categoryService.addCategory(categoryDto);
         return new ResponseEntity<>(categoryDto1, HttpStatus.CREATED);
     }
@@ -35,5 +35,11 @@ public class CategoryController {
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable int id){
         return new ResponseEntity<>(categoryService.getCategoryById(id),HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Long> countCategory(){
+        return new ResponseEntity<>(categoryService.countCategory(),HttpStatus.OK);
     }
 }

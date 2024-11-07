@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react'
 import { deleteBook, getAllBook } from '../../Services/BookService';
-import { useQuery, useQueryClient } from 'react-query';
 import { Link } from 'react-router-dom';
+import { useQuery } from 'react-query';
 
-function BooktableComponent() {
+function BooktableComponent({ data, title }) {
 
-    const queryClient = useQueryClient()
-
-    const { data: books, isLoading } = useQuery({
-        queryFn: () => getAllBook().then(response => response.data),
-        queryKey: ["books"]
-    })
-
-    if (isLoading) {
-        return <p>Loading...</p>
+    if(!data){
+        const { data: books, isLoading } = useQuery({
+            queryFn: () => getAllBook().then(response => response.data),
+            queryKey: ["books"]
+        })
+        data = books
+        if (isLoading) {
+            return <div>Loading...</div>;
+        }
+        
     }
+
 
     function formatDateTime(isoString) {
         const date = new Date(isoString);
@@ -35,9 +36,11 @@ function BooktableComponent() {
             <div className="flex-grow border-2 border-gray-200 border-dashed rounded-lg">
                 <div className="relative overflow-x-auto w-full">
                     <table className="w-full text-sm text-left text-gray-500">
-                        <caption class="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2 ">
-                            Books
-                            <Link class="ms-4 font-bold text-emerald-400 " to='add-new-book'>add new Book!</Link>
+                        <caption className="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2 ">
+                            {
+                                title ? title : "Books"
+                            }
+                            <Link className="ms-4 font-bold text-emerald-400 " to='/admin/book/add-new-book'>add new Book!</Link>
                         </caption>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
@@ -60,9 +63,6 @@ function BooktableComponent() {
                                     Copies
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    publication Year
-                                </th>
-                                <th scope="col" className="px-6 py-3">
                                     Status
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -77,11 +77,11 @@ function BooktableComponent() {
                             </tr>
                         </thead>
                         <tbody>
-                            {books.map(b => {
+                            {data.map(b => {
                                 return (
                                     <tr key={b.bookId}>
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            <Link to={`${b.bookId}`}>
+                                            <Link to={`/admin/book/${b.bookId}`}>
                                                 {b.title}
                                             </Link>
                                         </th>
@@ -99,9 +99,6 @@ function BooktableComponent() {
                                         </td>
                                         <td className="px-6 py-4">
                                             {b.copies}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {b.availableCopies}
                                         </td>
                                         <td className="px-6 py-4">
                                             {b.status}

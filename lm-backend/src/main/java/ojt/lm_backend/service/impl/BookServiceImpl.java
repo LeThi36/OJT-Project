@@ -7,10 +7,12 @@ import ojt.lm_backend.entity.*;
 import ojt.lm_backend.exception.LMAPIException;
 import ojt.lm_backend.repository.*;
 import ojt.lm_backend.service.BookService;
+import ojt.lm_backend.service.ImageUploadService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,14 +22,13 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
-
     private AuthorRepository authorRepository;
     private CategoryRepository categoryRepository;
     private PublisherRepository publisherRepository;
-    private BookFavoriteRepository bookFavoriteRepository;
     private BookReservationRepository bookReservationRepository;
     private BookReviewRepository bookReviewRepository;
     private BorrowRecordRepository borrowRecordRepository;
+    private ImageUploadService imageUploadService;
 
     private ModelMapper modelMapper;
 
@@ -47,7 +48,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto addNewBook(BookDto bookDto) {
+    public BookDto addNewBook(BookDto bookDto, File file) {
         Book book = new Book();
         book.setTitle(bookDto.getTitle());
         book.setCategory(categoryRepository
@@ -64,11 +65,11 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new LMAPIException(HttpStatus.BAD_REQUEST, "can not find this category")));
         book.setPublicationYear(bookDto.getPublicationYear());
         book.setCopies(bookDto.getCopies());
-        book.setAvailableCopies(bookDto.getAvailableCopies());
+        book.setDescription(bookDto.getDescription());
         book.setStatus(bookDto.getStatus());
         book.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         book.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-
+        book.setImageUrl(imageUploadService.bookImageUrl(file));
         Book savedBook = bookRepository.save(book);
         return modelMapper.map(savedBook, BookDto.class);
     }
@@ -79,10 +80,6 @@ public class BookServiceImpl implements BookService {
         if (book == null) {
             return "can not find this book to delete";
         } else {
-            List<BookFavorite> bookFavorites = bookFavoriteRepository.findByBookId(id);
-            if (!bookFavorites.isEmpty()) {
-                bookFavoriteRepository.deleteAll(bookFavorites);
-            }
             List<BookReservation> bookReservations = bookReservationRepository.findByBookId(id);
             if (!bookReservations.isEmpty()) {
                 bookReservationRepository.deleteAll(bookReservations);
@@ -117,7 +114,7 @@ public class BookServiceImpl implements BookService {
             book.setCategory(categoryRepository.findById(bookDto.getCategoryId()).orElse(null));
             book.setPublisher(publisherRepository.findById(bookDto.getPublisherId()).orElse(null));
             book.setPublicationYear(bookDto.getPublicationYear());
-            book.setAvailableCopies(book.getAvailableCopies());
+            book.setDescription(book.getDescription());
             bookRepository.save(book);
             return modelMapper.map(book,BookDto.class);
         }

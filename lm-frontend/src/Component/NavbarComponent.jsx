@@ -1,5 +1,5 @@
 import React from 'react'
-import { isUserLoggedIn, logout } from '../Services/AuthService'
+import { getUserId, isUserLoggedIn, logout } from '../Services/AuthService'
 import { useNavigate } from 'react-router-dom'
 
 function NavbarComponent() {
@@ -10,6 +10,8 @@ function NavbarComponent() {
         logout()
         navigate("/login")
     }
+
+    const userId = getUserId()
 
     return (
         <div>
@@ -24,13 +26,13 @@ function NavbarComponent() {
                         <div className="hidden lg:block">
                             <ul className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href="#" className="flex items-center">Pages</a>
+                                    <a href="/books" className="flex items-center">Books</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <a href="/category" className="flex items-center">Category</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href="#" className="flex items-center">Blocks</a>
+                                    <a href="/favorite" className="flex items-center">Favortie books</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <a href="#" className="flex items-center">Docs</a>
@@ -43,7 +45,10 @@ function NavbarComponent() {
                         <div className="hidden lg:block">
                             <ul className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href="#" className="flex items-center">Account</a>
+                                    <a href={`/user/${userId}`} className="flex items-center">Account</a>
+                                </li>
+                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
+                                    <a href="/cart" className="flex items-center">Cart</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <button onClick={handleLogout} className="flex items-center">Logout</button>

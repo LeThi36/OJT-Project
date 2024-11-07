@@ -20,4 +20,5 @@ public class UserDto {
     private String roleName;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String imageUrl;
 }

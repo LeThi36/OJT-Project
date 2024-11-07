@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
-
     private AuthorRepository authorRepository;
     private CategoryRepository categoryRepository;
     private PublisherRepository publisherRepository;

@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from 'react-query';
 import { json, useParams } from 'react-router-dom';
 import { getBookById } from '../../Services/BookService';
-import { getLoggedInUser } from '../../Services/AuthService';
-import { getBookReviewByBookId } from '../../Services/BookReview';
+import { getBookReviewByBookId, postBookReview } from '../../Services/BookReview';
 
 function BookComponent() {
 
@@ -67,6 +66,20 @@ function BookComponent() {
 
     const url = book.imageUrl.split('id=')[1]
 
+    const [reviewRequest, setReviewRequest] = useState({
+        bookId: '',
+        userId: 0,
+        rating: 0,
+        reviewText: '',
+    })
+
+    const handleSubmitReview = (e) => {
+        e.preventDefault()
+        setReviewRequest({...reviewRequest,bookId: id,userId: sessionStorage.getItem('userId')})
+        postBookReview(reviewRequest).then(res => console.log(res.data)).catch(err => console.log(err))
+    }
+
+
     return (
         <>
             <section className="text-gray-600 body-font overflow-hidden">
@@ -77,7 +90,7 @@ function BookComponent() {
                             <h2 className="text-sm title-font text-gray-500 tracking-widest uppercase">{book.category}</h2>
                             <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{book.title}</h1>
                             <div className="flex mb-4">
-                                <span className="flex items-center">
+                                <button className="flex items-center">
                                     {Array(5).fill(0).map((_, index) => (
                                         <svg
                                             key={index}
@@ -93,7 +106,7 @@ function BookComponent() {
                                         </svg>
                                     ))}
                                     <span className="text-gray-600 ml-3">{review.length} reviews</span>
-                                </span>
+                                </button>
                                 <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
                                     <a className="text-gray-500">
                                         <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
@@ -143,7 +156,7 @@ function BookComponent() {
                                         <div className="flex flex-col">
                                             <div className="border rounded-md p-3 ml-3 my-3">
                                                 <div className="flex gap-3 items-center">
-                                                    <img src="https://avatars.githubusercontent.com/u/22263436?v=4"
+                                                    <img src={`https://drive.google.com/thumbnail?id=${r.user.imageUrl.split('id=')[1]}`}
                                                         className="object-cover w-8 h-8 rounded-full 
                             border-2 border-emerald-400  shadow-emerald-400
                             "/>
@@ -178,6 +191,23 @@ function BookComponent() {
                                 )
                             })
                         }
+                    </div>
+                    <div className='flex flex-col'>
+                        <div className="border rounded-md p-3 ml-3 my-3">
+                            <div className='flex p-2 mb-2 '>
+                                <p className='font-bold me-2'>Write your review</p>
+                                <p>rating: </p>
+                                <select onChange={(e) => setReviewRequest({ ...reviewRequest, rating: e.target.value })} className='text-xs ms-2'>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                            <input onChange={(e) => setReviewRequest({ ...reviewRequest, reviewText: e.target.value })} type='text' className='w-full border rounded-md' placeholder='write your review here' />
+                            <button onClick={(e) => handleSubmitReview(e)} className='border rounded-md mt-2 p-2 bg-indigo-500 text-white'>submit</button>
+                        </div>
                     </div>
                 </div>
             </div>

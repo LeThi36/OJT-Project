@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDto {
+    private int id;
     private String title;
     private int categoryId;
     private int authorId;

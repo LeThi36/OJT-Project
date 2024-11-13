@@ -15,7 +15,12 @@ axios.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-export const getAllUser = () => axios.get(USER_REST_API_BASE_URL)
+export const getAllUser = (pageNo,pageSize) => axios.get(USER_REST_API_BASE_URL,{
+    params:{
+        pageNo: pageNo,
+        pageSize: pageSize
+    }
+})
 
 export const getUserById = (id) => axios.get(USER_REST_API_BASE_URL + '/' + id)
 

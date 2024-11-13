@@ -6,6 +6,9 @@ import ojt.lm_backend.entity.Author;
 import ojt.lm_backend.repository.AuthorRepository;
 import ojt.lm_backend.service.AuthorService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,9 +21,11 @@ public class AuthorServiceImpl implements AuthorService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<AuthorDto> getAllAuthor() {
-        List<Author> authors =  authorRepository.findAll();
-        return authors.stream().map(a -> modelMapper.map(a,AuthorDto.class)).collect(Collectors.toList());
+    public List<AuthorDto> getAllAuthor(int pageNo,int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
+        Page<Author> authors =  authorRepository.findAll(pageable);
+        List<Author> authors1 = authors.getContent();
+        return authors1.stream().map(a -> modelMapper.map(a,AuthorDto.class)).collect(Collectors.toList());
     }
 
     @Override

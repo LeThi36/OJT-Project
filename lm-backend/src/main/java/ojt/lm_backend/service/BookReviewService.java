@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface BookReviewService {
     List<BookReviewDto> bookReviewDtoList();
-    List<BookReviewDto> getBookReviewByBookId(int id);
+    List<BookReviewDto> getBookReviewByBookId(int id,int pageNo,int pageSize);
     BookReviewRequestDto postBookReview(BookReviewRequestDto bookReviewRequestDto);
+    Long countReview(int id);
 }

@@ -42,7 +42,7 @@ public class TokenServiceImpl implements TokenService {
             return "token not found";
         } else {
             Timestamp now = new Timestamp(System.currentTimeMillis());
-            if(now.before(token1.getExpiresAt())){
+            if(now.after(token1.getExpiresAt())){
                 return "token has been expired";
             }
         }

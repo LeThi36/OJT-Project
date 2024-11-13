@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookService {
-    List<BookDetailDto> getAllBooks();
+    List<BookDetailDto> getAllBooks(int pageNo, int pageSize);
 
     BookDetailDto getBookById(int id);
 

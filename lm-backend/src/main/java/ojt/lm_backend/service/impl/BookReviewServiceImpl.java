@@ -12,6 +12,9 @@ import ojt.lm_backend.repository.BookReviewRepository;
 import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.service.BookReviewService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -36,9 +39,11 @@ public class BookReviewServiceImpl implements BookReviewService {
     }
 
     @Override
-    public List<BookReviewDto> getBookReviewByBookId(int id) {
-        List<BookReview> bookReviewList = bookReviewRepository.findByBookId(id);
-        return bookReviewList.stream().map(bookReview -> modelMapper.map(bookReview,BookReviewDto.class)).toList();
+    public List<BookReviewDto> getBookReviewByBookId(int id,int pageNo,int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
+        Page<BookReview> bookReviewList = bookReviewRepository.findByBookId(id,pageable);
+        List<BookReview> bookReviews = bookReviewList.getContent();
+        return bookReviews.stream().map(bookReview -> modelMapper.map(bookReview,BookReviewDto.class)).toList();
     }
 
     @Override
@@ -52,5 +57,10 @@ public class BookReviewServiceImpl implements BookReviewService {
         bookReview.setRating(bookReviewRequestDto.getRating());
         bookReview.setReviewDate(new Timestamp(System.currentTimeMillis()));
         return modelMapper.map(bookReviewRepository.save(bookReview),BookReviewRequestDto.class);
+    }
+
+    @Override
+    public Long countReview(int id) {
+        return bookReviewRepository.countByBookId(id);
     }
 }

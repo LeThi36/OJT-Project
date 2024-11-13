@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 function BooksComponent({data}) {
 
     if (!Array.isArray(data) || data.length === 0) {
-        return <div>No books available</div>; // Hoặc bất kỳ thông báo nào khác bạn muốn hiển thị
+        return <div>No books available</div>;
     }
 
     return (
@@ -28,7 +28,6 @@ function BooksComponent({data}) {
                                         <p className="mt-1 text-md font-semibold col-span-2">Copies: {b.copies}</p>
                                             <p className="mt-1 text-md font-semibold col-end-5">{b.status}</p>
                                         </div>
-
                                     </div>
                                 </Link>
                             )

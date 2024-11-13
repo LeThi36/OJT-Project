@@ -6,6 +6,9 @@ import ojt.lm_backend.entity.Category;
 import ojt.lm_backend.repository.CategoryRepository;
 import ojt.lm_backend.service.CategoryService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,9 +30,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAllCategory() {
-        List<Category> categories = categoryRepository.findAll();
-        return categories.stream().map(c->modelMapper.map(c,CategoryDto.class)).collect(Collectors.toList());
+    public List<CategoryDto> getAllCategory(int pageNo,int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Category> categories = categoryRepository.findAll(pageable);
+        List<Category> categories1 = categories.getContent();
+        return categories1.stream().map(c->modelMapper.map(c,CategoryDto.class)).collect(Collectors.toList());
     }
 
     @Override

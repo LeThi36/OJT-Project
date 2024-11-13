@@ -25,8 +25,9 @@ public class BookController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<List<BookDetailDto>> getAllBook() {
-        List<BookDetailDto> books = bookService.getAllBooks();
+    public ResponseEntity<List<BookDetailDto>> getAllBook(@RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
+                                                          @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize) {
+        List<BookDetailDto> books = bookService.getAllBooks(pageNo,pageSize);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 

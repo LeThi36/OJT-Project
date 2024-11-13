@@ -1,20 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query';
 import { json, useParams } from 'react-router-dom';
 import { getBookById } from '../../Services/BookService';
-import { getBookReviewByBookId, postBookReview } from '../../Services/BookReview';
+import { countBookReviewById, getBookReviewByBookId, postBookReview } from '../../Services/BookReview';
 
 function BookComponent() {
 
     const { id } = useParams()
+
+    const [reviewRequest, setReviewRequest] = useState({
+        bookId: id,
+        userId: sessionStorage.getItem('userId'),
+        rating: 0,
+        reviewText: '',
+    })
+    const [currentPage, setCurrentPage] = useState(0)
+    const [totalPage, setTotalPage] = useState(0)
+
+    useEffect(()=>{
+        countBookReviewById(id).then(res => {const count = res.data; setTotalPage(Math.ceil(count/4))}
+        )
+    },[])
+
 
     const { data: book, isLoading: loadingBook } = useQuery({
         queryFn: () => getBookById(id).then(response => response.data),
         queryKey: ["book", id]
     })
     const { data: review, isLoading: loadingReview } = useQuery({
-        queryFn: () => getBookReviewByBookId(id).then(response => response.data),
-        queryKey: ["review", id]
+        queryFn: () => getBookReviewByBookId(id,currentPage,4).then(response => response.data),
+        queryKey: ["review", id,currentPage]
     })
 
     if (loadingBook) {
@@ -23,8 +38,6 @@ function BookComponent() {
     if (loadingReview) {
         return <div>Review Loading...</div>;
     }
-
-    console.log(review);
 
 
     const rating = () => {
@@ -66,16 +79,11 @@ function BookComponent() {
 
     const url = book.imageUrl.split('id=')[1]
 
-    const [reviewRequest, setReviewRequest] = useState({
-        bookId: '',
-        userId: 0,
-        rating: 0,
-        reviewText: '',
-    })
 
     const handleSubmitReview = (e) => {
         e.preventDefault()
-        setReviewRequest({...reviewRequest,bookId: id,userId: sessionStorage.getItem('userId')})
+        console.log(reviewRequest);
+
         postBookReview(reviewRequest).then(res => console.log(res.data)).catch(err => console.log(err))
     }
 
@@ -191,6 +199,17 @@ function BookComponent() {
                                 )
                             })
                         }
+                    </div>
+                    <div className="flex justify-center mt-4">
+                        {Array(totalPage).fill(0).map((page, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentPage(index)}
+                                className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700' : 'bg-indigo-500'} text-white rounded`}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
                     </div>
                     <div className='flex flex-col'>
                         <div className="border rounded-md p-3 ml-3 my-3">

@@ -9,6 +9,9 @@ import ojt.lm_backend.repository.*;
 import ojt.lm_backend.service.BookService;
 import ojt.lm_backend.service.ImageUploadService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +37,11 @@ public class BookServiceImpl implements BookService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<BookDetailDto> getAllBooks() {
-        List<Book> books = bookRepository.findAll();
-        return books.stream().map(b -> modelMapper.map(b, BookDetailDto.class)).collect(Collectors.toList());
+    public List<BookDetailDto> getAllBooks(int pageNo,int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Book> books = bookRepository.findAll(pageable);
+        List<Book> books1 = books.getContent();
+        return books1.stream().map(b -> modelMapper.map(b, BookDetailDto.class)).collect(Collectors.toList());
     }
 
     @Override

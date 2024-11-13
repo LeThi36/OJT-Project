@@ -25,13 +25,21 @@ public class BookReviewController {
     }
 
     @GetMapping("/book/{id}")
-    public ResponseEntity<List<BookReviewDto>> getBookReviewByBookId(@PathVariable int id) {
-        return new ResponseEntity<>(bookReviewService.getBookReviewByBookId(id), HttpStatus.OK);
+    public ResponseEntity<List<BookReviewDto>> getBookReviewByBookId(@PathVariable int id,
+                                                                     @RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
+                                                                     @RequestParam(value = "pageSize",defaultValue = "1",required = false) int pageSize) {
+        return new ResponseEntity<>(bookReviewService.getBookReviewByBookId(id,pageNo,pageSize), HttpStatus.OK);
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<BookReviewRequestDto> postBookReview(@RequestBody BookReviewRequestDto bookReviewRequestDto){
         return new ResponseEntity<>(bookReviewService.postBookReview(bookReviewRequestDto),HttpStatus.OK);
+    }
+
+    @GetMapping("/count/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<Long> countReviewByBookId(@PathVariable int id){
+        return new ResponseEntity<>(bookReviewService.countReview(id),HttpStatus.OK);
     }
 }

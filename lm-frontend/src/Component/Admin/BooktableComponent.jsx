@@ -1,19 +1,31 @@
-import { deleteBook, getAllBook } from '../../Services/BookService';
+import { countBook, deleteBook, getAllBook } from '../../Services/BookService';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
 
 function BooktableComponent({ data, title }) {
 
-    if(!data){
+    const [currentPage, setCurrentPage] = useState(0)
+    const [totalPage, setTotalPage] = useState(0)
+
+    useEffect(() => {
+        setTotalPage(Math.ceil(data.length / 8))
+    }, [])
+    if (!data) {
+
+        useEffect(() => {
+            countBook().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 8)) })
+        }, [])
+
         const { data: books, isLoading } = useQuery({
-            queryFn: () => getAllBook().then(response => response.data),
-            queryKey: ["books"]
+            queryFn: () => getAllBook(currentPage, 8).then(response => response.data),
+            queryKey: ["books", currentPage]
         })
         data = books
         if (isLoading) {
             return <div>Loading...</div>;
         }
-        
+
     }
 
 
@@ -118,6 +130,20 @@ function BooktableComponent({ data, title }) {
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div className='flex justify-center mt-4'>
+                {
+                    Array(totalPage).fill(0).map((page, index) => {
+                        return (
+                            <button
+                                key={index}
+                                className='border rounded-md p-4 mx-2'
+                                onClick={() => setCurrentPage(index)}>
+                                {index + 1}
+                            </button>
+                        )
+                    })
+                }
             </div>
         </div>
     )

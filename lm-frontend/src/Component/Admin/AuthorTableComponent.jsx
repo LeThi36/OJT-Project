@@ -1,20 +1,26 @@
-import React from 'react'
-import { getAllAuthor } from '../../Services/AuthorService';
+import React, { useEffect, useState } from 'react'
+import { countAuthor, getAllAuthor } from '../../Services/AuthorService';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 
 function AuthorTableComponent() {
+
+    const [currentPage, setCurrentPage] = useState(0)
+    const [totalPage, setTotalPage] = useState(0)
+
+    useEffect(() => {
+        countAuthor().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 8)) })
+    }, [])
+
     const { data: authors, isLoading } = useQuery({
-        queryFn: () => getAllAuthor().then(response => response.data),
-        queryKey: ["authors"]
+        queryFn: () => getAllAuthor(currentPage, 8).then(response => response.data),
+        queryKey: ["authors", currentPage]
     })
 
     if (isLoading) {
         return <p>Loading...</p>
     }
 
-    console.log(authors);
-    
 
     return (
         <div >
@@ -53,6 +59,20 @@ function AuthorTableComponent() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div className='flex justify-center mt-4'>
+                {
+                    Array(totalPage).fill(0).map((page, index) => {
+                        return (
+                            <button
+                                key={index}
+                                className='border rounded-md p-4 mx-2'
+                                onClick={() => setCurrentPage(index)}>
+                                {index + 1}
+                            </button>
+                        )
+                    })
+                }
             </div>
         </div>
     )

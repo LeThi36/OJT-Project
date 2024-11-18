@@ -78,6 +78,9 @@ function Login() {
     
     }
 
+    console.log(import.meta.env.VITE_googleClientId);
+    
+
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_googleClientId}>
         <div>

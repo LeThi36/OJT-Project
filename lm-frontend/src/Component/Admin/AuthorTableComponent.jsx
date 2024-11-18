@@ -60,20 +60,20 @@ function AuthorTableComponent() {
                     </table>
                 </div>
             </div>
-            <div className='flex justify-center mt-4'>
-                {
-                    Array(totalPage).fill(0).map((page, index) => {
-                        return (
-                            <button
-                                key={index}
-                                className='border rounded-md p-4 mx-2'
-                                onClick={() => setCurrentPage(index)}>
-                                {index + 1}
-                            </button>
-                        )
-                    })
-                }
-            </div>
+                <div className='flex justify-center mt-4'>
+                    {
+                        Array(totalPage).fill(0).map((page, index) => {
+                            return (
+                                <button
+                                    key={index}
+                                    className='border rounded-md p-4 mx-2'
+                                    onClick={() => setCurrentPage(index)}>
+                                    {index + 1}
+                                </button>
+                            )
+                        })
+                    }
+                </div>
         </div>
     )
 }

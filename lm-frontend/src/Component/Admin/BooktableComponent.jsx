@@ -9,7 +9,7 @@ function BooktableComponent({ data, title }) {
     const [totalPage, setTotalPage] = useState(0)
 
     useEffect(() => {
-        setTotalPage(Math.ceil(data.length / 8))
+        setTotalPage(Math.ceil(data.length() / 8))
     }, [])
     if (!data) {
 

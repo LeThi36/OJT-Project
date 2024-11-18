@@ -15,8 +15,8 @@ axios.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-export const getAllUser = (pageNo,pageSize) => axios.get(USER_REST_API_BASE_URL,{
-    params:{
+export const getAllUser = (pageNo, pageSize) => axios.get(USER_REST_API_BASE_URL, {
+    params: {
         pageNo: pageNo,
         pageSize: pageSize
     }
@@ -24,6 +24,14 @@ export const getAllUser = (pageNo,pageSize) => axios.get(USER_REST_API_BASE_URL,
 
 export const getUserById = (id) => axios.get(USER_REST_API_BASE_URL + '/' + id)
 
-export const userCount = () => axios.get(USER_REST_API_BASE_URL+'/count')
+export const userCount = () => axios.get(USER_REST_API_BASE_URL + '/count')
 
 export const getUser = () => axios.get(USER_REST_API_BASE_URL + '/')
+
+export const updateUser = (id, updatedUser) => axios.put(USER_REST_API_BASE_URL + '/' + id, updatedUser)
+
+export const updateUserImage = (formData, id) => axios.post(USER_REST_API_BASE_URL + '/uploadToGoogleDrive/' + id, formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+})

@@ -12,7 +12,7 @@ function CategoryComponent() {
     useEffect(() => {
         countCategory().then(res => {
             const count = res.data
-            setTotalPage(Math.ceil(count / 3))
+            setTotalPage(Math.ceil(count / 6))
         }
         ).catch(err => console.log(err))
     }, [])
@@ -20,7 +20,7 @@ function CategoryComponent() {
 
     const { data: category, isLoading, isError, error } = useQuery({
         queryKey: ['category',currentPage],
-        queryFn: () => getAllCategory(currentPage,3).then(res => res.data),
+        queryFn: () => getAllCategory(currentPage,6).then(res => res.data),
         keepPreviousData: true
 
     })

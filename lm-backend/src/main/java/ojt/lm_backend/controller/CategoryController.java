@@ -27,7 +27,7 @@ public class CategoryController {
     @GetMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<CategoryDto>> getAllCategory(@RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
-                                                            @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize){
+                                                            @RequestParam(value = "pageSize",defaultValue = "100",required = false) int pageSize){
         List<CategoryDto> categoryDtos = categoryService.getAllCategory(pageNo, pageSize);
         return new ResponseEntity<>(categoryDtos,HttpStatus.OK);
     }

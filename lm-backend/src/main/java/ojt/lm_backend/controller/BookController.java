@@ -26,7 +26,7 @@ public class BookController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<BookDetailDto>> getAllBook(@RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
-                                                          @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize) {
+                                                          @RequestParam(value = "pageSize",defaultValue = "100",required = false) int pageSize) {
         List<BookDetailDto> books = bookService.getAllBooks(pageNo,pageSize);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
@@ -81,5 +81,15 @@ public class BookController {
                                               @PathVariable int id){
         BookDto bookDto1 = bookService.updateBook(id, bookDto);
         return new ResponseEntity<>(bookDto1,HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<List<BookDetailDto>> searchBook( @RequestParam(required = false) Integer categoryId,
+                                                           @RequestParam(required = false) Integer authorId,
+                                                           @RequestParam(required = false) String content,
+                                                           @RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
+                                                           @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize){
+        return new ResponseEntity<>(bookService.searchBook(pageNo,pageSize,authorId,categoryId,content),HttpStatus.OK);
     }
 }

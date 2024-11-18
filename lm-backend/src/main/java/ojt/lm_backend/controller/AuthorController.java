@@ -21,7 +21,7 @@ public class AuthorController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<AuthorDto>> getAllAuthor(@RequestParam(value = "pageNo",required = false,defaultValue = "0") int pageNo,
-                                                        @RequestParam(value = "pageSize",required = false,defaultValue = "10")int pageSize){
+                                                        @RequestParam(value = "pageSize",required = false,defaultValue = "100")int pageSize){
         List<AuthorDto> authorDtos = authorService.getAllAuthor(pageNo,pageSize);
         return new ResponseEntity<>(authorDtos, HttpStatus.OK);
     }

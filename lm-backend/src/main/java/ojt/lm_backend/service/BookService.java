@@ -19,4 +19,6 @@ public interface BookService {
     Long countBook();
 
     BookDto updateBook(int id,BookDto bookDto);
+
+    List<BookDetailDto> searchBook(int pageNo,int pageSize,Integer authorId,Integer categoryId,String content);
 }

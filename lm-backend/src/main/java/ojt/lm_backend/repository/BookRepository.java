@@ -1,11 +1,15 @@
 package ojt.lm_backend.repository;
 
+import ojt.lm_backend.LMenum.BookStatus;
+import ojt.lm_backend.LMenum.BorrowStatus;
 import ojt.lm_backend.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book,Integer> {
     @Query("SELECT b FROM Book b " +

@@ -3,5 +3,7 @@ package ojt.lm_backend.LMenum;
 public enum BorrowStatus {
     BORROWED,
     RETURNED,
-    OVERDUE
+    LOST,
+    OVERDUE,
+    PENDING_APPROVAL
 }

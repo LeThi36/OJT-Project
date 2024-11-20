@@ -29,7 +29,7 @@ function BooksCardComponent() {
     
   }, [isSearching])
 
-  const { data: books, isLoading } = useQuery({
+  const { data: books, isLoading: loadingBook,isError: erroBook } = useQuery({
     queryKey: isSearching ? ['books', 'search', searchContent, currentPage, categoryId, authorId] : ['books', currentPage],
     queryFn: () =>
       isSearching
@@ -38,13 +38,13 @@ function BooksCardComponent() {
     keepPreviousData: true,
   })
 
-  const { data: category } = useQuery({
+  const { data: category,isLoading: loadingCategories,isError: errorCategories } = useQuery({
     queryKey: ['category'],
     queryFn: () => getAllCategory().then(res => res.data),
     keepPreviousData: true
   })
 
-  const { data: author } = useQuery({
+  const { data: author,isLoading: loadingAuthors,isError: errorAtuthor } = useQuery({
     queryKey: ['author'],
     queryFn: () => getAllAuthor().then(res => res.data),  
     keepPreviousData: true
@@ -65,7 +65,7 @@ function BooksCardComponent() {
   }
 
 
-  if (isLoading) {
+  if (loadingBook || loadingCategories || loadingAuthors) {
     return <div>Loading...</div>;
   }
 

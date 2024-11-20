@@ -94,6 +94,30 @@ public class ImageUploadServiceImpl implements ImageUploadService {
         return null;
     }
 
+    @Override
+    public String updateBookImageUrl(File file, int id) {
+        try {
+            String folderId = "1ovsrBW5SEmUr6VlQ2vnN_YtC4oqT_40x";
+            Drive drive = createDriveService();
+            com.google.api.services.drive.model.File fileMetaData = new com.google.api.services.drive.model.File();
+            fileMetaData.setName(file.getName());
+            fileMetaData.setParents(Collections.singletonList(folderId));
+            FileContent mediaContent = new FileContent("image/jpeg", file);
+            com.google.api.services.drive.model.File uploadedFile = drive.files().create(fileMetaData, mediaContent)
+                    .setFields("id").execute();
+            String imageUrl = "https://drive.google.com/uc?export=view&id=" + uploadedFile.getId();
+            System.out.println("IMGAE URL: " + imageUrl);
+            file.delete();
+            Book book = bookRepository.findById(id).orElse(null);
+            book.setImageUrl(imageUrl);
+            bookRepository.save(book);
+            return imageUrl;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
     private Drive createDriveService() throws GeneralSecurityException, IOException {
         GoogleCredential credential = GoogleCredential.fromStream(new FileInputStream(SERVICE_ACCOUNT_KEY_PATH))
                 .createScoped(Collections.singleton(DriveScopes.DRIVE));

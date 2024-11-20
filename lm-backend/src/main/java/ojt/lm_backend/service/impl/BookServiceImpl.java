@@ -119,7 +119,7 @@ public class BookServiceImpl implements BookService {
             book.setCategory(categoryRepository.findById(bookDto.getCategoryId()).orElse(null));
             book.setPublisher(publisherRepository.findById(bookDto.getPublisherId()).orElse(null));
             book.setPublicationYear(bookDto.getPublicationYear());
-            book.setDescription(book.getDescription());
+            book.setDescription(bookDto.getDescription());
             bookRepository.save(book);
             return modelMapper.map(book,BookDto.class);
         }

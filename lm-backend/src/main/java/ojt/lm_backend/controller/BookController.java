@@ -7,6 +7,7 @@ import ojt.lm_backend.dto.BookDto;
 import ojt.lm_backend.dto.BorrowRecordDetailDto;
 import ojt.lm_backend.entity.BorrowRecord;
 import ojt.lm_backend.service.BookService;
+import ojt.lm_backend.service.ImageUploadService;
 import ojt.lm_backend.service.LostBookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import java.util.List;
 public class BookController {
 
     private BookService bookService;
+    private ImageUploadService imageUploadService;
     private LostBookService lostBookService;
 
     @GetMapping
@@ -109,5 +111,18 @@ public class BookController {
                                                            @RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
                                                            @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize){
         return new ResponseEntity<>(bookService.searchBook(pageNo,pageSize,authorId,categoryId,content),HttpStatus.OK);
+    }
+
+    @PutMapping("/updateImage/{id}")
+    public Object updateBookImage(@RequestParam("image") MultipartFile file,
+                                  @PathVariable int id) throws IOException {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        File tempFile = File.createTempFile("temp", null);
+        file.transferTo(tempFile);
+        String res = imageUploadService.updateBookImageUrl(tempFile,id);
+        System.out.println(res);
+        return res;
     }
 }

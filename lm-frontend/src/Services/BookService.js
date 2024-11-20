@@ -23,12 +23,20 @@ export const addNewBook = (formData) => {
     });
 };
 
-export const searchBook = (categoryId,authorId,content,pageNo,pageSize) => axios.get(BOOK_REST_API_BASE_URL + '/search',{
-    params:{
+export const searchBook = (categoryId, authorId, content, pageNo, pageSize) => axios.get(BOOK_REST_API_BASE_URL + '/search', {
+    params: {
         categoryId: categoryId,
         authorId: authorId,
         content: content,
         pageNo: pageNo,
         pageSize: pageSize
     }
+})
+
+export const updateBook = (book, id) => axios.put(BOOK_REST_API_BASE_URL + '/' + id, book)
+
+export const updateBookImage = (formData, id) => axios.put(BOOK_REST_API_BASE_URL + '/updateImage/' + id, formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
 })

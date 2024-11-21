@@ -4,5 +4,6 @@ public enum BookStatus {
     NEW,
     USED,
     DAMAGED
+
 }
 

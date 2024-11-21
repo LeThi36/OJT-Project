@@ -16,8 +16,9 @@ public interface BorrowService {
     BorrowResponse getBorrowRecordById(Integer borrowId);
     BorrowResponse updateBorrowRecord(Integer borrowId, LocalDate returnDate);
     BorrowResponse adminUpdateBorrowRecord(Integer borrowId, BorrowRequest request);
-
-
+    BorrowResponse approveBorrowRequest(Integer borrowId);
+    BorrowResponse updateBorrowStatus(Integer borrowId, String newStatus);
+    BorrowResponse ReturnedBorrow(Integer borrowId);
     void deleteBorrowRecord(Integer borrowId);
     void updateFines();
 

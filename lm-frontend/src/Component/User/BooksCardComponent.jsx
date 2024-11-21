@@ -94,8 +94,8 @@ function BooksCardComponent() {
           </button>
         )}
 
-        <select onChange={(e) => setCategoryId(e.target.value)} className='me-2 rounded-md'>
-          <option value={null}>
+        <select onChange={(e) => setCategoryId(e.target.value === "null" ? null : e.target.value)} className='me-2 rounded-md'>
+          <option value="null">
             Category
           </option>
           {category.map((c) => {
@@ -106,8 +106,8 @@ function BooksCardComponent() {
             )
           })}
         </select>
-        <select onChange={(e) => setAuthorId(e.target.value)} className='rounded-md'>
-          <option value={null}>
+        <select onChange={(e) => setAuthorId(e.target.value === "null" ? null : e.target.value)} className='rounded-md'>
+          <option value="null">
             Author
           </option>
           {author.map((au) => {

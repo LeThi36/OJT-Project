@@ -36,10 +36,11 @@ public class BorrowRecord {
 
     @Column(name = "return_date")
     private LocalDate returnDate;
-  
-    @Column(name = "status", nullable = false, columnDefinition = "ENUM('borrowed', 'returned', 'PENDING_APPROVAL', 'overdue') DEFAULT 'borrowed'")
+
+    @Column(name = "status", nullable = false, columnDefinition = "ENUM('BORROWED', 'RETURNED', 'PENDING_APPROVAL', 'OVERDUE') DEFAULT 'BORROWED'")
     @Enumerated(EnumType.STRING)
     private BorrowStatus status;
+
 
     @Column(name = "fine", nullable = false, columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
     private BigDecimal fine;

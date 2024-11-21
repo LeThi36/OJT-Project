@@ -25,4 +25,15 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord,Integ
 
     @Query("SELECT COUNT(br) FROM BorrowRecord br WHERE br.user.userId = :userId AND br.status = :status AND br.fine > 0")
     int countLostBooksWithUnpaidFine(@Param("userId") Long userId, @Param("status") BorrowStatus status);
+
+    @Query("SELECT b FROM BorrowRecord b WHERE b.status = :status")
+    List<BorrowRecord> findByStatusA(@Param("status") BorrowStatus status);
+
+    @Query("SELECT b FROM BorrowRecord b WHERE b.dueDate = :threeDaysLater AND b.status = 'BORROWED'")
+    List<BorrowRecord> findDueSoon(@Param("threeDaysLater") LocalDate threeDaysLater);
+
+    @Query("SELECT b FROM BorrowRecord b WHERE b.dueDate < :today AND b.status = 'BORROWED'")
+    List<BorrowRecord> findOverdue(@Param("today") LocalDate today);
+
+
 }

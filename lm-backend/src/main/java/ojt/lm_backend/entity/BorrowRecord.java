@@ -1,10 +1,7 @@
 package ojt.lm_backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ojt.lm_backend.LMenum.BorrowStatus;
 
 import java.math.BigDecimal;
@@ -16,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class BorrowRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,8 +36,8 @@ public class BorrowRecord {
 
     @Column(name = "return_date")
     private LocalDate returnDate;
-
-    @Column(name = "status", nullable = false, columnDefinition = "ENUM('borrowed', 'returned', 'overdue') DEFAULT 'borrowed'")
+  
+    @Column(name = "status", nullable = false, columnDefinition = "ENUM('borrowed', 'returned', 'PENDING_APPROVAL', 'overdue') DEFAULT 'borrowed'")
     @Enumerated(EnumType.STRING)
     private BorrowStatus status;
 

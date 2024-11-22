@@ -159,6 +159,7 @@ public class AuthServiceImpl implements AuthService {
         return jwtAuthResponse;
     }
 
+
     @Override
     public String changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
         User user = userRepository.findByUsernameOrEmail(changePasswordRequestDto.getEmail(), changePasswordRequestDto.getEmail()).orElse(null);

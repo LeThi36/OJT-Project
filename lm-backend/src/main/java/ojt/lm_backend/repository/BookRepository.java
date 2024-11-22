@@ -1,5 +1,7 @@
 package ojt.lm_backend.repository;
 
+import ojt.lm_backend.LMenum.BookStatus;
+import ojt.lm_backend.LMenum.BorrowStatus;
 import ojt.lm_backend.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

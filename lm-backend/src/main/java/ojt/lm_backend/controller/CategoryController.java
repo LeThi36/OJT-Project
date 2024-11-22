@@ -43,4 +43,10 @@ public class CategoryController {
     public ResponseEntity<Long> countCategory(){
         return new ResponseEntity<>(categoryService.countCategory(),HttpStatus.OK);
     }
+
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> delectCategoryById(@PathVariable int id){
+        return new ResponseEntity<>(categoryService.delectCategoryById(id),HttpStatus.OK);
+    }
 }

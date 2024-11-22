@@ -13,3 +13,5 @@ export const getAllAuthor = (pageNo, pageSize) => axios.get(AUTHOR_REST_API_BASE
 
 export const getAuthorById = (id) => axios.get(AUTHOR_REST_API_BASE_URL + '/' + id)
 
+export const deleteAuthorById = (id) => axios.delete(AUTHOR_REST_API_BASE_URL + '/' + id)
+

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { countAuthor, getAllAuthor } from '../../Services/AuthorService';
+import { countAuthor, deleteAuthorById, getAllAuthor } from '../../Services/AuthorService';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 
@@ -12,10 +12,15 @@ function AuthorTableComponent() {
         countAuthor().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 8)) })
     }, [])
 
-    const { data: authors, isLoading } = useQuery({
+    const { data: authors, isLoading, refetch } = useQuery({
         queryFn: () => getAllAuthor(currentPage, 8).then(response => response.data),
         queryKey: ["authors", currentPage]
     })
+
+    const handleDelete = (id) => {
+        deleteAuthorById(id).then(res => alert(res.data)).catch(err => alert(err))
+        refetch()
+    }
 
     if (isLoading) {
         return <p>Loading...</p>
@@ -29,6 +34,7 @@ function AuthorTableComponent() {
                     <table className="w-full text-sm text-left text-gray-500">
                         <caption className="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2 ">
                             Authors
+                            <Link className="ms-4 font-bold text-emerald-400 " to='/admin/book/add-new-book'>add new Author!</Link>
                         </caption>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
@@ -53,6 +59,9 @@ function AuthorTableComponent() {
                                         <td className="px-6 py-4">
                                             {auth.books.length}
                                         </td>
+                                        <td>
+                                            <button onClick={() => handleDelete(auth.authorId)} className='font-bold text-red-600'>delete this author</button>
+                                        </td>
                                     </tr>
                                 );
                             })}
@@ -60,20 +69,20 @@ function AuthorTableComponent() {
                     </table>
                 </div>
             </div>
-                <div className='flex justify-center mt-4'>
-                    {
-                        Array(totalPage).fill(0).map((page, index) => {
-                            return (
-                                <button
-                                    key={index}
-                                    className='border rounded-md p-4 mx-2'
-                                    onClick={() => setCurrentPage(index)}>
-                                    {index + 1}
-                                </button>
-                            )
-                        })
-                    }
-                </div>
+            <div className='flex justify-center mt-4'>
+                {
+                    Array(totalPage).fill(0).map((page, index) => {
+                        return (
+                            <button
+                                key={index}
+                                className='border rounded-md p-4 mx-2'
+                                onClick={() => setCurrentPage(index)}>
+                                {index + 1}
+                            </button>
+                        )
+                    })
+                }
+            </div>
         </div>
     )
 }

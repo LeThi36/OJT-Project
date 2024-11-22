@@ -9,4 +9,5 @@ public interface CategoryService {
     List<CategoryDto> getAllCategory(int pageNo,int pageSize);
     CategoryDto getCategoryById(int id);
     Long countCategory();
+    String delectCategoryById(int id);
 }

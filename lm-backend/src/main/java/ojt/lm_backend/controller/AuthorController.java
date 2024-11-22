@@ -42,7 +42,7 @@ public class AuthorController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteAuthor(int id){
+    public ResponseEntity<String> deleteAuthor(@PathVariable int id){
         String message = authorService.deleteAuthor(id);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }

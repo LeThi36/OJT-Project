@@ -42,9 +42,6 @@ function BooksCardComponent() {
         queryKey: ['category'],
         queryFn: () => getAllCategory().then(res => res.data),
         keepPreviousData: true,
-        onSettled: () => {
-            console.log('asdasd');
-        }
     })
 
     const { data: author, isLoading: loadingAuthors, isError: errorAtuthor } = useQuery({
@@ -71,8 +68,6 @@ function BooksCardComponent() {
     if (loadingBook || loadingCategories || loadingAuthors) {
         return <div>Loading...</div>;
     }
-
-    console.log(category);
 
     return (
         <>

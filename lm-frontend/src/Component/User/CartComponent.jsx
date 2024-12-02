@@ -103,8 +103,6 @@ function CartComponent() {
                         </svg>
                     </Link>
                     <button
-                        onClick={() => {console.log(cart);
-                        }}
                         class="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-indigo-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-indigo-700">Continue
                         to Payment
                         <svg class="ml-2" xmlns="http://www.w3.org/2000/svg" width="23" height="22" viewBox="0 0 23 22"

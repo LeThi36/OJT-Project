@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/borrow")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class BorrowController {
     @Autowired
     private final BorrowService borrowService;

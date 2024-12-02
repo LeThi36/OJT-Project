@@ -78,6 +78,16 @@ function SidebarComopnent() {
                                 <span className="ms-3 whitespace-nowrap">Borrow Record</span>
                             </a>
                         </li>
+                        <li>
+                            <a href='/admin/request' className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                                <svg fill="#8E8E8E" height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 490 490" xml:space="preserve">
+                                <polygon points="452.253,28.326 197.831,394.674 29.044,256.875 0,292.469 207.253,461.674 490,54.528 "/>
+                                </svg>
+                                <span className="ms-3 whitespace-nowrap">Borrow Request</span>
+                            </a>
+                        </li>
+
+
                     </ul>
                 </div>
             </aside>

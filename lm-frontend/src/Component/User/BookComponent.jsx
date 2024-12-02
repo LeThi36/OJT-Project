@@ -16,10 +16,14 @@ function BookComponent() {
     })
     const [currentPage, setCurrentPage] = useState(0)
     const [totalPage, setTotalPage] = useState(0)
+    const [favorited,setFavorited] = useState(false)
 
     useEffect(()=>{
         countBookReviewById(id).then(res => {const count = res.data; setTotalPage(Math.ceil(count/4))}
         )
+        const favoriteBook = JSON.parse(localStorage.getItem('favoriteBook')) || [];
+        const existed = favoriteBook.find(item => item.bookId == id);        
+        setFavorited(existed ? true : false);
     },[])
 
 
@@ -50,10 +54,14 @@ function BookComponent() {
         const favoriteBook = JSON.parse(localStorage.getItem('favoriteBook')) || [];
         const existed = favoriteBook.find(item => item.bookId === book.bookId);
         if (existed) {
-            alert('Book already added to favorites');
+            const modifiedFavoriteBook = favoriteBook.filter((bookItem) => bookItem.bookId !== book.bookId);            
+            localStorage.setItem('favoriteBook', JSON.stringify(modifiedFavoriteBook));
+            setFavorited(false);
+            alert('Book removed to favorite');
         } else {
-            favoriteBook.push({ book });
+            favoriteBook.push(book);
             localStorage.setItem('favoriteBook', JSON.stringify(favoriteBook));
+            setFavorited(true);
             alert('Book added to favorite');
         }
     }
@@ -144,9 +152,12 @@ function BookComponent() {
                                 </div>
 
                                 <button onClick={() => handelLikeBook(book)} className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
-                                    <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
+                                    {favorited ? (<svg fill="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                                         <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
-                                    </svg>
+                                    </svg>)
+                                    : (<svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
+                                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                                    </svg>)}
                                 </button>
                             </div>
                         </div>

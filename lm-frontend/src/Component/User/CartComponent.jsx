@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { getUserById } from '../../Services/UserService';
 
 function CartComponent() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || []
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const userId = sessionStorage.getItem("userId");
+
+    useEffect(() => {
+        getUserById(userId)
+        .then((response) => response.data)
+        .then((data) => console.log(data))
+    })
 
     if (cart.length === 0) {
         return (

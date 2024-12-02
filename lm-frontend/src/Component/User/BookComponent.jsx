@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { json, useParams } from 'react-router-dom';
 import { getBookById } from '../../Services/BookService';
 import { countBookReviewById, getBookReviewByBookId, postBookReview } from '../../Services/BookReview';
+import { createBorrowRecord } from '../../Services/BorrowRecordService';
 
 function BookComponent() {
-
     const { id } = useParams()
 
     const [reviewRequest, setReviewRequest] = useState({
@@ -16,6 +16,50 @@ function BookComponent() {
     })
     const [currentPage, setCurrentPage] = useState(0)
     const [totalPage, setTotalPage] = useState(0)
+    const [showModal, setShowModal] = useState(false);
+    const [borrowStart, setBorrowStart] = useState(null);
+    const [borrowEnd, setBorrowEnd] = useState(null);
+    const [isValidDate, setIsValidDate] = useState(true);
+    const userId = sessionStorage.getItem("userId");
+
+    function checkValidDate() {
+        const currentDate = new Date();
+        const borrowStartDate = new Date(borrowStart);
+        const borrowEndDate = new Date(borrowEnd);
+        if (currentDate <= borrowStartDate && borrowStartDate <= borrowEndDate) return true;
+        return false;
+    }
+
+    const borrowMutation = useMutation({
+        mutationFn: (borrowRecord) => {
+            return createBorrowRecord(borrowRecord);
+        },
+        onSuccess: () => {
+            setBorrowEnd("");
+            setBorrowStart("");
+            setShowModal(false);
+            alert("Borrow request registered. Awaiting approval.");
+        },
+        onError: () => {
+            alert("Operation failed. Please try again.");
+        }
+    });
+
+    function onBorrow() {
+        if (!checkValidDate()) setIsValidDate(false);
+        else {
+            setIsValidDate(true);
+            const borrowStartDate = new Date(borrowStart);
+            const borrowEndDate = new Date(borrowEnd);
+            const duration = (borrowEndDate - borrowStartDate) / (1000 * 3600 * 24);
+            borrowMutation.mutate({
+                userId: Number(userId),
+                bookId: id,
+                borrowDate: borrowStartDate,
+                borrowDurationDays: duration
+            });
+        }
+    }
 
     useEffect(()=>{
         countBookReviewById(id).then(res => {const count = res.data; setTotalPage(Math.ceil(count/4))}
@@ -90,6 +134,11 @@ function BookComponent() {
 
     return (
         <>
+            {borrowMutation.isLoading && (
+                <div style={{ textAlign: 'center', width: "100vw", height: "100vh", position: 'fixed', top: 0, left: 0, zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.3)'}}>
+                    <img style={{ marginTop: "20%", marginLeft: "50%", transform: "translateX(-50%)" }} src="https://media.tenor.com/_62bXB8gnzoAAAAj/loading.gif" alt="" />
+                </div>
+            )}
             <section className="text-gray-600 body-font overflow-hidden">
                 <div className="container px-5 py-24 mx-auto">
                     <div className="lg:w-4/5 mx-auto flex flex-wrap">
@@ -139,7 +188,10 @@ function BookComponent() {
                             <p className="leading-relaxed">{book.description}</p>
                             <div className="flex justify-between item-center mt-20">
                                 <div className="flex">
-                                    <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2">Buy it now</button>
+                                    <button
+                                        onClick={() => setShowModal(true)}
+                                        className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2"
+                                    >Borrow it now</button>
                                     <button className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-600 hover:text-white rounded" onClick={() => handelCart(book)}>Add to cart</button>
                                 </div>
 
@@ -165,7 +217,7 @@ function BookComponent() {
                                             <div className="border rounded-md p-3 ml-3 my-3">
                                                 <div className="flex gap-3 items-center">
                                                     <img src={`https://drive.google.com/thumbnail?id=${r.user.imageUrl.split('id=')[1]}`}
-                                                        className="object-cover w-8 h-8 rounded-full 
+                                                        className="object-cover w-8 h-8 rounded-full
                             border-2 border-emerald-400  shadow-emerald-400
                             "/>
                                                     <h3 className="font-bold">
@@ -227,6 +279,58 @@ function BookComponent() {
                             <input onChange={(e) => setReviewRequest({ ...reviewRequest, reviewText: e.target.value })} type='text' className='w-full border rounded-md' placeholder='write your review here' />
                             <button onClick={(e) => handleSubmitReview(e)} className='border rounded-md mt-2 p-2 bg-indigo-500 text-white'>submit</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                id='borrow-book-modal'
+                style={{
+                    display: showModal ? "block" : "none",
+                    position: 'fixed', backgroundColor: "rgba(0,0,0,0.1)", width: "100%", height: "100%", top: 0, zIndex: 9999,
+                    padding: "140px 20%"
+                }}
+            >
+                <div
+                    style={{height: 450, width: "100%", backgroundColor: 'white', borderRadius: 20}}
+                >
+                    <div
+                        style={{ position: 'absolute', right: "21.5%", top: "21.5%", color: "#6B7280", fontWeight: 700, cursor: "pointer"}}
+                        onClick={() => setShowModal(false)}
+                    >✕</div>
+                    <div
+                        style={{borderBottom: "1px solid #ccc", fontSize: 32, textAlign: 'center', padding: "8px 0", fontWeight: 700}}
+                    >Borrow Info</div>
+
+                    {/* modal body */}
+                    <div style={{padding: 16}}>
+                        <div>
+                            <div style={{ fontSize: 20, fontWeight: 500, textAlign: 'center', marginTop: 80 }}>Please enter borrow time:</div>
+                            <div
+                                style={{color: 'red', textAlign: 'center', display: isValidDate ? 'none' : 'block'}}
+                            >Please enter valid date</div>
+                            <div style={{ display: "flex", alignItems: 'center', marginTop: 20, justifyContent: 'center' }}>
+                                <div>
+                                    <div>Start date:</div>
+                                    <input type='date' value={borrowStart} onChange={(e) => setBorrowStart(e.target.value)} />
+                                </div>
+                                <div style={{ marginLeft: 20 }}>
+                                    <div>End date:</div>
+                                    <input type='date' value={borrowEnd} onChange={(e) => setBorrowEnd(e.target.value)} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{display: "flex", justifyContent: 'flex-end', padding: 16, position: 'absolute', top: '70%', right: "20%"}}>
+                        <button
+                            className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2"
+                            onClick={() => onBorrow()}
+                        >Borrow</button>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="flex border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-600 hover:text-white rounded"
+                        >Cancel</button>
                     </div>
                 </div>
             </div>

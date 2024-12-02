@@ -19,7 +19,7 @@ function CategoryDetailComponent() {
 
     return (
         <>
-            <BooktableComponent data={categoryDetail.books} title={categoryDetail.categoryName}/>
+            <BooktableComponent data={categoryDetail.books} title={categoryDetail.categoryName} elementId={id} />
         </>
     )
 }

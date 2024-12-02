@@ -2,13 +2,19 @@ import { countBook, deleteBook, getAllBook } from '../../Services/BookService';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useEffect, useState } from 'react';
+import { updateCategory } from '../../Services/CategoryService';
 
-function BooktableComponent({ data, title }) {
+function BooktableComponent({ data, title, elementId }) {
 
     const [currentPage, setCurrentPage] = useState(0)
     const [totalPage, setTotalPage] = useState(0)
+    const [isEdit, setIsEdit] = useState(false)
+    const [updatedCategory, setUpdatedCategory] = useState({
+        categoryId: elementId,
+        categoryName: ''
+    })
 
-    if(data){
+    if (data) {
         useEffect(() => {
             setTotalPage(Math.ceil(data.length / 8))
         }, [])
@@ -46,6 +52,12 @@ function BooktableComponent({ data, title }) {
         queryClient.invalidateQueries("books");
     };
 
+    const handleSubmit = (updatedCategory) => {
+        console.log(updatedCategory);
+
+        updateCategory(updatedCategory).then(res => { alert("update successfully"); setIsEdit(false) }).catch(err => alert("something went wrong"))
+    }
+
     return (
         <div >
             <div className="flex-grow border-2 border-gray-200 border-dashed rounded-lg">
@@ -53,7 +65,15 @@ function BooktableComponent({ data, title }) {
                     <table className="w-full text-sm text-left text-gray-500">
                         <caption className="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2 ">
                             {
-                                title ? title : "Books"
+                                title ? (<>
+                                    <button onClick={() => setIsEdit(!isEdit)}>{title}</button>
+                                </>) : "Books"
+                            }
+                            {
+                                isEdit ? (<>
+                                    <input type="text" className='ms-2 text-sm rounded-md text-black' placeholder='edit this name' onChange={(e) => { setUpdatedCategory({ ...updatedCategory, categoryName: e.target.value }) }} />
+                                    <button className='me-2 ms-2 text-emerald-400' onClick={() => handleSubmit(updatedCategory)}>submit</button>
+                                </>) : (<></>)
                             }
                             <Link className="ms-4 font-bold text-emerald-400 " to='/admin/book/add-new-book'>add new Book!</Link>
                         </caption>

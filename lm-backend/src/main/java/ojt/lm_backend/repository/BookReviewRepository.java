@@ -12,7 +12,7 @@ import java.util.List;
 public interface BookReviewRepository extends JpaRepository<BookReview,Integer> {
     @Query("SELECT br FROM BookReview br WHERE br.book.bookId = :bookId")
     List<BookReview> findByBookId(@Param("bookId") Integer bookId);
-    @Query("SELECT br FROM BookReview br WHERE br.book.bookId = :bookId")
+    @Query("SELECT br FROM BookReview br WHERE br.book.bookId = :bookId ORDER BY br.reviewDate DESC")
     Page<BookReview> findByBookId(@Param("bookId") Integer bookId, Pageable pageable);
     @Query("SELECT COUNT(br) FROM BookReview br WHERE br.book.bookId = :bookId")
     Long countByBookId(Integer bookId);

@@ -49,4 +49,10 @@ public class CategoryController {
     public ResponseEntity<String> delectCategoryById(@PathVariable int id){
         return new ResponseEntity<>(categoryService.delectCategoryById(id),HttpStatus.OK);
     }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryDto categoryDto){
+        return new ResponseEntity<>(categoryService.updateCategoryName(categoryDto),HttpStatus.OK);
+    }
 }

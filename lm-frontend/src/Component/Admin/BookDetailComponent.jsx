@@ -99,7 +99,10 @@ function BookDetailComponent() {
             <div className="bg-white w-2/3 shadow overflow-hidden sm:rounded-lg mx-auto">
                 <div className="px-4 py-5 sm:px-6">
                     <h3 className="text-center text-lg leading-6 font-medium text-gray-900">
-                        {bookDetail.title}
+
+                        {
+                            isEdit ? (<input type='text' onChange={(e) => setBookDetail({ ...bookDetail, title: e.target.value })} className='rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md' placeholder='' value={bookDetail.title} />) : (bookDetail.title)
+                        }
                     </h3>
                     <p className="mt-1 text-sm text-gray-500 text-center">
                         Details and informations about {bookDetail.title}.

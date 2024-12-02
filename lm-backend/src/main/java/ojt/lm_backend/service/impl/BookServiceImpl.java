@@ -38,7 +38,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDetailDto> getAllBooks(int pageNo,int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Book> books = bookRepository.findAll(pageable);
+        Page<Book> books = bookRepository.findAllByOrderByCreatedAtDesc(pageable);
         List<Book> books1 = books.getContent();
         return books1.stream().map(b -> modelMapper.map(b, BookDetailDto.class)).collect(Collectors.toList());
     }

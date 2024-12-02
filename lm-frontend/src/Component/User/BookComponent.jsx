@@ -11,7 +11,7 @@ function BookComponent() {
     const [reviewRequest, setReviewRequest] = useState({
         bookId: id,
         userId: sessionStorage.getItem('userId'),
-        rating: 0,
+        rating: 1,
         reviewText: '',
     })
     const [currentPage, setCurrentPage] = useState(0)
@@ -75,7 +75,7 @@ function BookComponent() {
         queryFn: () => getBookById(id).then(response => response.data),
         queryKey: ["book", id]
     })
-    const { data: review, isLoading: loadingReview } = useQuery({
+    const { data: review, isLoading: loadingReview,refetch } = useQuery({
         queryFn: () => getBookReviewByBookId(id,currentPage,4).then(response => response.data),
         queryKey: ["review", id,currentPage]
     })
@@ -134,9 +134,12 @@ function BookComponent() {
 
     const handleSubmitReview = (e) => {
         e.preventDefault()
-        console.log(reviewRequest);
-
-        postBookReview(reviewRequest).then(res => console.log(res.data)).catch(err => console.log(err))
+        postBookReview(reviewRequest).then(res => {setReviewRequest({
+            ...reviewRequest, 
+            reviewText: '',
+        }
+        )
+        ;refetch()}).catch(err => console.log(err))
     }
 
 

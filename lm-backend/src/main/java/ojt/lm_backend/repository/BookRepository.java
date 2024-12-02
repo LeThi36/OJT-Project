@@ -29,4 +29,6 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
 
     @Query("SELECT b From Book b WHERE b.author.authorId = :authorId")
     List<Book> findBookByAuthorId(@Param("authorId") int id);
+
+    Page<Book> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

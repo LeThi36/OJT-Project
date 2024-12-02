@@ -27,7 +27,6 @@ public class AuthorController {
     }
 
     @GetMapping("/count")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<Long> countAuthor(){
         Long count = authorService.countAuthor();
         return new ResponseEntity<>(count,HttpStatus.OK);

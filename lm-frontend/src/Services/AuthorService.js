@@ -15,3 +15,5 @@ export const getAuthorById = (id) => axios.get(AUTHOR_REST_API_BASE_URL + '/' + 
 
 export const deleteAuthorById = (id) => axios.delete(AUTHOR_REST_API_BASE_URL + '/' + id)
 
+export const createAuthor = (authorName) => axios.post(AUTHOR_REST_API_BASE_URL, authorName)
+

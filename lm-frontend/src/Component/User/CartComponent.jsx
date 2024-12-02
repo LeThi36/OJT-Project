@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { getUserById } from '../../Services/UserService';
 
 function CartComponent() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || []
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const userId = sessionStorage.getItem("userId");
+
+    useEffect(() => {
+        getUserById(userId)
+        .then((response) => response.data)
+        .then((data) => console.log(data))
+    })
 
     if (cart.length === 0) {
         return (
@@ -95,6 +103,8 @@ function CartComponent() {
                         </svg>
                     </Link>
                     <button
+                        onClick={() => {console.log(cart);
+                        }}
                         class="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-indigo-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-indigo-700">Continue
                         to Payment
                         <svg class="ml-2" xmlns="http://www.w3.org/2000/svg" width="23" height="22" viewBox="0 0 23 22"

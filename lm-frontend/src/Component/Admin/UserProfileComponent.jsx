@@ -106,7 +106,7 @@ function UserProfileComponent() {
                 <div className='px-5 border-t-2 h-64 w-full bg-[url("https://miro.medium.com/v2/resize:fit:1200/1*6Jp3vJWe7VFlFHZ9WhSJng.jpeg")]'>
                     <div className='flex justify-center'>
                         <div className='relative'>
-                            <img className='border-slate-950 border-2 object-cover rounded-full mt-2 h-56 w-56' src={`https://drive.google.com/thumbnail?id=${url}`} alt="drive image" />
+                            <img className='border-slate-950 border-2 object-cover rounded-full mt-2 h-56 w-56' src={`https://drive.google.com/thumbnail?id=${url}&sz=w1000`} alt="drive image" />
                             <button onClick={(e) => handleButtonClick(e)} className='absolute border rounded-full bg-white left-3/4 top-5'>
                                 <svg className="w-[24px] h-[24px] fill-[#8e8e8e]" viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg">
                                     {/*! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. */}

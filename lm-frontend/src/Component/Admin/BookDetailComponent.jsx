@@ -266,7 +266,7 @@ function BookDetailComponent() {
                         </dl>
                     </div>
                     <div className='w-full'>
-                        <img className='w-full' src={'https://drive.google.com/thumbnail?id=' + bookDetail.imageUrl.split('id=')[1]}></img>
+                        <img className='w-full' src={'https://drive.google.com/thumbnail?id=' + bookDetail.imageUrl.split('id=')[1]+'&sz=w1000'}></img>
                         <button className='font-semibold capitalize text-red-700' onClick={(e) => handleButtonClick(e)}>edit book cover</button>
                         <input
                             id="fileInput"

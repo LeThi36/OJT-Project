@@ -5,7 +5,7 @@ import ojt.lm_backend.dto.UserDto;
 import java.util.List;
 
 public interface UserService {
-    List<UserDto> getAllUser();
+    List<UserDto> getAllUser(int pageNo,int pageSize);
     String deleteUser(Long id);
     UserDto updateUser(Long id, UserDto userDto);
     List<UserDto> findByNameContaining(String username);

@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getAllCategory } from '../../Services/CategoryService'
+import { countCategory, getAllCategory } from '../../Services/CategoryService'
 import { useQuery } from 'react-query'
 import axios from 'axios'
 
 function CategoryComponent() {
 
-    const { data: category, isLoading,isError,error } = useQuery({
-        queryKey: ['category'],
-        queryFn: () => getAllCategory().then(res => res.data)
+    const [currentPage, setCurrentPage] = useState(0)
+    const [totalPage, setTotalPage] = useState(0)
+
+    useEffect(() => {
+        countCategory().then(res => {
+            const count = res.data
+            setTotalPage(Math.ceil(count / 6))
+        }
+        ).catch(err => console.log(err))
+    }, [])
+
+
+    const { data: categoryDetail, isLoading, isError, error } = useQuery({
+        queryKey: ['CATEGORY_DETAIL',currentPage],
+        queryFn: () => getAllCategory(currentPage,6).then(res => res.data),
+        keepPreviousData: true
+
     })
 
 
@@ -18,7 +32,7 @@ function CategoryComponent() {
 
     if (isError) return <p>Error: {error.message}</p>
 
-    if (!category) {
+    if (!categoryDetail) {
         return <p>No categories found.</p>
     }
 
@@ -33,7 +47,7 @@ function CategoryComponent() {
                     </div>
                     <div className="flex flex-wrap -m-4">
                         {
-                            category.map((c) => {
+                            categoryDetail.map((c) => {
                                 return (
                                     <Link key={c.categoryId} to={`/category/${c.categoryId}`} className="p-4 md:w-1/3 cursor-pointer">
                                         <div className="flex rounded-lg h-full bg-gray-100 p-8 flex-col">
@@ -63,6 +77,17 @@ function CategoryComponent() {
                             })
                         }
 
+                    </div>
+                    <div className="flex justify-center mt-4">
+                        {Array(totalPage).fill(0).map((page, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentPage(index)}
+                                className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700' : 'bg-indigo-500'} text-white rounded`}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </section>

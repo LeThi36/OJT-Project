@@ -44,6 +44,7 @@ public class BorrowServiceImpl implements BorrowService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+
         Book book = bookRepository.findById(request.getBookId())
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
@@ -53,6 +54,7 @@ public class BorrowServiceImpl implements BorrowService {
         } else {
             throw new RuntimeException("No copies available for loan.");
         }
+
 
         LocalDate borrowDate = request.getBorrowDate();
         LocalDate dueDate = borrowDate.plusDays(request.getBorrowDurationDays());
@@ -187,6 +189,7 @@ public class BorrowServiceImpl implements BorrowService {
         BorrowRecord updatedRecord = borrowRecordRepository.save(record);
 
         Book book = record.getBook();
+
         Integer returnedQuantity = 1;  // Trả về một cuốn sách
         book.setCopies(book.getCopies() + returnedQuantity);
         bookRepository.save(book);

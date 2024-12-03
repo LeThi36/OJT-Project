@@ -9,6 +9,9 @@ import ojt.lm_backend.repository.RoleRepository;
 import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +31,11 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public List<UserDto> getAllUser() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map((u) -> modelMapper.map(u, UserDto.class)).collect(Collectors.toList());
+    public List<UserDto> getAllUser(int pageNo,int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
+        Page<User> users = userRepository.findAll(pageable);
+        List<User> users1 = users.getContent();
+        return users1.stream().map((u) -> modelMapper.map(u, UserDto.class)).collect(Collectors.toList());
     }
 
     @Override

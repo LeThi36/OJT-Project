@@ -27,6 +27,7 @@ import FavoriteBookComponent from './Component/User/FavoriteBookComponent'
 import ChangePasswordComponent from './Component/Authentication/ChangePasswordComponent'
 import ResetPasswordComponent from './Component/Authentication/ResetPasswordComponent'
 import ForgotPasswordComopent from './Component/Authentication/ForgotPasswordComponent'
+import BorrowRequestTableComponent from './Component/Admin/BorrowRequestTableComponent'
 
 
 
@@ -86,6 +87,7 @@ function App() {
                 <Route path='author' element={<AuthorTableComponent />} />
                 <Route path='author/:id' element={<AuthorDetailCoponent />} />
                 <Route path='borrow' element={<BorrowRecordTableComponent />} />
+                <Route path='request' element={<BorrowRequestTableComponent />} />
               </Routes>
             </div>
           </AuthenticatedRoute>

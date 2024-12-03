@@ -1,17 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from 'react-query';
-import { getAllCategory } from '../../Services/CategoryService';
+import { addCategory, deleteCategoryById, getAllCategory } from '../../Services/CategoryService';
 import { Link } from 'react-router-dom';
 
 function CategoryTableComponent() {
 
-    const { data: categories, isLoading } = useQuery({
+    const [isEdit, setIsEdit] = useState(false)
+    const [categoryName, setCategoryName] = useState({
+        categoryName: ''
+    })
+
+
+    const { data: categories, isLoading, refetch } = useQuery({
         queryFn: () => getAllCategory().then(response => response.data),
         queryKey: ["categories"]
     })
 
-    console.log(categories);
-    
+    const handleDelete = (id) => {
+        deleteCategoryById(id).then(res => { alert(res.data); refetch() }).catch(err => alert(err))
+    }
+
+    const handleAdd = (categoryName) => {
+        addCategory(categoryName).then(res => { alert("add category sucessfully"); refetch() }).catch(err => alert("some thing went wrong"))
+    }
+
+    const handleCancle = () => {
+        setCategoryName({
+            categoryName: ''
+        })
+        setIsEdit(false)
+    }
+
 
     if (isLoading) {
         return <p>Loading...</p>
@@ -24,6 +43,18 @@ function CategoryTableComponent() {
                     <table className="w-full text-sm text-left text-gray-500">
                         <caption className="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2">
                             Category
+                            <button className="ms-4 font-bold text-emerald-400 " onClick={() => setIsEdit(!isEdit)}>add new Category!</button>
+                            {
+                                isEdit ? (<>
+                                    <input type="text" className='rounded-md text-black text-sm ms-2' placeholder='input category name here' onChange={(e) => { setCategoryName({ categoryName: e.target.value }) }} />
+                                    <button className='text-emerald-400 ms-2' onClick={() => handleAdd(categoryName)}>
+                                        submit
+                                    </button>
+                                    <button className='text-red-700 ms-2' onClick={() => handleCancle()}>
+                                        cancle
+                                    </button>
+                                </>) : (<></>)
+                            }
                         </caption>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
@@ -33,6 +64,7 @@ function CategoryTableComponent() {
                                 <th scope="col" className="px-6 py-3">
                                     Number of books
                                 </th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,6 +79,9 @@ function CategoryTableComponent() {
                                         </th>
                                         <td className="px-6 py-4">
                                             {cat.books.length}
+                                        </td>
+                                        <td>
+                                            <button onClick={() => handleDelete(cat.categoryId)} className='font-bold text-red-600'>delete this category</button>
                                         </td>
                                     </tr>
                                 );

@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/borrow")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class BorrowController {
     @Autowired
     private final BorrowService borrowService;
@@ -36,12 +37,14 @@ public class BorrowController {
         return borrowService.createBorrowRecord(request);
     }
 
+
     // mượn nhieu sách
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/create/multiple")
     public MultipleBorrowResponse createMultipleBorrows(@RequestBody MultipleBorrowRequest multipleBorrowRequest) {
         return borrowService.createMultipleBorrows(multipleBorrowRequest);
     }
+
 
     //xem lịch sử order borrow của người đó
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")

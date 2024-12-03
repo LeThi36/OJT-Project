@@ -13,6 +13,9 @@ function NavbarComponent() {
 
     const userId = getUserId()
 
+    const role = sessionStorage.getItem("role")
+    
+
     return (
         <div>
             <nav className="block w-full max-w-screen-lg px-4 py-2 mx-auto bg-white bg-opacity-90 sticky top-3 shadow lg:px-8 lg:py-3 backdrop-blur-lg backdrop-saturate-150 z-[9999]">
@@ -44,6 +47,12 @@ function NavbarComponent() {
                         isAuth &&
                         <div className="hidden lg:block">
                             <ul className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+                                {
+                                    role === "admin" &&
+                                    <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
+                                        <a href='/admin' className="flex items-center">Admin Page</a>
+                                    </li>
+                                }
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                     <a href={`/user/${userId}`} className="flex items-center">Account</a>
                                 </li>
@@ -56,6 +65,7 @@ function NavbarComponent() {
                             </ul>
                         </div>
                     }
+
                     {
                         !isAuth &&
                         <div className="hidden lg:block">

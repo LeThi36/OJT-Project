@@ -15,11 +15,12 @@ function BookFormComponent() {
         publisherId: '',
         publicationYear: '',
         copies: '',
-        description:'',
+        description: '',
         status: ''
     })
 
     const [selectedImage, setSelectedImage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -45,18 +46,20 @@ function BookFormComponent() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-    
+        setIsLoading(true)
         const formData = new FormData();
         formData.append('bookDto', JSON.stringify(book));
         formData.append('image', selectedImage);
-    
+
         try {
             const response = await addNewBook(formData);
             console.log(response);
             alert("Book added successfully!");
-            navigate("/admin");
+            navigate("/admin/book");
         } catch (error) {
             console.error("Error adding book:", error);
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -154,18 +157,20 @@ function BookFormComponent() {
 
                 <div className='mb-5 pt-3'>
                     <input type='file' className='rounded-md file:mr-3 border w-full text-[#6B7280] font-medium file:font-medium '
-                    onChange={(event) => {
-                        console.log(event.target.files[0]); // Log the selected file
-                        setSelectedImage(event.target.files[0]); // Update the state with the selected file
-                      }}></input>
+                        onChange={(event) => {
+                            console.log(event.target.files[0]); // Log the selected file
+                            setSelectedImage(event.target.files[0]); // Update the state with the selected file
+                        }}></input>
                 </div>
 
 
                 <div>
                     <button
                         onClick={(e) => handleSubmit(e)}
-                        className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-                        Add new Book
+                        className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none" disabled={isLoading}>
+                            {
+                                isLoading ? ("processing...") : ("Add new Book")
+                            }
                     </button>
                 </div>
             </div >

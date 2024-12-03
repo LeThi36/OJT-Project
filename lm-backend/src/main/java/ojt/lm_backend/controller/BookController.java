@@ -7,6 +7,7 @@ import ojt.lm_backend.dto.BookDto;
 import ojt.lm_backend.dto.BorrowRecordDetailDto;
 import ojt.lm_backend.entity.BorrowRecord;
 import ojt.lm_backend.service.BookService;
+import ojt.lm_backend.service.ImageUploadService;
 import ojt.lm_backend.service.LostBookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +26,14 @@ import java.util.List;
 public class BookController {
 
     private BookService bookService;
+    private ImageUploadService imageUploadService;
     private LostBookService lostBookService;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<List<BookDetailDto>> getAllBook() {
-        List<BookDetailDto> books = bookService.getAllBooks();
+    public ResponseEntity<List<BookDetailDto>> getAllBook(@RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
+                                                          @RequestParam(value = "pageSize",defaultValue = "100",required = false) int pageSize) {
+        List<BookDetailDto> books = bookService.getAllBooks(pageNo,pageSize);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
@@ -98,5 +101,28 @@ public class BookController {
     public ResponseEntity<List<BorrowRecordDetailDto>> updateOverdueToLost() {
         List<BorrowRecordDetailDto> updateOverDueToLost = lostBookService.updateOverDueToLost();
         return new ResponseEntity<>(updateOverDueToLost,HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<List<BookDetailDto>> searchBook( @RequestParam(required = false) Integer categoryId,
+                                                           @RequestParam(required = false) Integer authorId,
+                                                           @RequestParam(required = false) String content,
+                                                           @RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
+                                                           @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize){
+        return new ResponseEntity<>(bookService.searchBook(pageNo,pageSize,authorId,categoryId,content),HttpStatus.OK);
+    }
+
+    @PutMapping("/updateImage/{id}")
+    public Object updateBookImage(@RequestParam("image") MultipartFile file,
+                                  @PathVariable int id) throws IOException {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        File tempFile = File.createTempFile("temp", null);
+        file.transferTo(tempFile);
+        String res = imageUploadService.updateBookImageUrl(tempFile,id);
+        System.out.println(res);
+        return res;
     }
 }

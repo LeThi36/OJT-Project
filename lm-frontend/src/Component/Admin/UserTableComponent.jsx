@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import SidebarComopnent from './SidebarComopnent'
-import { getAllUser } from '../../Services/UserService'
+import { getAllUser, userCount } from '../../Services/UserService'
 import { Link } from 'react-router-dom'
 import { useQuery } from 'react-query'
 
 function UserTableComponent() {
 
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPage, setTotalPage] = useState(0)
+
+  useEffect(() => {
+    userCount().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 8)) })
+  }, [])
+
   const { data: users, isLoading } = useQuery({
     queryFn: () => getAllUser().then(response => response.data),
-    queryKey: ["users"]
+    queryKey: ["users", currentPage]
   })
 
   if (isLoading) {
@@ -64,6 +71,20 @@ function UserTableComponent() {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className='flex justify-center mt-4'>
+        {
+          Array(totalPage).fill(0).map((page, index) => {
+            return (
+              <button
+                key={index}
+                className='border rounded-md p-4 mx-2'
+                onClick={() => setCurrentPage(index)}>
+                {index + 1}
+              </button>
+            )
+          })
+        }
       </div>
     </div>
   )

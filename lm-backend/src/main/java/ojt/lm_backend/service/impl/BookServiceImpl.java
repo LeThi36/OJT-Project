@@ -9,6 +9,9 @@ import ojt.lm_backend.repository.*;
 import ojt.lm_backend.service.BookService;
 import ojt.lm_backend.service.ImageUploadService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +36,11 @@ public class BookServiceImpl implements BookService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<BookDetailDto> getAllBooks() {
-        List<Book> books = bookRepository.findAll();
-        return books.stream().map(b -> modelMapper.map(b, BookDetailDto.class)).collect(Collectors.toList());
+    public List<BookDetailDto> getAllBooks(int pageNo,int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Book> books = bookRepository.findAllByOrderByCreatedAtDesc(pageable);
+        List<Book> books1 = books.getContent();
+        return books1.stream().map(b -> modelMapper.map(b, BookDetailDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -114,11 +119,18 @@ public class BookServiceImpl implements BookService {
             book.setCategory(categoryRepository.findById(bookDto.getCategoryId()).orElse(null));
             book.setPublisher(publisherRepository.findById(bookDto.getPublisherId()).orElse(null));
             book.setPublicationYear(bookDto.getPublicationYear());
-            book.setDescription(book.getDescription());
+            book.setDescription(bookDto.getDescription());
             bookRepository.save(book);
             return modelMapper.map(book,BookDto.class);
         }
         return null;
+    }
+
+    @Override
+    public List<BookDetailDto> searchBook(int pageNo, int pageSize, Integer authorId, Integer categoryId, String content) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        List<Book> books = bookRepository.searchBooks(categoryId,authorId,content,pageable).getContent();
+        return books.stream().map(b -> modelMapper.map(b,BookDetailDto.class)).toList();
     }
 
 }

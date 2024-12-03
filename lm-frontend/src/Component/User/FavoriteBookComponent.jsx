@@ -29,7 +29,7 @@ function FavoriteBookComponent() {
             <div className="flex flex-col text-center w-full mt-20">
                 <h1 className="sm:text-3xl text-2xl font-medium title-font text-gray-900">Favorite Books</h1>
             </div>
-            <BooksComponent data={favoriteBook.map(fav => fav.book)} />
+            <BooksComponent data={favoriteBook} />
         </>
     )
 }

@@ -8,9 +8,9 @@ function CategoryDetailComponent() {
 
     const { id } = useParams()
 
-    const { data: category, isLoading } = useQuery({
+    const { data: categoryDetail, isLoading } = useQuery({
         queryFn: () => getCategoryById(id).then(response => response.data),
-        queryKey: ["category", id]
+        queryKey: ["CATEGORY_DETAIL", id]
     })
 
     if (isLoading) {
@@ -19,7 +19,7 @@ function CategoryDetailComponent() {
 
     return (
         <>
-            <BooktableComponent data={category.books} title={category.categoryName}/>
+            <BooktableComponent data={categoryDetail.books} title={categoryDetail.categoryName} elementId={id} />
         </>
     )
 }

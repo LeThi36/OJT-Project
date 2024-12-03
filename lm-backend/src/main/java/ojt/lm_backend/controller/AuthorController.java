@@ -20,13 +20,13 @@ public class AuthorController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<List<AuthorDto>> getAllAuthor(){
-        List<AuthorDto> authorDtos = authorService.getAllAuthor();
+    public ResponseEntity<List<AuthorDto>> getAllAuthor(@RequestParam(value = "pageNo",required = false,defaultValue = "0") int pageNo,
+                                                        @RequestParam(value = "pageSize",required = false,defaultValue = "100")int pageSize){
+        List<AuthorDto> authorDtos = authorService.getAllAuthor(pageNo,pageSize);
         return new ResponseEntity<>(authorDtos, HttpStatus.OK);
     }
 
     @GetMapping("/count")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<Long> countAuthor(){
         Long count = authorService.countAuthor();
         return new ResponseEntity<>(count,HttpStatus.OK);
@@ -41,7 +41,7 @@ public class AuthorController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteAuthor(int id){
+    public ResponseEntity<String> deleteAuthor(@PathVariable int id){
         String message = authorService.deleteAuthor(id);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }

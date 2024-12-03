@@ -26,8 +26,9 @@ public class CategoryController {
 
     @GetMapping
     @PreAuthorize("permitAll()")
-    public ResponseEntity<List<CategoryDto>> getAllCategory(){
-        List<CategoryDto> categoryDtos = categoryService.getAllCategory();
+    public ResponseEntity<List<CategoryDto>> getAllCategory(@RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
+                                                            @RequestParam(value = "pageSize",defaultValue = "100",required = false) int pageSize){
+        List<CategoryDto> categoryDtos = categoryService.getAllCategory(pageNo, pageSize);
         return new ResponseEntity<>(categoryDtos,HttpStatus.OK);
     }
 
@@ -41,5 +42,17 @@ public class CategoryController {
     @PreAuthorize("permitAll()")
     public ResponseEntity<Long> countCategory(){
         return new ResponseEntity<>(categoryService.countCategory(),HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> delectCategoryById(@PathVariable int id){
+        return new ResponseEntity<>(categoryService.delectCategoryById(id),HttpStatus.OK);
+    }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryDto categoryDto){
+        return new ResponseEntity<>(categoryService.updateCategoryName(categoryDto),HttpStatus.OK);
     }
 }

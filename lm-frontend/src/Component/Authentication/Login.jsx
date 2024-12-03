@@ -15,18 +15,13 @@ function Login() {
 
     const navigate = useNavigate()
 
-    const handleLogin = (e) => {
-        e.preventDefault()
-        const login = { usernameOrEmail, password }
-        console.log(login);
-
+    const handleLogin = () => {
         loginAPICALL(usernameOrEmail, password).then(response => {
             const token = 'Bearer ' + response.data.accessToken
             const userId = response.data.userId
             const role = response.data.role
             storeToken(token)
             saveLoggedInUser(usernameOrEmail, role, userId)
-            console.log(response.data);
 
 
             if (role == "ROLE_ADMIN") {
@@ -38,7 +33,6 @@ function Login() {
 
 
         }).catch(error => {
-            console.error(error);
             alert('wrong username or password')
         })
     }
@@ -48,20 +42,18 @@ function Login() {
     };
 
     const handleLoginSuccess = (idToken) => {
-        console.log(idToken);
         axios.post('http://localhost:8080/api/auth/login/google',idToken,{
             headers: {
                 'Content-Type': 'application/json',
             },
         }).then(response =>{
-            console.log(response.data);
             const role = response.data.role
             const userId = response.data.userId
             const token = 'Bearer ' + response.data.accessToken
             storeToken(token)
             saveLoggedInUser(usernameOrEmail, role, userId)
             console.log(response.data);
-
+            
 
             if (role == "ROLE_ADMIN") {
                 navigate('/admin')
@@ -78,7 +70,6 @@ function Login() {
     
     }
 
-    console.log(import.meta.env.VITE_googleClientId);
     
 
     return (
@@ -149,7 +140,7 @@ function Login() {
                                 />
 
                                 <div className="mb-4 text-center">
-                                    <button onClick={(e) => handleLogin(e)} className="transition duration-500 bg-gray-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                    <button onClick={() => handleLogin()} className="transition duration-500 bg-gray-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                         Login
                                     </button>
                                 </div>

@@ -63,4 +63,10 @@ public class BookReviewServiceImpl implements BookReviewService {
     public Long countReview(int id) {
         return bookReviewRepository.countByBookId(id);
     }
+
+    @Override
+    public String deleteReview(int id) {
+        bookReviewRepository.deleteById(id);
+        return "deleted review";
+    }
 }

@@ -42,4 +42,10 @@ public class BookReviewController {
     public ResponseEntity<Long> countReviewByBookId(@PathVariable int id){
         return new ResponseEntity<>(bookReviewService.countReview(id),HttpStatus.OK);
     }
+
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<String> deleteBookReview(@PathVariable int id){
+        return new ResponseEntity<>(bookReviewService.deleteReview(id),HttpStatus.OK);
+    }
 }

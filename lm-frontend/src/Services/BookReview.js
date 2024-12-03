@@ -12,3 +12,5 @@ export const getBookReviewByBookId = (id, pageNo, pageSize) => axios.get(BOOKREV
 export const postBookReview = (bookReview) => axios.post(BOOKREVIEW_REST_API_BASE_URL, bookReview)
 
 export const countBookReviewById = (id) => axios.get(BOOKREVIEW_REST_API_BASE_URL + '/count/' + id)
+
+export const deleteBookReviewById = (id) => axios.delete(BOOKREVIEW_REST_API_BASE_URL + '/' + id)

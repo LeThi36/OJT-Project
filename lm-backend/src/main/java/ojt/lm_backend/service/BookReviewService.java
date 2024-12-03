@@ -10,4 +10,5 @@ public interface BookReviewService {
     List<BookReviewDto> getBookReviewByBookId(int id,int pageNo,int pageSize);
     BookReviewRequestDto postBookReview(BookReviewRequestDto bookReviewRequestDto);
     Long countReview(int id);
+    String deleteReview(int id);
 }

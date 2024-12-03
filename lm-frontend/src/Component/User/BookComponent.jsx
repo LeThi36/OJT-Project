@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query';
 import { json, useParams } from 'react-router-dom';
 import { getBookById } from '../../Services/BookService';
-import { countBookReviewById, getBookReviewByBookId, postBookReview } from '../../Services/BookReview';
+import { countBookReviewById, deleteBookReviewById, getBookReviewByBookId, postBookReview } from '../../Services/BookReview';
 import { createBorrowRecord } from '../../Services/BorrowRecordService';
 
 function BookComponent() {
@@ -16,11 +16,13 @@ function BookComponent() {
     })
     const [currentPage, setCurrentPage] = useState(0)
     const [totalPage, setTotalPage] = useState(0)
-    const [favorited,setFavorited] = useState(false)
+    const [favorited, setFavorited] = useState(false)
     const [showModal, setShowModal] = useState(false);
     const [borrowStart, setBorrowStart] = useState(null);
     const [borrowEnd, setBorrowEnd] = useState(null);
     const [isValidDate, setIsValidDate] = useState(true);
+    const [isConfirm, setIsConfirm] = useState(false)
+    const [bookReviewId, setBookReviewId] = useState(null)
     const userId = sessionStorage.getItem("userId");
 
     function checkValidDate() {
@@ -62,22 +64,22 @@ function BookComponent() {
         }
     }
 
-    useEffect(()=>{
-        countBookReviewById(id).then(res => {const count = res.data; setTotalPage(Math.ceil(count/4))}
+    useEffect(() => {
+        countBookReviewById(id).then(res => { const count = res.data; setTotalPage(Math.ceil(count / 4)) }
         )
         const favoriteBook = JSON.parse(localStorage.getItem('favoriteBook')) || [];
-        const existed = favoriteBook.find(item => item.bookId == id);        
+        const existed = favoriteBook.find(item => item.bookId == id);
         setFavorited(existed ? true : false);
-    },[])
+    }, [])
 
 
     const { data: book, isLoading: loadingBook } = useQuery({
         queryFn: () => getBookById(id).then(response => response.data),
         queryKey: ["book", id]
     })
-    const { data: review, isLoading: loadingReview,refetch } = useQuery({
-        queryFn: () => getBookReviewByBookId(id,currentPage,4).then(response => response.data),
-        queryKey: ["review", id,currentPage]
+    const { data: review, isLoading: loadingReview, refetch } = useQuery({
+        queryFn: () => getBookReviewByBookId(id, currentPage, 4).then(response => response.data),
+        queryKey: ["review", id, currentPage]
     })
 
     if (loadingBook) {
@@ -98,7 +100,7 @@ function BookComponent() {
         const favoriteBook = JSON.parse(localStorage.getItem('favoriteBook')) || [];
         const existed = favoriteBook.find(item => item.bookId === book.bookId);
         if (existed) {
-            const modifiedFavoriteBook = favoriteBook.filter((bookItem) => bookItem.bookId !== book.bookId);            
+            const modifiedFavoriteBook = favoriteBook.filter((bookItem) => bookItem.bookId !== book.bookId);
             localStorage.setItem('favoriteBook', JSON.stringify(modifiedFavoriteBook));
             setFavorited(false);
             alert('Book removed to favorite');
@@ -134,19 +136,28 @@ function BookComponent() {
 
     const handleSubmitReview = (e) => {
         e.preventDefault()
-        postBookReview(reviewRequest).then(res => {setReviewRequest({
-            ...reviewRequest, 
-            reviewText: '',
-        }
-        )
-        ;refetch()}).catch(err => console.log(err))
+        postBookReview(reviewRequest).then(res => {
+            setReviewRequest({
+                ...reviewRequest,
+                reviewText: '',
+            }
+            )
+                ; refetch()
+        }).catch(err => console.log(err))
+    }
+
+    const handleConfirm = () => {
+        setIsConfirm(!isConfirm)
+        setBookReviewId(null)
+        deleteBookReviewById(bookReviewId).then(res => alert(res.data)).catch(err => alert(err))
+        refetch()
     }
 
 
     return (
         <>
             {borrowMutation.isLoading && (
-                <div style={{ textAlign: 'center', width: "100vw", height: "100vh", position: 'fixed', top: 0, left: 0, zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.3)'}}>
+                <div style={{ textAlign: 'center', width: "100vw", height: "100vh", position: 'fixed', top: 0, left: 0, zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
                     <img style={{ marginTop: "20%", marginLeft: "50%", transform: "translateX(-50%)" }} src="https://media.tenor.com/_62bXB8gnzoAAAAj/loading.gif" alt="" />
                 </div>
             )}
@@ -210,9 +221,9 @@ function BookComponent() {
                                     {favorited ? (<svg fill="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                                         <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                                     </svg>)
-                                    : (<svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-                                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
-                                    </svg>)}
+                                        : (<svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
+                                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                                        </svg>)}
                                 </button>
                             </div>
                         </div>
@@ -253,6 +264,9 @@ function BookComponent() {
                                                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                                                         </svg>
                                                     ))}
+                                                    {
+                                                        userId == r.user.userId ? (<button className='text-red-500 ms-auto font-bold me-2 border rounded-full px-2 hover:bg-red-600 hover:text-red-300 duration-300' onClick={() => { setIsConfirm(!isConfirm); setBookReviewId(r.reviewId) }}>Delete this review</button>) : (<></>)
+                                                    }
                                                 </div>
                                                 <p className="text-gray-600 mt-2">
                                                     {
@@ -290,9 +304,42 @@ function BookComponent() {
                                     <option>5</option>
                                 </select>
                             </div>
-                            <input onChange={(e) => setReviewRequest({ ...reviewRequest, reviewText: e.target.value })} type='text' className='w-full border rounded-md' placeholder='write your review here' />
+                            <input onChange={(e) => setReviewRequest({ ...reviewRequest, reviewText: e.target.value })} type='text' className='w-full border rounded-md' placeholder='write your review here' value={reviewRequest.reviewText} />
                             <button onClick={(e) => handleSubmitReview(e)} className='border rounded-md mt-2 p-2 bg-indigo-500 text-white'>submit</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className={`${isConfirm ? 'hidden overflow-y-hidden' : 'block overflow-y-hidden'} fixed inset-0 bg-slate-400 bg-opacity-60 overflow-y-auto h-fullfull w-auto px-4`}>
+                <div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
+
+                    <div class="flex justify-end p-2">
+                        <button onclick="closeModal('modelConfirm')" type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="p-6 pt-0 text-center">
+                        <svg className="w-20 h-20 text-red-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 className="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete this review?</h3>
+                        <button onClick={() => handleConfirm()}
+                            className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
+                            Yes, I'm sure
+                        </button>
+                        <button onClick={() => setIsConfirm(!isConfirm)}
+                            className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center"
+                            data-modal-toggle="delete-user-modal">
+                            No, cancel
+                        </button>
                     </div>
                 </div>
             </div>
@@ -306,22 +353,22 @@ function BookComponent() {
                 }}
             >
                 <div
-                    style={{height: 450, width: "100%", backgroundColor: 'white', borderRadius: 20}}
+                    style={{ height: 450, width: "100%", backgroundColor: 'white', borderRadius: 20 }}
                 >
                     <div
-                        style={{ position: 'absolute', right: "21.5%", top: "21.5%", color: "#6B7280", fontWeight: 700, cursor: "pointer"}}
+                        style={{ position: 'absolute', right: "21.5%", top: "21.5%", color: "#6B7280", fontWeight: 700, cursor: "pointer" }}
                         onClick={() => setShowModal(false)}
                     >✕</div>
                     <div
-                        style={{borderBottom: "1px solid #ccc", fontSize: 32, textAlign: 'center', padding: "8px 0", fontWeight: 700}}
+                        style={{ borderBottom: "1px solid #ccc", fontSize: 32, textAlign: 'center', padding: "8px 0", fontWeight: 700 }}
                     >Borrow Info</div>
 
                     {/* modal body */}
-                    <div style={{padding: 16}}>
+                    <div style={{ padding: 16 }}>
                         <div>
                             <div style={{ fontSize: 20, fontWeight: 500, textAlign: 'center', marginTop: 80 }}>Please enter borrow time:</div>
                             <div
-                                style={{color: 'red', textAlign: 'center', display: isValidDate ? 'none' : 'block'}}
+                                style={{ color: 'red', textAlign: 'center', display: isValidDate ? 'none' : 'block' }}
                             >Please enter valid date</div>
                             <div style={{ display: "flex", alignItems: 'center', marginTop: 20, justifyContent: 'center' }}>
                                 <div>
@@ -336,7 +383,7 @@ function BookComponent() {
                         </div>
                     </div>
 
-                    <div style={{display: "flex", justifyContent: 'flex-end', padding: 16, position: 'absolute', top: '70%', right: "20%"}}>
+                    <div style={{ display: "flex", justifyContent: 'flex-end', padding: 16, position: 'absolute', top: '70%', right: "20%" }}>
                         <button
                             className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2"
                             onClick={() => onBorrow()}

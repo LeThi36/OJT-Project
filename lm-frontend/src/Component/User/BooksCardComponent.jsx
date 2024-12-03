@@ -120,7 +120,7 @@ function BooksCardComponent() {
             </div>
             <BooksComponent data={books} />
             <div className='flex justify-center'>
-                {Array(totalPage)
+                {!isSearching && Array(totalPage)
                     .fill(0)
                     .map((_, index) => (
                         <button

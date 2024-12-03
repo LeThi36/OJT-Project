@@ -1,7 +1,9 @@
 package ojt.lm_backend.service;
 
 import ojt.lm_backend.dto.request.BorrowRequest;
+import ojt.lm_backend.dto.request.MultipleBorrowRequest;
 import ojt.lm_backend.dto.response.BorrowResponse;
+import ojt.lm_backend.dto.response.MultipleBorrowResponse;
 import ojt.lm_backend.entity.Book;
 import ojt.lm_backend.entity.BorrowRecord;
 import ojt.lm_backend.entity.User;
@@ -21,5 +23,6 @@ public interface BorrowService {
     BorrowResponse ReturnedBorrow(Integer borrowId);
     void deleteBorrowRecord(Integer borrowId);
     void updateFines();
-
+    MultipleBorrowResponse createMultipleBorrows(MultipleBorrowRequest multipleBorrowRequest);
+    BorrowResponse returnAllBooks(Integer borrowId);
 }

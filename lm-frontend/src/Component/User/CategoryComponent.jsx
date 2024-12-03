@@ -50,9 +50,9 @@ function CategoryComponent() {
                             categoryDetail.map((c) => {
                                 return (
                                     <Link key={c.categoryId} to={`/category/${c.categoryId}`} className="p-4 md:w-1/3 cursor-pointer">
-                                        <div className="flex rounded-lg h-full bg-gray-100 p-8 flex-col">
+                                        <div className="text-white flex rounded-lg h-full bg-gray-100 p-8 flex-col">
                                             <div className="flex items-center mb-3">
-                                                <div className="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                                                <div className="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 flex-shrink-0">
                                                     <svg className="w-[24px] h-[24px] fill-[#ffffff]" viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg">
 
 
@@ -83,7 +83,7 @@ function CategoryComponent() {
                             <button
                                 key={index}
                                 onClick={() => setCurrentPage(index)}
-                                className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700' : 'bg-indigo-500'} text-white rounded`}
+                                className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700 hover:bg-indigo-500' : 'bg-indigo-500 hover:bg-indigo-300'} text-white rounded duration-300`}
                             >
                                 {index + 1}
                             </button>

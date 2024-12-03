@@ -64,7 +64,7 @@ function CategoryTableComponent() {
                                 <th scope="col" className="px-6 py-3">
                                     Number of books
                                 </th>
-                                <th></th>
+                                <th className='w-1/5'></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,7 +81,7 @@ function CategoryTableComponent() {
                                             {cat.books.length}
                                         </td>
                                         <td>
-                                            <button onClick={() => handleDelete(cat.categoryId)} className='font-bold text-red-600'>delete this category</button>
+                                            <button onClick={() => handleDelete(cat.categoryId)} class="font-bold text-white rounded-full px-2 py-1 bg-red-600 hover:bg-red-900 duration-300">delete this category</button>
                                         </td>
                                     </tr>
                                 );

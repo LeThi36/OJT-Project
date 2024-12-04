@@ -3,7 +3,9 @@ package ojt.lm_backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import ojt.lm_backend.dto.request.BorrowRequest;
+import ojt.lm_backend.dto.request.MultipleBorrowRequest;
 import ojt.lm_backend.dto.response.BorrowResponse;
+import ojt.lm_backend.dto.response.MultipleBorrowResponse;
 import ojt.lm_backend.entity.Book;
 import ojt.lm_backend.entity.User;
 import ojt.lm_backend.repository.BookRepository;
@@ -34,6 +36,15 @@ public class BorrowController {
     public BorrowResponse createBorrowRecord(@RequestBody BorrowRequest request) {
         return borrowService.createBorrowRecord(request);
     }
+
+
+    // mượn nhieu sách
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PostMapping("/create/multiple")
+    public MultipleBorrowResponse createMultipleBorrows(@RequestBody MultipleBorrowRequest multipleBorrowRequest) {
+        return borrowService.createMultipleBorrows(multipleBorrowRequest);
+    }
+
 
     //xem lịch sử order borrow của người đó
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")

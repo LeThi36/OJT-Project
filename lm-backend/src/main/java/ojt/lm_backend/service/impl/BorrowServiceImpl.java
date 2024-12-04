@@ -4,7 +4,9 @@ package ojt.lm_backend.service.impl;
 import ojt.lm_backend.LMenum.BookStatus;
 import ojt.lm_backend.LMenum.BorrowStatus;
 import ojt.lm_backend.dto.request.BorrowRequest;
+import ojt.lm_backend.dto.request.MultipleBorrowRequest;
 import ojt.lm_backend.dto.response.BorrowResponse;
+import ojt.lm_backend.dto.response.MultipleBorrowResponse;
 import ojt.lm_backend.entity.BorrowRecord;
 import ojt.lm_backend.entity.User;
 import ojt.lm_backend.entity.Book;
@@ -20,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,18 +44,18 @@ public class BorrowServiceImpl implements BorrowService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Tìm Book theo bookId
+
         Book book = bookRepository.findById(request.getBookId())
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        // Kiểm tra trạng thái của cuốn sách
-        if (book.getStatus() != BookStatus.NEW) {
-            // Log trạng thái sách nếu không phải NEW
-            System.out.println("Book '" + book.getTitle() + "' Not available for loan. Current status: " + book.getStatus());
-            throw new RuntimeException("This book is not available for loan.");
+        if (book.getCopies() > 0) {
+            book.setCopies(book.getCopies() - 1);
+            bookRepository.save(book);
+        } else {
+            throw new RuntimeException("No copies available for loan.");
         }
 
-        // Nếu trạng thái là NEW, tạo bản ghi mượn
+
         LocalDate borrowDate = request.getBorrowDate();
         LocalDate dueDate = borrowDate.plusDays(request.getBorrowDurationDays());
 
@@ -186,10 +189,11 @@ public class BorrowServiceImpl implements BorrowService {
         BorrowRecord updatedRecord = borrowRecordRepository.save(record);
 
         Book book = record.getBook();
-        if (book.getStatus() == BookStatus.USED) {
-            book.setStatus(BookStatus.NEW);
-            bookRepository.save(book);
-        }
+
+        Integer returnedQuantity = 1;  // Trả về một cuốn sách
+        book.setCopies(book.getCopies() + returnedQuantity);
+        bookRepository.save(book);
+
         return convertToResponse(updatedRecord);
     }
 
@@ -216,6 +220,71 @@ public class BorrowServiceImpl implements BorrowService {
             System.out.println("Updated record ID: " + record.getBorrowId() + " with fine: " + fine);
         }
     }
+
+    public MultipleBorrowResponse createMultipleBorrows(MultipleBorrowRequest multipleBorrowRequest) {
+        List<MultipleBorrowResponse.BorrowResponse> borrowResponses = new ArrayList<>();
+
+        for (MultipleBorrowRequest.BookBorrowRequest bookRequest : multipleBorrowRequest.getBooks()) {
+            // Tìm User theo userId
+            User user = userRepository.findById(multipleBorrowRequest.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Tìm Book theo bookId
+            Book book = bookRepository.findById(bookRequest.getBookId())
+                    .orElseThrow(() -> new RuntimeException("Book not found"));
+
+            // Kiểm tra số lượng bản sao sách còn lại trong database
+            if (book.getCopies() >= 1) {
+                // Giảm số lượng copies theo số lượng sách mượn
+                book.setCopies(book.getCopies() - 1);
+                bookRepository.save(book);  // Lưu lại sách với số lượng bản sao đã giảm
+            } else {
+                throw new RuntimeException("Not enough copies available for book: " + book.getTitle());
+            }
+
+            // Tính toán ngày mượn và ngày trả sách từ request
+            LocalDate borrowDate = bookRequest.getBorrowDate();  // Ngày mượn từ request
+            LocalDate dueDate = borrowDate.plusDays(bookRequest.getBorrowDurationDays());  // Ngày trả sách
+
+            // Tạo bản ghi mượn sách
+            BorrowRecord record = BorrowRecord.builder()
+                    .user(user)
+                    .book(book)
+                    .borrowDate(borrowDate)
+                    .dueDate(dueDate)
+                    .status(BorrowStatus.PENDING_APPROVAL)
+                    .fine(BigDecimal.valueOf(0))
+                    .build();
+
+            // Lưu bản ghi mượn vào cơ sở dữ liệu
+            BorrowRecord savedRecord = borrowRecordRepository.save(record);
+
+            // Tạo phản hồi cho bản ghi mượn và thêm vào danh sách
+            MultipleBorrowResponse.BorrowResponse response = MultipleBorrowResponse.BorrowResponse.builder()
+                    .borrowId(savedRecord.getBorrowId())
+                    .bookId(book.getBookId())
+                    .borrowDate(borrowDate)
+                    .dueDate(dueDate)
+                    .status(savedRecord.getStatus())
+                    .fine(savedRecord.getFine())
+
+                    .build();
+
+            borrowResponses.add(response);
+        }
+
+        // Trả về danh sách phản hồi của các bản ghi mượn
+        return MultipleBorrowResponse.builder()
+                .userId(multipleBorrowRequest.getUserId())
+                .borrows(borrowResponses)
+                .build();
+    }
+
+    @Override
+    public BorrowResponse returnAllBooks(Integer borrowId) {
+        return null;
+    }
+
 
     private BigDecimal calculateFine(LocalDate dueDate) {
         long daysLate = ChronoUnit.DAYS.between(dueDate, LocalDate.now());

@@ -217,9 +217,9 @@ function BookComponent() {
                                 <div className="flex">
                                     <button
                                         onClick={() => setShowModal(true)}
-                                        className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2 duration-300"
+                                        className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-800 rounded mr-2 duration-300"
                                     >Borrow it now</button>
-                                    <button className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-600 hover:text-white rounded duration-300" onClick={() => handelCart(book)}>Add to cart</button>
+                                    <button className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-500 hover:text-white rounded duration-300" onClick={() => handelCart(book)}>Add to cart</button>
                                 </div>
 
                                 <button onClick={() => handelLikeBook(book)} className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">

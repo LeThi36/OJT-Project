@@ -87,21 +87,21 @@ function UserProfileComponent() {
                     <p className="mt-1 text-sm text-gray-500 text-center">
                         Details and informations about {user.username}.
                     </p>
-                    <a href='/change-password' className="mt-1 text-grey-900 font-semibold capitalize text-start">
+                    <a href='/change-password' className=" border rounded-lg border-orange-500 bg-orange-500 text-white px-2 py-1 hover:bg-orange-700 hover:border-orange-700 duration-300 text-grey-900 font-semibold capitalize text-start">
                         Change password
                     </a>
 
                     {isEdit ? (
                         <>
-                            <button onClick={(e) => handleSave(e)} className="mt-1 text-grey-900 font-semibold capitalize border-s-2 ps-2 ms-2 border-s-gray-900 text-emerald-700">
+                            <button onClick={(e) => handleSave(e)} className="mt-1 text-grey-900 font-semibold capitalize border-s-2 ps-2 ms-2 border-s-gray-900 text-emerald-500 hover:text-emerald-800 duration-300">
                                 save
                             </button>
-                            <button onClick={(e) => handleCancel(e)} className="mt-1 text-grey-900 font-semibold capitalize border-s-2 ps-2 ms-2 border-s-gray-900 text-red-700">
+                            <button onClick={(e) => handleCancel(e)} className="mt-1 text-grey-900 font-semibold capitalize border-s-2 ps-2 ms-2 border-s-gray-900 text-red-500 hover:text-orange-800 duration-300">
                                 cancel
                             </button>
                         </>
                     ) : (
-                        <button onClick={(e) => handleUpdate(e)} className="mt-1 text-grey-900 font-semibold capitalize text-start mx-2 border-s-2 ps-2 border-s-gray-900">
+                        <button onClick={(e) => handleUpdate(e)} className="mt-1 text-white border-emerald-500 bg-emerald-500 border rounded-lg font-semibold capitalize text-start px-2 py-1 hover:bg-emerald-700 hover:border-emerald-700 duration-300 ms-2">
                             Update Profile
                         </button>
                     )}

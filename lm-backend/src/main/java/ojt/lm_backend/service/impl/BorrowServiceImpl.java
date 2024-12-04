@@ -234,9 +234,9 @@ public class BorrowServiceImpl implements BorrowService {
                     .orElseThrow(() -> new RuntimeException("Book not found"));
 
             // Kiểm tra số lượng bản sao sách còn lại trong database
-            if (book.getCopies() >= bookRequest.getQuantity()) {
+            if (book.getCopies() >= 1) {
                 // Giảm số lượng copies theo số lượng sách mượn
-                book.setCopies(book.getCopies() - bookRequest.getQuantity());
+                book.setCopies(book.getCopies() - 1);
                 bookRepository.save(book);  // Lưu lại sách với số lượng bản sao đã giảm
             } else {
                 throw new RuntimeException("Not enough copies available for book: " + book.getTitle());
@@ -254,7 +254,6 @@ public class BorrowServiceImpl implements BorrowService {
                     .dueDate(dueDate)
                     .status(BorrowStatus.PENDING_APPROVAL)
                     .fine(BigDecimal.valueOf(0))
-                    .quantity(bookRequest.getQuantity())  // Lưu số lượng sách mượn
                     .build();
 
             // Lưu bản ghi mượn vào cơ sở dữ liệu
@@ -268,7 +267,7 @@ public class BorrowServiceImpl implements BorrowService {
                     .dueDate(dueDate)
                     .status(savedRecord.getStatus())
                     .fine(savedRecord.getFine())
-                    .quantity(bookRequest.getQuantity())  // Trả về số lượng sách mượn
+
                     .build();
 
             borrowResponses.add(response);

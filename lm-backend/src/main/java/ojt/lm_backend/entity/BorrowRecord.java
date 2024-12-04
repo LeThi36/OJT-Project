@@ -44,7 +44,4 @@ public class BorrowRecord {
 
     @Column(name = "fine", nullable = false, columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
     private BigDecimal fine;
-
-    @Column(name = "quantity")
-    private Integer quantity;
 }

@@ -28,7 +28,5 @@ public class MultipleBorrowResponse {
         private LocalDate dueDate;        // Trả về ngày hết hạn
         private BorrowStatus status;
         private BigDecimal fine;
-        private Integer quantity;
-        private Integer borrowDurationDays;  //
     }
 }

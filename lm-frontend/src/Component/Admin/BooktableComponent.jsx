@@ -1,6 +1,6 @@
 import { countBook, deleteBook, getAllBook } from '../../Services/BookService';
 import { Link } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useEffect, useState } from 'react';
 import { updateCategory } from '../../Services/CategoryService';
 
@@ -13,6 +13,12 @@ function BooktableComponent({ data, title, elementId }) {
         categoryId: elementId,
         categoryName: ''
     })
+    const [isConfirm, setIsConfirm] = useState({
+        confirm: false,
+        bookId: 0
+    })
+
+    const queryClient = useQueryClient();
 
     if (data) {
         useEffect(() => {
@@ -28,7 +34,7 @@ function BooktableComponent({ data, title, elementId }) {
 
         const { data: books, isLoading } = useQuery({
             queryFn: () => getAllBook(currentPage, 8).then(response => response.data),
-            queryKey: ["books", currentPage]
+            queryKey: ["BOOK_TABLE", currentPage]
         })
         data = books
         if (isLoading) {
@@ -36,7 +42,6 @@ function BooktableComponent({ data, title, elementId }) {
         }
 
     }
-
 
     function formatDateTime(isoString) {
         const date = new Date(isoString);
@@ -47,10 +52,13 @@ function BooktableComponent({ data, title, elementId }) {
         return `${formattedDate} ${formattedTime}`;
     }
 
-    const handleDelete = async (bookId) => {
-        await deleteBook(bookId);
-        queryClient.invalidateQueries("books");
-    };
+    const handleConfirm = () => {
+        deleteBook(isConfirm.bookId).then(res => { alert("delete successfully"); queryClient.invalidateQueries({ queryKey: ["BOOK_TABLE"] }) }).catch(err => alert("something went wrong"))
+        setIsConfirm({
+            confirm: false,
+            bookId: 0
+        })
+    }
 
     const handleSubmit = (updatedCategory) => {
         console.log(updatedCategory);
@@ -145,7 +153,7 @@ function BooktableComponent({ data, title, elementId }) {
                                             {formatDateTime(b.updatedAt)}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <button onClick={() => handleDelete(b.bookId)} class="font-bold text-white rounded-full px-2 py-1 bg-red-600 hover:bg-red-900 duration-300">Delete Book</button>
+                                            <button onClick={() => setIsConfirm({ confirm: true, bookId: b.bookId })} class="font-bold text-white rounded-full px-2 py-1 bg-red-600 hover:bg-red-900 duration-300">Delete Book</button>
                                         </td>
                                     </tr>
                                 );
@@ -160,13 +168,46 @@ function BooktableComponent({ data, title, elementId }) {
                         return (
                             <button
                                 key={index}
-                                className={`text-white border rounded-md px-4 py-2 mx-2 hover:bg-gray-500 duration-300 ${currentPage === index ? 'bg-gray-600':'bg-gray-400'}`}
+                                className={`text-white border rounded-md px-4 py-2 mx-2 hover:bg-gray-500 duration-300 ${currentPage === index ? 'bg-gray-600' : 'bg-gray-400'}`}
                                 onClick={() => setCurrentPage(index)}>
                                 {index + 1}
                             </button>
                         )
                     })
                 }
+            </div>
+            
+            <div className={`${!isConfirm.confirm ? 'hidden overflow-y-hidden' : 'block overflow-y-hidden'} fixed inset-0 overflow-y-auto h-fullfull w-auto px-4 `}>
+                <div className="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
+
+                    <div className="flex justify-end p-2">
+                        <button type="button"
+                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" onClick={() => setIsConfirm({ ...isConfirm, confirm: false })}>
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clipRule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="p-6 pt-0 text-center">
+                        <svg className="w-20 h-20 text-indigo-700 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 className="text-xl font-normal text-gray-500 mt-5 mb-6">This action can not roll back!</h3>
+                        <button onClick={() => handleConfirm()}
+                            className="text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
+                            Yes, I'm sure
+                        </button>
+                        <button onClick={() => setIsConfirm({ ...isConfirm, confirm: false })}
+                            className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center"
+                            data-modal-toggle="delete-user-modal">
+                            No, cancel
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     )

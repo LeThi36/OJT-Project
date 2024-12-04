@@ -53,11 +53,15 @@ public class SecurityConfig {
                     author.requestMatchers("/api/user/count").permitAll();
                     author.requestMatchers("/api/author/count").permitAll();
                     author.requestMatchers("/api/book/count").permitAll();
+                    author.requestMatchers("/api/review/count/{id}").permitAll();
                     author.requestMatchers("/api/category").permitAll();
                     author.requestMatchers("/api/sendmail").permitAll();
                     author.requestMatchers("/api/category/count").permitAll();
                     author.requestMatchers("/api/category/book/*").permitAll();
                     author.requestMatchers("/api/token/**").permitAll();
+                    author.requestMatchers("/api/category/{id}").permitAll();
+                    author.requestMatchers("/api/book/{id}").permitAll();
+                    author.requestMatchers("/api/review/book/{id}").permitAll();
                     author.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

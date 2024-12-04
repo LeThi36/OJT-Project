@@ -38,7 +38,6 @@ public class BookReviewController {
     }
 
     @GetMapping("/count/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<Long> countReviewByBookId(@PathVariable int id){
         return new ResponseEntity<>(bookReviewService.countReview(id),HttpStatus.OK);
     }

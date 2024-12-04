@@ -33,7 +33,6 @@ public class CategoryController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable int id){
         return new ResponseEntity<>(categoryService.getCategoryById(id),HttpStatus.OK);
     }

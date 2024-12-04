@@ -134,10 +134,13 @@ function Login() {
                                         </div>
                                     </div>
                                 </div>
+                                <div className='google-login'>
+
                                 <GoogleLogin
                                     onSuccess={(credentialResponse) => handleLoginSuccess(credentialResponse)}
                                     onError={handleLoginFailure}
                                 />
+                                </div>
 
                                 <div className="mb-4 text-center">
                                     <button onClick={() => handleLogin()} className="transition duration-500 bg-gray-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">

@@ -221,29 +221,32 @@ public class BorrowServiceImpl implements BorrowService {
         }
     }
 
-    @Override
     public MultipleBorrowResponse createMultipleBorrows(MultipleBorrowRequest multipleBorrowRequest) {
         List<MultipleBorrowResponse.BorrowResponse> borrowResponses = new ArrayList<>();
 
         for (MultipleBorrowRequest.BookBorrowRequest bookRequest : multipleBorrowRequest.getBooks()) {
-
+            // Tìm User theo userId
             User user = userRepository.findById(multipleBorrowRequest.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
+            // Tìm Book theo bookId
             Book book = bookRepository.findById(bookRequest.getBookId())
                     .orElseThrow(() -> new RuntimeException("Book not found"));
 
+            // Kiểm tra số lượng bản sao sách còn lại trong database
             if (book.getCopies() >= bookRequest.getQuantity()) {
-
+                // Giảm số lượng copies theo số lượng sách mượn
                 book.setCopies(book.getCopies() - bookRequest.getQuantity());
-                bookRepository.save(book);
+                bookRepository.save(book);  // Lưu lại sách với số lượng bản sao đã giảm
             } else {
                 throw new RuntimeException("Not enough copies available for book: " + book.getTitle());
             }
 
-            LocalDate borrowDate = multipleBorrowRequest.getBorrowDate();
-            LocalDate dueDate = borrowDate.plusDays(multipleBorrowRequest.getBorrowDurationDays());
+            // Tính toán ngày mượn và ngày trả sách từ request
+            LocalDate borrowDate = bookRequest.getBorrowDate();  // Ngày mượn từ request
+            LocalDate dueDate = borrowDate.plusDays(bookRequest.getBorrowDurationDays());  // Ngày trả sách
 
+            // Tạo bản ghi mượn sách
             BorrowRecord record = BorrowRecord.builder()
                     .user(user)
                     .book(book)
@@ -254,8 +257,10 @@ public class BorrowServiceImpl implements BorrowService {
                     .quantity(bookRequest.getQuantity())  // Lưu số lượng sách mượn
                     .build();
 
+            // Lưu bản ghi mượn vào cơ sở dữ liệu
             BorrowRecord savedRecord = borrowRecordRepository.save(record);
 
+            // Tạo phản hồi cho bản ghi mượn và thêm vào danh sách
             MultipleBorrowResponse.BorrowResponse response = MultipleBorrowResponse.BorrowResponse.builder()
                     .borrowId(savedRecord.getBorrowId())
                     .bookId(book.getBookId())
@@ -263,11 +268,13 @@ public class BorrowServiceImpl implements BorrowService {
                     .dueDate(dueDate)
                     .status(savedRecord.getStatus())
                     .fine(savedRecord.getFine())
-                    .quantity(bookRequest.getQuantity())
+                    .quantity(bookRequest.getQuantity())  // Trả về số lượng sách mượn
                     .build();
 
             borrowResponses.add(response);
         }
+
+        // Trả về danh sách phản hồi của các bản ghi mượn
         return MultipleBorrowResponse.builder()
                 .userId(multipleBorrowRequest.getUserId())
                 .borrows(borrowResponses)

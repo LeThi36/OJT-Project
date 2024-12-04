@@ -24,10 +24,11 @@ public class MultipleBorrowResponse {
     public static class BorrowResponse {
         private Integer borrowId;
         private Integer bookId;
-        private LocalDate borrowDate;
-        private LocalDate dueDate;
+        private LocalDate borrowDate;     // Trả về ngày mượn
+        private LocalDate dueDate;        // Trả về ngày hết hạn
         private BorrowStatus status;
         private BigDecimal fine;
         private Integer quantity;
+        private Integer borrowDurationDays;  //
     }
 }

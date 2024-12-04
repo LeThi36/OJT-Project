@@ -14,9 +14,8 @@ import java.util.List;
 @Data
 public class MultipleBorrowRequest {
     private Long userId;
-    private LocalDate borrowDate;
-    private int borrowDurationDays;
     private List<BookBorrowRequest> books;
+
 
 
     @NoArgsConstructor
@@ -26,5 +25,7 @@ public class MultipleBorrowRequest {
     public static class BookBorrowRequest {
         private Integer bookId;
         private Integer quantity;
+        private LocalDate borrowDate;  // Thêm ngày mượn cho từng sách
+        private int borrowDurationDays;
     }
 }

@@ -34,7 +34,7 @@ function ResetPasswordComponent() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         console.log(requestObj);
-        
+
         if (resetPassword.rsPass !== resetPassword.comfirmRsPass) {
             alert("confirm password does not match!")
             setRequestPassword(
@@ -49,7 +49,7 @@ function ResetPasswordComponent() {
                 await resetPasswordAPICall(requestObj).then(res => alert(res.data))
             } catch (error) {
                 console.log(error);
-            } finally{
+            } finally {
                 setIsLoading(false)
                 navigate('/login')
             }
@@ -91,24 +91,24 @@ function ResetPasswordComponent() {
                                 </div>
                                 <div className="mb-8 text-left">
                                     <label htmlFor="resetpassword" className="text-gray-700 text-lg font-bold mb-2">
-                                        Reset Password
+                                        New Password
                                     </label>
                                     <div className="mt-1 relative rounded-md shadow-sm">
                                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                            <svg className="h-5 w-5 text-gray-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                         </div>
-                                        <input onChange={(e) => setRequestPassword({ ...resetPassword, rsPass: e.target.value })} id="resetpassword" className="block pr-10 shadow appearance-none border-2 border-neutral-100 rounded w-full py-2 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-neutral-900 transition duration-500 ease-in-out" placeholder="you@example.com" />
+                                        <input onChange={(e) => setRequestPassword({ ...resetPassword, rsPass: e.target.value })} id="resetpassword" className="block pr-10 shadow appearance-none border-2 border-neutral-100 rounded w-full py-2 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-neutral-900 transition duration-500 ease-in-out" placeholder="enter your new password" type='password' />
                                     </div>
                                 </div>
                                 <div className="mb-8 text-left">
                                     <label htmlFor="confirmPassword" className="text-gray-700 text-lg font-bold mb-2">
-                                        Reset Password
+                                        Confirm New Password
                                     </label>
                                     <div className="mt-1 relative rounded-md shadow-sm">
                                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                            <svg className="h-5 w-5 text-gray-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                         </div>
-                                        <input onChange={(e) => setRequestPassword({ ...resetPassword, comfirmRsPass: e.target.value })} id="confirmPassword" className="block pr-10 shadow appearance-none border-2 border-neutral-100 rounded w-full py-2 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-neutral-900 transition duration-500 ease-in-out" placeholder="you@example.com" />
+                                        <input onChange={(e) => setRequestPassword({ ...resetPassword, comfirmRsPass: e.target.value })} id="confirmPassword" className="block pr-10 shadow appearance-none border-2 border-neutral-100 rounded w-full py-2 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-neutral-900 transition duration-500 ease-in-out" placeholder="enter your new password again" type='password' />
                                     </div>
                                 </div>
                                 <div className="mb-4 text-center">

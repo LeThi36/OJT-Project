@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query';
-import { json, useParams } from 'react-router-dom';
+import { json, useNavigate, useParams } from 'react-router-dom';
 import { getBookById } from '../../Services/BookService';
 import { countBookReviewById, deleteBookReviewById, getBookReviewByBookId, postBookReview } from '../../Services/BookReview';
 import { createBorrowRecord } from '../../Services/BorrowRecordService';
+import { isUserLoggedIn } from '../../Services/AuthService';
 
 function BookComponent() {
     const { id } = useParams()
+
+    const navigate = useNavigate()
 
     const [reviewRequest, setReviewRequest] = useState({
         bookId: id,
@@ -18,8 +21,8 @@ function BookComponent() {
     const [totalPage, setTotalPage] = useState(0)
     const [favorited, setFavorited] = useState(false)
     const [showModal, setShowModal] = useState(false);
-    const [borrowStart, setBorrowStart] = useState(null);
-    const [borrowEnd, setBorrowEnd] = useState(null);
+    const [borrowStart, setBorrowStart] = useState('');
+    const [borrowEnd, setBorrowEnd] = useState('');
     const [isValidDate, setIsValidDate] = useState(true);
     const [isConfirm, setIsConfirm] = useState(false)
     const [bookReviewId, setBookReviewId] = useState(null)
@@ -113,21 +116,26 @@ function BookComponent() {
     }
 
     const handelCart = (book, redirect) => {
-        const cart = JSON.parse(localStorage.getItem('cart')) || []
-        const existed = cart.find(item => item.bookId === book.bookId)
-        if (existed) {
-            cart.map(item => {
-                if (item.bookId === book.bookId)
-                    return alert('book already add')
-                return item
-            })
+
+        if (isUserLoggedIn()) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || []
+            const existed = cart.find(item => item.bookId === book.bookId)
+            if (existed) {
+                cart.map(item => {
+                    if (item.bookId === book.bookId)
+                        return alert('book already add')
+                    return item
+                })
+            } else {
+                localStorage.setItem('cart', JSON.stringify([...cart, { ...book }]))
+                alert('Book added to cart')
+            }
+            if (redirect) {
+                console.log('add to cart product', product)
+                navigate('/cart')
+            }
         } else {
-            localStorage.setItem('cart', JSON.stringify([...cart, { ...book }]))
-            alert('Book added to cart')
-        }
-        if (redirect) {
-            console.log('add to cart product', product)
-            navigate('/cart')
+            navigate('/login')
         }
     }
 
@@ -156,6 +164,10 @@ function BookComponent() {
     const handleDeleteButton = (r) => {
         setIsConfirm(!isConfirm)
         setBookReviewId(r.reviewId)
+    }
+
+    const handleBorrowButton = () => {
+        isUserLoggedIn() ? setShowModal(true) : navigate('/login')
     }
 
 
@@ -216,7 +228,7 @@ function BookComponent() {
                             <div className="flex justify-between item-center mt-20">
                                 <div className="flex">
                                     <button
-                                        onClick={() => setShowModal(true)}
+                                        onClick={() => handleBorrowButton()}
                                         className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-800 rounded mr-2 duration-300"
                                     >Borrow it now</button>
                                     <button className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-500 hover:text-white rounded duration-300" onClick={() => handelCart(book)}>Add to cart</button>
@@ -242,45 +254,43 @@ function BookComponent() {
                         {
                             review.map(r => {
                                 return (
-                                    <>
-                                        <div className="flex flex-col">
-                                            <div className="border rounded-md p-3 ml-3 my-3">
-                                                <div className="flex gap-3 items-center">
-                                                    <img src={`https://drive.google.com/thumbnail?id=${r.user.imageUrl.split('id=')[1]}`}
-                                                        className="object-cover w-8 h-8 rounded-full
+                                    <div className="flex flex-col" key={r.reviewId}>
+                                        <div className="border rounded-md p-3 ml-3 my-3">
+                                            <div className="flex gap-3 items-center">
+                                                <img src={`https://drive.google.com/thumbnail?id=${r.user.imageUrl.split('id=')[1]}`}
+                                                    className="object-cover w-8 h-8 rounded-full
                             border-2 border-emerald-400  shadow-emerald-400
                             "/>
-                                                    <h3 className="font-bold">
-                                                        {
-                                                            r.user.username
-                                                        }
-                                                    </h3>
-                                                    {Array(5).fill(0).map((_, index) => (
-                                                        <svg
-                                                            key={index}
-                                                            fill={index < Math.floor(r.rating) ? "currentColor" : "none"}
-                                                            stroke="currentColor"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth="2"
-                                                            className="w-4 h-4 text-indigo-500"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                                                        </svg>
-                                                    ))}
+                                                <h3 className="font-bold">
                                                     {
-                                                        userId == r.user.userId ? (<button className='text-white ms-auto me-2 border rounded-full px-2 hover:bg-red-800 bg-red-600 duration-300' onClick={() => handleDeleteButton(r)}>Delete this review</button>) : (<></>)
+                                                        r.user.username
                                                     }
-                                                </div>
-                                                <p className="text-gray-600 mt-2">
-                                                    {
-                                                        r.reviewText
-                                                    }
-                                                </p>
+                                                </h3>
+                                                {Array(5).fill(0).map((_, index) => (
+                                                    <svg
+                                                        key={index}
+                                                        fill={index < Math.floor(r.rating) ? "currentColor" : "none"}
+                                                        stroke="currentColor"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        className="w-4 h-4 text-indigo-500"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                                    </svg>
+                                                ))}
+                                                {
+                                                    userId == r.user.userId ? (<button className='text-white ms-auto me-2 border rounded-full px-2 hover:bg-red-800 bg-red-600 duration-300' onClick={() => handleDeleteButton(r)}>Delete this review</button>) : (<></>)
+                                                }
                                             </div>
+                                            <p className="text-gray-600 mt-2">
+                                                {
+                                                    r.reviewText
+                                                }
+                                            </p>
                                         </div>
-                                    </>
+                                    </div>
                                 )
                             })
                         }
@@ -296,23 +306,27 @@ function BookComponent() {
                             </button>
                         ))}
                     </div>
-                    <div className='flex flex-col'>
-                        <div className="border rounded-md p-3 ml-3 my-3">
-                            <div className='flex p-2 mb-2'>
-                                <p className='font-bold me-2 my-auto'>Write your review</p>
-                                <p className='my-auto'>rating: </p>
-                                <select onChange={(e) => setReviewRequest({ ...reviewRequest, rating: e.target.value })} className='text-xs ms-2 rounded-md border-inherit'>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
+
+                    {
+                        isUserLoggedIn() &&
+                        <div className='flex flex-col'>
+                            <div className="border rounded-md p-3 ml-3 my-3">
+                                <div className='flex p-2 mb-2'>
+                                    <p className='font-bold me-2 my-auto'>Write your review</p>
+                                    <p className='my-auto'>rating: </p>
+                                    <select onChange={(e) => setReviewRequest({ ...reviewRequest, rating: e.target.value })} className='text-xs ms-2 rounded-md border-inherit'>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                </div>
+                                <input onChange={(e) => setReviewRequest({ ...reviewRequest, reviewText: e.target.value })} type='text' className='w-full border-inherit rounded-md' placeholder='write your review here' value={reviewRequest.reviewText} />
+                                <button onClick={(e) => handleSubmitReview(e)} className='border rounded-md mt-2 p-2 bg-indigo-500 text-white hover:bg-indigo-800 duration-300'>submit</button>
                             </div>
-                            <input onChange={(e) => setReviewRequest({ ...reviewRequest, reviewText: e.target.value })} type='text' className='w-full border-inherit rounded-md' placeholder='write your review here' value={reviewRequest.reviewText} />
-                            <button onClick={(e) => handleSubmitReview(e)} className='border rounded-md mt-2 p-2 bg-indigo-500 text-white hover:bg-indigo-800 duration-300'>submit</button>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
 
@@ -320,19 +334,19 @@ function BookComponent() {
                 <div className="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
 
                     <div className="flex justify-end p-2">
-                        <button onclick="closeModal('modelConfirm')" type="button"
-                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" onClick={()=>setIsConfirm(false)}>
+                        <button type="button"
+                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" onClick={() => setIsConfirm(false)}>
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
+                                <path fillRule="evenodd"
                                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"></path>
+                                    clipRule="evenodd"></path>
                             </svg>
                         </button>
                     </div>
                     <div className="p-6 pt-0 text-center">
                         <svg className="w-20 h-20 text-indigo-700 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <h3 className="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete this review?</h3>
@@ -388,7 +402,7 @@ function BookComponent() {
                         </div>
                     </div>
 
-                    <div style={{ display: "flex", justifyContent: 'flex-end', padding: 16, position: 'absolute', top: '70%', right: "20%" }}>
+                    <div style={{ display: "flex", justifyContent: 'flex-end', padding: 16, position: 'absolute', top: '50%', right: "20%" }}>
                         <button
                             className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2"
                             onClick={() => onBorrow()}

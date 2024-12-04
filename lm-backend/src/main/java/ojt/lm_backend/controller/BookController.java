@@ -38,7 +38,6 @@ public class BookController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<?> findBookById(@PathVariable int id) {
         BookDetailDto book = bookService.getBookById(id);
         if (book == null) {
@@ -75,7 +74,6 @@ public class BookController {
     }
 
     @GetMapping("/count")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<Long> countBook(){
         Long count = bookService.countBook();
         return new ResponseEntity<>(count,HttpStatus.OK);

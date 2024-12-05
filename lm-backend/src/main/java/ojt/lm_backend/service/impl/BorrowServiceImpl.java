@@ -186,6 +186,7 @@ public class BorrowServiceImpl implements BorrowService {
             throw new RuntimeException("Cannot reverse a request with status PENDING_APPROVAL.");
         }
         record.setStatus(BorrowStatus.RETURNED);
+        record.setReturnDate(LocalDate.now());
         BorrowRecord updatedRecord = borrowRecordRepository.save(record);
 
         Book book = record.getBook();

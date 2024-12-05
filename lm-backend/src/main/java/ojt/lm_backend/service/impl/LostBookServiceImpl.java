@@ -115,7 +115,6 @@ public class LostBookServiceImpl implements LostBookService {
 
     @Override
     public boolean canUserBorrow(Long userId) {
-
-        return false;
+        return !borrowRecordRepository.existsProblematicBorrowRecords(userId);
     }
 }

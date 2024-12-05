@@ -26,6 +26,9 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord,Integ
     @Query("SELECT COUNT(br) FROM BorrowRecord br WHERE br.user.userId = :userId AND br.status = :status AND br.fine > 0")
     int countLostBooksWithUnpaidFine(@Param("userId") Long userId, @Param("status") BorrowStatus status);
 
+    @Query("SELECT COUNT(b) > 0 FROM BorrowRecord b WHERE b.user.userId = :userId AND (b.status = 'BORROWED' OR (b.status = 'LOST' AND b.fine > 0))")
+    boolean existsProblematicBorrowRecords(@Param("userId") Long userId);
+
     @Query("SELECT b FROM BorrowRecord b WHERE b.status = :status")
     List<BorrowRecord> findByStatusA(@Param("status") BorrowStatus status);
 

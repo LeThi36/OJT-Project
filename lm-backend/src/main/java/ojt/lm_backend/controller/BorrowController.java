@@ -9,6 +9,8 @@ import ojt.lm_backend.entity.User;
 import ojt.lm_backend.repository.BookRepository;
 import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.service.BorrowService;
+import ojt.lm_backend.service.LostBookService;
+import ojt.lm_backend.service.impl.LostBookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,8 @@ public class BorrowController {
     private final BorrowService borrowService;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
+    @Autowired
+    private LostBookService lostBookService;
 
     // tạo bản ghi borrow
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -111,6 +115,13 @@ public class BorrowController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update fines: " + e.getMessage());
         }
+    }
+
+    @PreAuthorize("hasAnyRole('USER')")
+    @GetMapping("/canUserBorrow/{userId}")
+    public ResponseEntity<?> canUserBorrow(@PathVariable Long userId) {
+        boolean canUserBorrow = lostBookService.canUserBorrow(userId);
+        return new ResponseEntity<>(canUserBorrow, HttpStatus.OK);
     }
 
 }

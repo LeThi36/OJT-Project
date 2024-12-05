@@ -24,7 +24,6 @@ public class MultipleBorrowRequest {
     @Data
     public static class BookBorrowRequest {
         private Integer bookId;
-        private Integer quantity;
         private LocalDate borrowDate;  // Thêm ngày mượn cho từng sách
         private Integer borrowDurationDays;
     }

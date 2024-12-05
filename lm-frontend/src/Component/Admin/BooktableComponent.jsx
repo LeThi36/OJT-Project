@@ -145,7 +145,7 @@ function BooktableComponent({ data, title, elementId }) {
                                             {formatDateTime(b.updatedAt)}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <button onClick={() => handleDelete(b.bookId)} class="font-bold text-red-600">Delete Book</button>
+                                            <button onClick={() => handleDelete(b.bookId)} class="font-bold text-white rounded-full px-2 py-1 bg-red-600 hover:bg-red-900 duration-300">Delete Book</button>
                                         </td>
                                     </tr>
                                 );
@@ -160,7 +160,7 @@ function BooktableComponent({ data, title, elementId }) {
                         return (
                             <button
                                 key={index}
-                                className='border rounded-md p-4 mx-2'
+                                className={`text-white border rounded-md px-4 py-2 mx-2 hover:bg-gray-500 duration-300 ${currentPage === index ? 'bg-gray-600':'bg-gray-400'}`}
                                 onClick={() => setCurrentPage(index)}>
                                 {index + 1}
                             </button>

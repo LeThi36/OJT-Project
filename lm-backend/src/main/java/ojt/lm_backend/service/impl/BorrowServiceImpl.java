@@ -10,7 +10,6 @@ import ojt.lm_backend.dto.response.MultipleBorrowResponse;
 import ojt.lm_backend.entity.BorrowRecord;
 import ojt.lm_backend.entity.User;
 import ojt.lm_backend.entity.Book;
-import ojt.lm_backend.exception.ResourceNotFoundException;
 import ojt.lm_backend.repository.BorrowRecordRepository;
 import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.repository.BookRepository;
@@ -20,7 +19,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -188,14 +186,12 @@ public class BorrowServiceImpl implements BorrowService {
             throw new RuntimeException("Cannot reverse a request with status PENDING_APPROVAL.");
         }
         record.setStatus(BorrowStatus.RETURNED);
-        record.setReturnDate(LocalDate.now());
         BorrowRecord updatedRecord = borrowRecordRepository.save(record);
 
         Book book = record.getBook();
 
         Integer returnedQuantity = 1;  // Trả về một cuốn sách
         book.setCopies(book.getCopies() + returnedQuantity);
-
         bookRepository.save(book);
 
         return convertToResponse(updatedRecord);
@@ -224,7 +220,7 @@ public class BorrowServiceImpl implements BorrowService {
             System.out.println("Updated record ID: " + record.getBorrowId() + " with fine: " + fine);
         }
     }
-    @Override
+
     public MultipleBorrowResponse createMultipleBorrows(MultipleBorrowRequest multipleBorrowRequest) {
         List<MultipleBorrowResponse.BorrowResponse> borrowResponses = new ArrayList<>();
 
@@ -237,20 +233,16 @@ public class BorrowServiceImpl implements BorrowService {
             Book book = bookRepository.findById(bookRequest.getBookId())
                     .orElseThrow(() -> new RuntimeException("Book not found"));
 
-            // Kiểm tra giá trị borrowDurationDays
-            Integer borrowDurationDays = bookRequest.getBorrowDurationDays();
-            if (borrowDurationDays == null) {
-                throw new RuntimeException("Borrow duration is missing for book: " + book.getTitle());
-            }
-
             // Kiểm tra số lượng bản sao sách còn lại trong database
-            if (book.getCopies() >= bookRequest.getQuantity()) {
-                book.setCopies(book.getCopies() - bookRequest.getQuantity());
+            if (book.getCopies() >= 1) {
+                // Giảm số lượng copies theo số lượng sách mượn
+                book.setCopies(book.getCopies() - 1);
                 bookRepository.save(book);  // Lưu lại sách với số lượng bản sao đã giảm
             } else {
                 throw new RuntimeException("Not enough copies available for book: " + book.getTitle());
             }
 
+            // Tính toán ngày mượn và ngày trả sách từ request
             LocalDate borrowDate = bookRequest.getBorrowDate();  // Ngày mượn từ request
             LocalDate dueDate = borrowDate.plusDays(bookRequest.getBorrowDurationDays());  // Ngày trả sách
 
@@ -262,7 +254,6 @@ public class BorrowServiceImpl implements BorrowService {
                     .dueDate(dueDate)
                     .status(BorrowStatus.PENDING_APPROVAL)
                     .fine(BigDecimal.valueOf(0))
-                    .quantity(bookRequest.getQuantity())  // Lưu số lượng sách mượn
                     .build();
 
             // Lưu bản ghi mượn vào cơ sở dữ liệu
@@ -276,7 +267,7 @@ public class BorrowServiceImpl implements BorrowService {
                     .dueDate(dueDate)
                     .status(savedRecord.getStatus())
                     .fine(savedRecord.getFine())
-                    .quantity(bookRequest.getQuantity())  // Trả về số lượng sách mượn
+
                     .build();
 
             borrowResponses.add(response);

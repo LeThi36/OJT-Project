@@ -153,6 +153,11 @@ function BookComponent() {
         refetch()
     }
 
+    const handleDeleteButton = (r) => {
+        setIsConfirm(!isConfirm)
+        setBookReviewId(r.reviewId)
+    }
+
 
     return (
         <>
@@ -212,9 +217,9 @@ function BookComponent() {
                                 <div className="flex">
                                     <button
                                         onClick={() => setShowModal(true)}
-                                        className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2"
+                                        className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-800 rounded mr-2 duration-300"
                                     >Borrow it now</button>
-                                    <button className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-600 hover:text-white rounded" onClick={() => handelCart(book)}>Add to cart</button>
+                                    <button className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-500 hover:text-white rounded duration-300" onClick={() => handelCart(book)}>Add to cart</button>
                                 </div>
 
                                 <button onClick={() => handelLikeBook(book)} className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
@@ -265,7 +270,7 @@ function BookComponent() {
                                                         </svg>
                                                     ))}
                                                     {
-                                                        userId == r.user.userId ? (<button className='text-red-500 ms-auto font-bold me-2 border rounded-full px-2 hover:bg-red-600 hover:text-red-300 duration-300' onClick={() => { setIsConfirm(!isConfirm); setBookReviewId(r.reviewId) }}>Delete this review</button>) : (<></>)
+                                                        userId == r.user.userId ? (<button className='text-white ms-auto me-2 border rounded-full px-2 hover:bg-red-800 bg-red-600 duration-300' onClick={() => handleDeleteButton(r)}>Delete this review</button>) : (<></>)
                                                     }
                                                 </div>
                                                 <p className="text-gray-600 mt-2">
@@ -285,7 +290,7 @@ function BookComponent() {
                             <button
                                 key={index}
                                 onClick={() => setCurrentPage(index)}
-                                className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700' : 'bg-indigo-500'} text-white rounded`}
+                                className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700 hover:bg-indigo-500' : 'bg-indigo-500'} text-white rounded hover:bg-indigo-300 duration-300`}
                             >
                                 {index + 1}
                             </button>
@@ -293,10 +298,10 @@ function BookComponent() {
                     </div>
                     <div className='flex flex-col'>
                         <div className="border rounded-md p-3 ml-3 my-3">
-                            <div className='flex p-2 mb-2 '>
-                                <p className='font-bold me-2'>Write your review</p>
-                                <p>rating: </p>
-                                <select onChange={(e) => setReviewRequest({ ...reviewRequest, rating: e.target.value })} className='text-xs ms-2'>
+                            <div className='flex p-2 mb-2'>
+                                <p className='font-bold me-2 my-auto'>Write your review</p>
+                                <p className='my-auto'>rating: </p>
+                                <select onChange={(e) => setReviewRequest({ ...reviewRequest, rating: e.target.value })} className='text-xs ms-2 rounded-md border-inherit'>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -304,20 +309,20 @@ function BookComponent() {
                                     <option>5</option>
                                 </select>
                             </div>
-                            <input onChange={(e) => setReviewRequest({ ...reviewRequest, reviewText: e.target.value })} type='text' className='w-full border rounded-md' placeholder='write your review here' value={reviewRequest.reviewText} />
-                            <button onClick={(e) => handleSubmitReview(e)} className='border rounded-md mt-2 p-2 bg-indigo-500 text-white'>submit</button>
+                            <input onChange={(e) => setReviewRequest({ ...reviewRequest, reviewText: e.target.value })} type='text' className='w-full border-inherit rounded-md' placeholder='write your review here' value={reviewRequest.reviewText} />
+                            <button onClick={(e) => handleSubmitReview(e)} className='border rounded-md mt-2 p-2 bg-indigo-500 text-white hover:bg-indigo-800 duration-300'>submit</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className={`${isConfirm ? 'hidden overflow-y-hidden' : 'block overflow-y-hidden'} fixed inset-0 bg-slate-400 bg-opacity-60 overflow-y-auto h-fullfull w-auto px-4`}>
-                <div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
+            <div className={`${!isConfirm ? 'hidden overflow-y-hidden' : 'block overflow-y-hidden'} fixed inset-0 bg-slate-400 bg-opacity-60 overflow-y-auto h-fullfull w-auto px-4`}>
+                <div className="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
 
-                    <div class="flex justify-end p-2">
+                    <div className="flex justify-end p-2">
                         <button onclick="closeModal('modelConfirm')" type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" onClick={()=>setIsConfirm(false)}>
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                                     clip-rule="evenodd"></path>
@@ -325,14 +330,14 @@ function BookComponent() {
                         </button>
                     </div>
                     <div className="p-6 pt-0 text-center">
-                        <svg className="w-20 h-20 text-red-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        <svg className="w-20 h-20 text-indigo-700 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <h3 className="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete this review?</h3>
                         <button onClick={() => handleConfirm()}
-                            className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
+                            className="text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
                             Yes, I'm sure
                         </button>
                         <button onClick={() => setIsConfirm(!isConfirm)}

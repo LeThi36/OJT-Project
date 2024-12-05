@@ -84,11 +84,11 @@ function BooksCardComponent() {
                     className='rounded-md w-64'
                     placeholder='search any book name'
                 />
-                <button onClick={handleSearch} className="mx-2 bg-blue-500 text-white px-4 py-2 rounded">
+                <button onClick={handleSearch} className="mx-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-800 duration-300">
                     Search
                 </button>
                 {isSearching && (
-                    <button onClick={handleReset} className="mx-2 bg-gray-500 text-white px-4 py-2 rounded">
+                    <button onClick={handleReset} className="mx-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 duration-300">
                         Cancel
                     </button>
                 )}
@@ -126,8 +126,8 @@ function BooksCardComponent() {
                         <button
                             key={index}
                             onClick={() => setCurrentPage(index)}
-                            className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700' : 'bg-indigo-500'
-                                } text-white rounded`}
+                            className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700 hover:bg-indigo-500' : 'bg-indigo-500 hover:bg-indigo-300'
+                                } text-white rounded duration-300`}
                         >
                             {index + 1}
                         </button>

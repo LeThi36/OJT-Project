@@ -69,6 +69,7 @@ function AuthorTableComponent() {
                                 <th scope="col" className="px-6 py-3">
                                     Number of books
                                 </th>
+                                <th className='w-1/5'></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -85,7 +86,7 @@ function AuthorTableComponent() {
                                             {auth.books.length}
                                         </td>
                                         <td>
-                                            <button onClick={() => handleDelete(auth.authorId)} className='font-bold text-red-600'>delete this author</button>
+                                            <button onClick={() => handleDelete(auth.authorId)} class="font-bold text-white rounded-full px-2 py-1 bg-red-600 hover:bg-red-900 duration-300">delete this author</button>
                                         </td>
                                     </tr>
                                 );
@@ -100,7 +101,7 @@ function AuthorTableComponent() {
                         return (
                             <button
                                 key={index}
-                                className='border rounded-md p-4 mx-2'
+                                className={`text-white border rounded-md px-4 py-2 mx-2 hover:bg-gray-500 duration-300 ${currentPage === index ? 'bg-gray-600':'bg-gray-400'}`}
                                 onClick={() => setCurrentPage(index)}>
                                 {index + 1}
                             </button>

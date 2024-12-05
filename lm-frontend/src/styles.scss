@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.category-card {
+    &:hover {
+        transition: 0.3s ease;
+        background-color: rgb(67 56 202);
+
+        .category-card {
+            &__title {
+                color: white;
+            }
+
+            &__subtitle {
+                color: white;
+            }
+
+            &__icon {
+                background-color: rgb(67 56 202);
+            }
+        }
+    }
+}
+
+.book-card {
+    &:hover {
+        transition: 0.3s ease;
+        background-color: rgb(209 213 219);
+
+        .book-card {
+            &__title {
+                color: rgb(79 70 229);
+            }
+            &__text {
+                color: black;
+            }
+            &__status {
+                color: rgb(79 70 229);
+            }
+        }
+    }
+}

@@ -186,7 +186,7 @@ CREATE TABLE `borrow_records` (
   `borrow_date` date DEFAULT NULL,
   `due_date` date DEFAULT NULL,
   `return_date` date DEFAULT NULL,
-  `status` enum('BORROWED','RETURNED','OVERDUE') DEFAULT NULL,
+  `status` ENUM('BORROWED', 'RETURNED', 'LOST', 'OVERDUE', 'PENDING_APPROVAL') DEFAULT NULL,
   `fine` decimal(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`borrow_id`),
   KEY `user_id` (`user_id`),

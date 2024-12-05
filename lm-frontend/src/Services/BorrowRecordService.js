@@ -9,3 +9,7 @@ export const createBorrowRecord = (borrowRecord) => axios.post(BORROW_REST_API_U
 export const approveBorrowRecord = (borrowId) => axios.put(BORROW_REST_API_URL + `/approve/${borrowId}`);
 
 export const deleteBorrowRecord = (borrowId) => axios.delete(BORROW_REST_API_URL + `/delete/${borrowId}`);
+
+export const createBorrowRecordMultiple = (borrowRecords) => axios.post(BORROW_REST_API_URL + '/create/multiple', borrowRecords);
+
+export const returnBorrowedBook = (borrowId) => axios.put(BORROW_REST_API_URL + `/return/${borrowId}`);

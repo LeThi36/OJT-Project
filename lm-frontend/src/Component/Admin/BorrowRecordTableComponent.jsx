@@ -1,17 +1,27 @@
 import React from 'react'
-import { useQuery } from 'react-query';
-import { getAllBorrowRecord } from '../../Services/BorrowRecordService';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { getAllBorrowRecord, returnBorrowedBook } from '../../Services/BorrowRecordService';
 import { Link } from 'react-router-dom';
 
 function BorrowRecordTableComponent() {
-
-    const { data: borrow, isLoading } = useQuery({
+    const queryClient = useQueryClient();
+    const { data: borrow, isLoading, refetch } = useQuery({
         queryFn: () => getAllBorrowRecord().then(response => response.data),
-        queryKey: ["borrow"]
-    })
+        queryKey: ["BORROW_RECORDS_ADMIN"]
+    });
+    const returnBorrowMutation = useMutation({
+        mutationFn: (borrowId) => {
+            returnBorrowedBook(borrowId)
+            .then(() => {queryClient.invalidateQueries({ queryKey: ["BORROW_RECORDS_ADMIN"]});})
+        },
+    });
 
     if (isLoading) {
         return <p>Loading...</p>
+    }
+
+    function handleReturnBook(borrowId) {
+        returnBorrowMutation.mutate(borrowId);
     }
 
     return (
@@ -49,6 +59,9 @@ function BorrowRecordTableComponent() {
                                 <th scope="col" className="px-6 py-3">
                                     Fine
                                 </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,6 +95,14 @@ function BorrowRecordTableComponent() {
                                         </td>
                                         <td className="px-6 py-4">
                                             {b.fine}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <button
+                                                onClick={() => handleReturnBook(b.borrowId)}
+                                                style={{ display: b.status === "BORROWED" ? 'block' : 'none', color: 'white', backgroundColor: 'rgba(0, 0, 0)', padding: '8px 12px', borderRadius: 8}}
+                                            >
+                                                Return
+                                            </button>
                                         </td>
                                     </tr>
                                 );

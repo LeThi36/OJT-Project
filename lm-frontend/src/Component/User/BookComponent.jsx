@@ -372,10 +372,10 @@ function BookComponent() {
                 }}
             >
                 <div
-                    style={{ height: 450, width: "100%", backgroundColor: 'white', borderRadius: 20 }}
+                    style={{ height: 450, width: "100%", backgroundColor: 'white', borderRadius: 20, position: 'relative' }}
                 >
                     <div
-                        style={{ position: 'absolute', right: "21.5%", top: "21.5%", color: "#6B7280", fontWeight: 700, cursor: "pointer" }}
+                        style={{ position: 'absolute', right: 30, top: 20, color: "#6B7280", fontWeight: 700, cursor: "pointer" }}
                         onClick={() => setShowModal(false)}
                     >✕</div>
                     <div
@@ -402,7 +402,7 @@ function BookComponent() {
                         </div>
                     </div>
 
-                    <div style={{ display: "flex", justifyContent: 'flex-end', padding: 16, position: 'absolute', top: '50%', right: "20%" }}>
+                    <div style={{ display: "flex", justifyContent: 'flex-end', padding: 16, position: 'absolute', bottom: '0', right: "0" }}>
                         <button
                             className="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded mr-2"
                             onClick={() => onBorrow()}

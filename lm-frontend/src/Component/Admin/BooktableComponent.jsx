@@ -153,7 +153,7 @@ function BooktableComponent({ data, title, elementId }) {
                                             {formatDateTime(b.updatedAt)}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <button onClick={() => setIsConfirm({ confirm: true, bookId: b.bookId })} class="font-bold text-white rounded-full px-2 py-1 bg-red-600 hover:bg-red-900 duration-300">Delete Book</button>
+                                            <button onClick={() => setIsConfirm({ confirm: true, bookId: b.bookId })} className="font-bold text-white rounded-full px-2 py-1 bg-red-600 hover:bg-red-900 duration-300">Delete Book</button>
                                         </td>
                                     </tr>
                                 );

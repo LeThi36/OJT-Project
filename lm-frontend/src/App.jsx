@@ -28,6 +28,7 @@ import ChangePasswordComponent from './Component/Authentication/ChangePasswordCo
 import ResetPasswordComponent from './Component/Authentication/ResetPasswordComponent'
 import ForgotPasswordComopent from './Component/Authentication/ForgotPasswordComponent'
 import BorrowRequestTableComponent from './Component/Admin/BorrowRequestTableComponent'
+import DashBoardComponent from './Component/Admin/DashBoardComponent'
 
 
 
@@ -77,6 +78,7 @@ function App() {
             <SidebarComopnent />
             <div className="ml-80 py-2 w-auto mt-6 mr-16">
               <Routes>
+                <Route path='' element={<DashBoardComponent/>}/>
                 <Route path="user" element={<UserTableComponent />} />
                 <Route path='user/:id' element={<UserProfileComponent />} />
                 <Route path='book' element={<BooktableComponent />} />

@@ -19,5 +19,5 @@ public class BorrowRequest {
     private Long userId;
     private Integer bookId;
     private LocalDate borrowDate;
-    private int borrowDurationDays;
+    private Integer borrowDurationDays;
 }

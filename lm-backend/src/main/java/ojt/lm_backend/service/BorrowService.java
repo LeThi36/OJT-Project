@@ -25,4 +25,7 @@ public interface BorrowService {
     void updateFines();
     MultipleBorrowResponse createMultipleBorrows(MultipleBorrowRequest multipleBorrowRequest);
     BorrowResponse returnAllBooks(Integer borrowId);
+    long countBorrowRecord();
+    long inCommingBorrowRecord();
+    List<Long> borrowCountByCategory();
 }

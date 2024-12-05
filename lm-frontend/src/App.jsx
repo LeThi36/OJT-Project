@@ -76,8 +76,9 @@ function App() {
         <Route path='/admin/*' element={
           <AuthenticatedRoute>
             <SidebarComopnent />
-            <div className="ml-80 py-2 w-auto mt-6 mr-16">
+            <div className="ml-80 py-2 w-auto mt-6 mr-16" style={{ minHeight: 700 }}>
               <Routes>
+                <Route path='' element={<DashBoardComponent />} />
                 <Route path="user" element={<UserTableComponent />} />
                 <Route path='user/:id' element={<UserProfileComponent />} />
                 <Route path='book' element={<BooktableComponent />} />

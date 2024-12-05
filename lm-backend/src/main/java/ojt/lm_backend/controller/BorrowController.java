@@ -124,4 +124,20 @@ public class BorrowController {
         }
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> countBorrowRecord(){
+        return new ResponseEntity<>(borrowService.countBorrowRecord(),HttpStatus.OK);
+    }
+
+    @GetMapping("/count/pending")
+    public ResponseEntity<Long> countPendingBorrowRecord(){
+        return new ResponseEntity<>(borrowService.inCommingBorrowRecord(),HttpStatus.OK);
+    }
+
+    @GetMapping("/count/record")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Long>> countBorrowRecordByCategory(){
+        return new ResponseEntity<>(borrowService.borrowCountByCategory(),HttpStatus.OK);
+    }
+
 }

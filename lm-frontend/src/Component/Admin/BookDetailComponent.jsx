@@ -216,7 +216,7 @@ function BookDetailComponent() {
                                 </dt>
                                 {
                                     isEdit ?
-                                        <input value={bookDetail.description} onChange={(e) => setBookDetail({ ...bookDetail, description: e.target.value })} className='"w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md'></input>
+                                        <textarea rows={5} value={bookDetail.description} onChange={(e) => setBookDetail({ ...bookDetail, description: e.target.value })} className='"w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md'></textarea>
                                         :
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
                                             {bookDetail.description}

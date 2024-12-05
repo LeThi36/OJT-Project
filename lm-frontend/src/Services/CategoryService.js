@@ -18,3 +18,5 @@ export const deleteCategoryById = (id) => axios.delete(CATEGORY_REST_API_BASE_UR
 export const addCategory = (categoryName) => axios.post(CATEGORY_REST_API_BASE_URL, categoryName)
 
 export const updateCategory = (updateCategory) => axios.put(CATEGORY_REST_API_BASE_URL, updateCategory)
+
+export const getAllCategoryName = () => axios.get(CATEGORY_REST_API_BASE_URL + '/getCategoryName')

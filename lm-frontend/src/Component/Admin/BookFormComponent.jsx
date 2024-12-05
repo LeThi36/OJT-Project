@@ -151,7 +151,7 @@ function BookFormComponent() {
                     <label htmlFor="description" className="mb-3 block text-base font-medium text-[#07074D]">
                         Description
                     </label>
-                    <input onChange={(e) => setBook({ ...book, description: e.target.value })} value={book.description} type="text" name="description" id="description" placeholder="Book Title"
+                    <textarea rows={5} onChange={(e) => setBook({ ...book, description: e.target.value })} value={book.description} type="text" name="description" id="description" placeholder="Book Title"
                         className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
                 </div>
 
@@ -168,9 +168,9 @@ function BookFormComponent() {
                     <button
                         onClick={(e) => handleSubmit(e)}
                         className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none" disabled={isLoading}>
-                            {
-                                isLoading ? ("processing...") : ("Add new Book")
-                            }
+                        {
+                            isLoading ? ("processing...") : ("Add new Book")
+                        }
                     </button>
                 </div>
             </div >

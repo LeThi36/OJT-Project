@@ -13,3 +13,9 @@ export const deleteBorrowRecord = (borrowId) => axios.delete(BORROW_REST_API_URL
 export const createBorrowRecordMultiple = (borrowRecords) => axios.post(BORROW_REST_API_URL + '/create/multiple', borrowRecords);
 
 export const returnBorrowedBook = (borrowId) => axios.put(BORROW_REST_API_URL + `/return/${borrowId}`);
+
+export const countBorrowedRecord = () => axios.get(BORROW_REST_API_URL + '/count')
+
+export const countPendingBorrowRecord = () => axios.get(BORROW_REST_API_URL + '/count/pending')
+
+export const countRecord = () => axios.get(BORROW_REST_API_URL + '/count/record')

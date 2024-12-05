@@ -11,4 +11,5 @@ public interface CategoryService {
     Long countCategory();
     String delectCategoryById(int id);
     CategoryDto updateCategoryName(CategoryDto categoryDto);
+    List<String> findAllCategoryName();
 }

@@ -94,4 +94,9 @@ public class CategoryServiceImpl implements CategoryService {
         category.setCategoryName(categoryDto.getCategoryName());
         return modelMapper.map(categoryRepository.save(category),CategoryDto.class);
     }
+
+    @Override
+    public List<String> findAllCategoryName() {
+        return categoryRepository.findAllCategoryNames().stream().collect(Collectors.toList());
+    }
 }

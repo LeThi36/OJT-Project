@@ -54,4 +54,10 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryDto categoryDto){
         return new ResponseEntity<>(categoryService.updateCategoryName(categoryDto),HttpStatus.OK);
     }
+
+    @GetMapping("/getCategoryName")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<String>> getAllCategoryName(){
+        return new ResponseEntity<>(categoryService.findAllCategoryName(),HttpStatus.OK);
+    }
 }

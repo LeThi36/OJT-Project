@@ -52,6 +52,8 @@ public class SecurityConfig {
                     author.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll();
                     author.requestMatchers("/api/user/count").permitAll();
                     author.requestMatchers("/api/author/count").permitAll();
+                    author.requestMatchers("/api/borrow/count").permitAll();
+                    author.requestMatchers("/api/borrow/count/pending").permitAll();
                     author.requestMatchers("/api/book/count").permitAll();
                     author.requestMatchers("/api/review/count/{id}").permitAll();
                     author.requestMatchers("/api/category").permitAll();

@@ -76,7 +76,6 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
 
-
     @Override
     public List<BorrowResponse> getAllBorrowRecords() {
         return borrowRecordRepository.findAll().stream()
@@ -286,6 +285,21 @@ public class BorrowServiceImpl implements BorrowService {
         return null;
     }
 
+    @Override
+    public long countBorrowRecord() {
+        return borrowRecordRepository.count();
+    }
+
+    @Override
+    public long inCommingBorrowRecord() {
+        return borrowRecordRepository.countByStatus(BorrowStatus.PENDING_APPROVAL);
+    }
+
+    @Override
+    public List<Long> borrowCountByCategory() {
+        return borrowRecordRepository.findCategoryBorrowCount().stream().collect(Collectors.toList());
+    }
+
 
     private BigDecimal calculateFine(LocalDate dueDate) {
         long daysLate = ChronoUnit.DAYS.between(dueDate, LocalDate.now());
@@ -303,6 +317,7 @@ public class BorrowServiceImpl implements BorrowService {
             return BigDecimal.valueOf(50000 + periodsOfThreeMonths * 150000);
         }
     }
+
     private BorrowResponse convertToResponse(BorrowRecord record) {
         return BorrowResponse.builder()
                 .borrowId(record.getBorrowId())

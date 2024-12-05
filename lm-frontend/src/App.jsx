@@ -28,6 +28,7 @@ import ChangePasswordComponent from './Component/Authentication/ChangePasswordCo
 import ResetPasswordComponent from './Component/Authentication/ResetPasswordComponent'
 import ForgotPasswordComopent from './Component/Authentication/ForgotPasswordComponent'
 import BorrowRequestTableComponent from './Component/Admin/BorrowRequestTableComponent'
+import DashBoardComponent from './Component/Admin/DashBoardComponent'
 
 
 

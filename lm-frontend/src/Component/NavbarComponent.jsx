@@ -48,7 +48,7 @@ function NavbarComponent() {
                         <div className="hidden lg:block">
                             <ul className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
                                 {
-                                    role === "admin" &&
+                                    role == "ROLE_ADMIN" &&
                                     <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
                                         <a href='/admin' className="flex items-center">Admin Page</a>
                                     </li>

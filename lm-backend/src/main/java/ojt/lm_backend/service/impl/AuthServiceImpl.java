@@ -47,10 +47,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String register(RegisterDto registerDto) {
         if (userRepository.existsByUsername(registerDto.getUsername())) {
-            throw new LMAPIException(HttpStatus.BAD_REQUEST, "Username is exists");
+            return "username is exists";
         }
         if (userRepository.existsByEmail(registerDto.getEmail())) {
-            throw new LMAPIException(HttpStatus.BAD_REQUEST, "Email is exists");
+            return "email is exists";
         }
 
         User user = new User();

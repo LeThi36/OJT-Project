@@ -26,7 +26,8 @@ public class BorrowRecordController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<BorrowRecordDetailDto>> getAllBorrowRecord(){
-        return new ResponseEntity<>(borrowRecordService.getAllBorrowRecord(),HttpStatus.OK);
+    public ResponseEntity<List<BorrowRecordDetailDto>> getAllBorrowRecord(@RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
+                                                                          @RequestParam(value = "pageSize",defaultValue = "100",required = false) int pageSize){
+        return new ResponseEntity<>(borrowRecordService.getAllBorrowRecord(pageNo,pageSize),HttpStatus.OK);
     }
 }

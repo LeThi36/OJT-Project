@@ -1,19 +1,32 @@
-import React from 'react'
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getAllBorrowRecord, returnBorrowedBook } from '../../Services/BorrowRecordService';
+import React, { useEffect, useState } from 'react'
+import { useMutation, useQuery } from 'react-query';
+import { countBorrowedRecord, countRecord, getAllBorrowRecord, returnBorrowedBook } from '../../Services/BorrowRecordService';
 import { Link } from 'react-router-dom';
 
 function BorrowRecordTableComponent() {
-    const queryClient = useQueryClient();
+
+    const [totalPage, setTotalPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(0)
+
     const { data: borrow, isLoading, refetch } = useQuery({
-        queryFn: () => getAllBorrowRecord().then(response => response.data),
-        queryKey: ["BORROW_RECORDS_ADMIN"]
+        queryFn: () => getAllBorrowRecord(currentPage, 12).then(response => response.data),
+        queryKey: ["BORROW_RECORDS_ADMIN", currentPage]
     });
+
+    useEffect(() => {
+        countBorrowedRecord().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 12)); console.log(res.data);
+         }).catch(err => console.log(err)
+        )
+    }, [])
+
     const returnBorrowMutation = useMutation({
         mutationFn: (borrowId) => {
-            returnBorrowedBook(borrowId)
-            .then(() => {queryClient.invalidateQueries({ queryKey: ["BORROW_RECORDS_ADMIN"]});})
+            return returnBorrowedBook(borrowId);
         },
+        onSuccess: () => {
+            alert("update successfully")
+            refetch()
+        }
     });
 
     if (isLoading) {
@@ -21,7 +34,7 @@ function BorrowRecordTableComponent() {
     }
 
     function handleReturnBook(borrowId) {
-        returnBorrowMutation.mutate(borrowId);
+        returnBorrowMutation.mutate(borrowId)
     }
 
     return (
@@ -99,9 +112,10 @@ function BorrowRecordTableComponent() {
                                         <td className="px-6 py-4">
                                             <button
                                                 onClick={() => handleReturnBook(b.borrowId)}
-                                                style={{ display: b.status === "BORROWED" ? 'block' : 'none', color: 'white', backgroundColor: 'rgba(0, 0, 0)', padding: '8px 12px', borderRadius: 8}}
+                                                style={{ display: b.status === "BORROWED" ? 'block' : 'none', color: 'white', backgroundColor: 'rgba(0, 0, 0)', padding: '8px 12px', borderRadius: 8 }}
+                                                disabled={returnBorrowMutation.isLoading}
                                             >
-                                                Return
+                                                {returnBorrowMutation.isLoading ? "Processing..." : "Return"}
                                             </button>
                                         </td>
                                     </tr>
@@ -110,6 +124,17 @@ function BorrowRecordTableComponent() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div className="flex justify-center mt-4">
+                {Array(totalPage).fill(0).map((page, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentPage(index)}
+                        className={`mx-1 px-4 py-2 ${currentPage === index ? 'bg-indigo-700 hover:bg-indigo-500' : 'bg-indigo-500'} text-white rounded hover:bg-indigo-300 duration-300`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
             </div>
         </div>
     )

@@ -3,6 +3,8 @@ package ojt.lm_backend.repository;
 import ojt.lm_backend.LMenum.BorrowStatus;
 import ojt.lm_backend.entity.BorrowRecord;
 import ojt.lm_backend.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -46,5 +48,5 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord,Integ
             "ORDER BY c.id ASC")
     List<Long> findCategoryBorrowCount();
 
-    List<BorrowRecord> findAllByOrderByBorrowIdDesc();
+    Page<BorrowRecord> findAllByOrderByBorrowIdDesc(Pageable pageable);
 }

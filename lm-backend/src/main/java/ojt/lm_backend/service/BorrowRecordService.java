@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface BorrowRecordService {
     BorrowRecordDto addBorrowRecord(BorrowRecordDto borrowRecordDto);
-    List<BorrowRecordDetailDto> getAllBorrowRecord();
+    List<BorrowRecordDetailDto> getAllBorrowRecord(int pageNo,int pageSize);
 }

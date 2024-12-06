@@ -9,6 +9,9 @@ import ojt.lm_backend.repository.BorrowRecordRepository;
 import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.service.BorrowRecordService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,8 +41,10 @@ public class BorrowRecordImpl implements BorrowRecordService {
     }
 
     @Override
-    public List<BorrowRecordDetailDto> getAllBorrowRecord() {
-        List<BorrowRecord> borrowRecordList = borrowRecordRepository.findAllByOrderByBorrowIdDesc();
+    public List<BorrowRecordDetailDto> getAllBorrowRecord(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
+        Page<BorrowRecord> borrowRecords = borrowRecordRepository.findAllByOrderByBorrowIdDesc(pageable);
+        List<BorrowRecord> borrowRecordList = borrowRecords.getContent();
         return borrowRecordList.
                 stream().
                 map(b -> modelMapper.

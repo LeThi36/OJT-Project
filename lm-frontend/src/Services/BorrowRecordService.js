@@ -2,7 +2,12 @@ import axios from "axios"
 
 const BORROW_REST_API_URL = 'http://localhost:8080/api/borrow'
 
-export const getAllBorrowRecord = () => axios.get(BORROW_REST_API_URL)
+export const getAllBorrowRecord = (pageNo,pageSize) => axios.get(BORROW_REST_API_URL,{
+    params: {
+        pageNo: pageNo,
+        pageSize: pageSize
+    }
+})
 
 export const createBorrowRecord = (borrowRecord) => axios.post(BORROW_REST_API_URL + '/create', borrowRecord);
 
@@ -19,3 +24,4 @@ export const countBorrowedRecord = () => axios.get(BORROW_REST_API_URL + '/count
 export const countPendingBorrowRecord = () => axios.get(BORROW_REST_API_URL + '/count/pending')
 
 export const countRecord = () => axios.get(BORROW_REST_API_URL + '/count/record')
+

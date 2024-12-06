@@ -130,8 +130,8 @@ function CartComponent() {
                 <div className="hidden lg:grid grid-cols-2 py-6">
                     <div className="font-normal text-xl leading-8 text-gray-500">Book</div>
                     <p className="font-normal text-xl leading-8 text-gray-500 flex items-center justify-between">
-                        <span className="w-full max-w-[200px] text-center">Return Date</span>
-                        <span className="w-full max-w-[260px] text-center">Due Date</span>
+                        <span className="w-full max-w-[200px] text-center">Borrow Date</span>
+                        <span className="w-full max-w-[260px] text-center">Return Date</span>
                     </p>
                 </div>
 
@@ -192,7 +192,10 @@ function CartComponent() {
                     </Link>
                     <button
                         onClick={handleBorrowBooks}
-                        className="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-indigo-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-indigo-700">Borrow these book
+                        className="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-indigo-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-indigo-700"
+                        disabled={createBorrowRecordsMutate.isLoading}
+                        >
+                        {createBorrowRecordsMutate.isLoading ? "Processing..." : "Borrow these book"}
                         <svg className="ml-2" xmlns="http://www.w3.org/2000/svg" width="23" height="22" viewBox="0 0 23 22"
                             fill="none">
                             <path d="M8.75324 5.49609L14.2535 10.9963L8.75 16.4998" stroke="white" stroke-width="1.6"

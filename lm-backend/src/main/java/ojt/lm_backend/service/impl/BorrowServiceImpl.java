@@ -8,12 +8,14 @@ import ojt.lm_backend.dto.request.MultipleBorrowRequest;
 import ojt.lm_backend.dto.response.BorrowResponse;
 import ojt.lm_backend.dto.response.MultipleBorrowResponse;
 import ojt.lm_backend.entity.BorrowRecord;
+import ojt.lm_backend.entity.EmailDetail;
 import ojt.lm_backend.entity.User;
 import ojt.lm_backend.entity.Book;
 import ojt.lm_backend.repository.BorrowRecordRepository;
 import ojt.lm_backend.repository.UserRepository;
 import ojt.lm_backend.repository.BookRepository;
 import ojt.lm_backend.service.BorrowService;
+import ojt.lm_backend.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -38,12 +40,14 @@ public class BorrowServiceImpl implements BorrowService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public BorrowResponse createBorrowRecord(BorrowRequest request) {
         // Tìm User theo userId
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
 
         Book book = bookRepository.findById(request.getBookId())
                 .orElseThrow(() -> new RuntimeException("Book not found"));
@@ -70,6 +74,15 @@ public class BorrowServiceImpl implements BorrowService {
 
         // Lưu bản ghi vào database
         BorrowRecord savedRecord = borrowRecordRepository.save(record);
+
+        //gui mail ve user
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setRecipient(user.getEmail());
+        emailDetail.setSubject("thank you for using our services");
+        emailDetail.setMsgBody("Your Borrow Request is waiting for approval \n" +
+                "Book detail: " + book.getTitle() + "\n" +
+                "\n Author: " + book.getAuthor().getAuthorName());
+        emailService.sendSimpleEmail(emailDetail);
 
         // Trả về response
         return convertToResponse(savedRecord);
@@ -152,10 +165,16 @@ public class BorrowServiceImpl implements BorrowService {
 
         Book book = record.getBook();
 
-        if (book.getStatus() == BookStatus.NEW) {
-            book.setStatus(BookStatus.USED);
-            bookRepository.save(book);
-        }
+        //gui mail cho user de thong bao
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setSubject("Update about your borrow Request");
+        emailDetail.setRecipient(record.getUser().getEmail());
+        emailDetail.setMsgBody("Your borrow Request has been approved \n" +
+                "Ready to collect your book \n" +
+                "Detail \n" +
+                "pick up date: " + record.getBorrowDate() + "\n" +
+                "Book name: " + record.getBook().getTitle() + " Author: " + record.getBook().getAuthor().getAuthorName());
+        emailService.sendSimpleEmail(emailDetail);
         return convertToResponse(updatedRecord);
     }
 
@@ -194,6 +213,18 @@ public class BorrowServiceImpl implements BorrowService {
         book.setCopies(book.getCopies() + returnedQuantity);
         bookRepository.save(book);
 
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setRecipient(record.getUser().getEmail());
+        emailDetail.setSubject("Thank you for your return");
+        emailDetail.setMsgBody("Thank you for returning the book \n Book Name: " + record.getBook().getTitle() + ", Author: "
+                + record.getBook().getAuthor().getAuthorName() + " \n" +
+                "\n return Date: " + record.getReturnDate() +
+                "if you have any issue please contact \n" +
+                "Email: dinhbang121@gmail.com\n" +
+                "HotLine: 0947199561"
+        );
+        emailService.sendSimpleEmail(emailDetail);
+
         return convertToResponse(updatedRecord);
     }
 
@@ -224,10 +255,14 @@ public class BorrowServiceImpl implements BorrowService {
     public MultipleBorrowResponse createMultipleBorrows(MultipleBorrowRequest multipleBorrowRequest) {
         List<MultipleBorrowResponse.BorrowResponse> borrowResponses = new ArrayList<>();
 
+        // Tìm User theo userId
+        User user = userRepository.findById(multipleBorrowRequest.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Book> bookList = new ArrayList<>();
+
         for (MultipleBorrowRequest.BookBorrowRequest bookRequest : multipleBorrowRequest.getBooks()) {
-            // Tìm User theo userId
-            User user = userRepository.findById(multipleBorrowRequest.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+
 
             // Tìm Book theo bookId
             Book book = bookRepository.findById(bookRequest.getBookId())
@@ -271,7 +306,16 @@ public class BorrowServiceImpl implements BorrowService {
                     .build();
 
             borrowResponses.add(response);
+            bookList.add(book);
         }
+
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setSubject("thank you for using our services");
+        emailDetail.setRecipient(user.getEmail());
+        emailDetail.setMsgBody("Your Borrow Request is waiting for approval \n" +
+                "Detail book: \n" + bookList.stream().map(s -> "Book name: " + s.getTitle() + " Author: " + s.getAuthor().getAuthorName()).collect(Collectors.joining("\n")));
+
+        emailService.sendSimpleEmail(emailDetail);
 
         // Trả về danh sách phản hồi của các bản ghi mượn
         return MultipleBorrowResponse.builder()

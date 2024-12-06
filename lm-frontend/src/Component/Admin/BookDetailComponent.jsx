@@ -10,6 +10,7 @@ function BookDetailComponent() {
     const { id } = useParams()
     const [isEdit, setIsEdit] = useState(false)
     const [bookDetail, setBookDetail] = useState(null)
+    const [errors, setErrors] = useState({})
 
     const { data: authors, isLoading: loadingAuthors } = useQuery({
         queryFn: () => getAllAuthor().then(response => response.data || []),
@@ -62,12 +63,15 @@ function BookDetailComponent() {
     }
 
     const handleSubmit = () => {
-        console.log(bookDetail)
-        updateBook(bookDetail, id).then(res => {
-            console.log(res.data)
-            refetch()
-            setIsEdit(false)
-        }).catch(err => alert(err))
+        if (validateForm()) {
+            updateBook(bookDetail, id).then(res => {
+                console.log(res.data)
+                refetch()
+                setIsEdit(false)
+            }).catch(err => alert(err))
+        } else {
+            alert("aaaa")
+        }
     }
 
     const handleFileChange = async (e) => {
@@ -94,6 +98,47 @@ function BookDetailComponent() {
         return <div>No book details available.</div>;
     }
 
+    const validateForm = () => {
+        const Newerrors = {}
+
+        if (!bookDetail.title || bookDetail.title.trim() === "") {
+            Newerrors.title = "Title is required"
+        }
+
+        if (!bookDetail.categoryId) {
+            Newerrors.categoryId = "Category is required"
+        }
+
+        if (!bookDetail.authorId) {
+            Newerrors.authorId = "Author is required"
+        }
+
+        if (!bookDetail.publisherId) {
+            Newerrors.publisherId = "Publisher is required"
+        }
+
+        if (!bookDetail.publicationYear || isNaN(bookDetail.publicationYear)) {
+            Newerrors.publicationYear = "Please enter a valid publication year.";
+        } else if (!/^\d{4}$/.test(bookDetail.publicationYear)) {
+            Newerrors.publicationYear = "Publication Year must be a valid year (example : 2024)";
+        }
+
+        if (!bookDetail.copies || isNaN(bookDetail.copies) || parseInt(bookDetail.copies) <= 0) {
+            Newerrors.copies = "Please enter a valid number of copies.";
+        }
+
+        if (!bookDetail.status) {
+            Newerrors.status = "Status is required"
+        }
+
+        if (!bookDetail.description || bookDetail.description.trim() === "") {
+            Newerrors.description = "Description is required"
+        }
+
+        setErrors(Newerrors)
+        return Object.keys(Newerrors).length === 0
+    }
+
     return (
         <div className='w-full'>
             <div className="bg-white w-2/3 shadow overflow-hidden sm:rounded-lg mx-auto">
@@ -101,7 +146,13 @@ function BookDetailComponent() {
                     <h3 className="text-center text-lg leading-6 font-medium text-gray-900">
 
                         {
-                            isEdit ? (<input type='text' onChange={(e) => setBookDetail({ ...bookDetail, title: e.target.value })} className='rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md' placeholder='' value={bookDetail.title} />) : (bookDetail.title)
+                            isEdit ? (
+                                <>
+                                    {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
+                                    <input type='text' onChange={(e) => setBookDetail({ ...bookDetail, title: e.target.value })} className='rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md' placeholder='' value={bookDetail.title} />
+
+                                </>)
+                                : (bookDetail.title)
                         }
                     </h3>
                     <p className="mt-1 text-sm text-gray-500 text-center">
@@ -125,8 +176,10 @@ function BookDetailComponent() {
                                 <dt className="text-sm font-medium text-gray-500">
                                     Category
                                 </dt>
+
                                 {
-                                    isEdit ?
+                                    isEdit ? <div>
+                                        {errors.categoryId && <p className="text-red-500 text-sm">{errors.categoryId}</p>}
                                         <select onChange={(e) => setBookDetail({ ...bookDetail, categoryId: e.target.value })} type="text" name="phone" id="phone" placeholder="Enter your phone number"
                                             className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
                                             <option value="">Select Category</option>
@@ -136,6 +189,7 @@ function BookDetailComponent() {
                                                 })
                                             }
                                         </select>
+                                    </div>
                                         :
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
                                             {bookDetail.category}
@@ -148,15 +202,19 @@ function BookDetailComponent() {
                                 </dt>
                                 {
                                     isEdit ?
-                                        <select onChange={(e) => setBookDetail({ ...bookDetail, authorId: e.target.value })} name="author" id="author"
-                                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
-                                            <option value="">Select Author</option>
-                                            {
-                                                authors.map(auth => {
-                                                    return (<option key={auth.authorId} value={auth.authorId}>{auth.authorName}</option>)
-                                                })
-                                            }
-                                        </select>
+                                        <div>
+                                            {errors.authorId && <p className="text-red-500 text-sm">{errors.authorId}</p>}
+
+                                            <select onChange={(e) => setBookDetail({ ...bookDetail, authorId: e.target.value })} name="author" id="author"
+                                                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                                                <option value="">Select Author</option>
+                                                {
+                                                    authors.map(auth => {
+                                                        return (<option key={auth.authorId} value={auth.authorId}>{auth.authorName}</option>)
+                                                    })
+                                                }
+                                            </select>
+                                        </div>
                                         :
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
                                             {bookDetail.author}
@@ -169,15 +227,19 @@ function BookDetailComponent() {
                                 </dt>
                                 {
                                     isEdit ?
-                                        <select onChange={(e) => setBookDetail({ ...bookDetail, publisherId: e.target.value })} name="publisher" id="publisher"
-                                            className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
-                                            <option value="">Select Publisher</option>
-                                            {
-                                                publishers.map(pub => {
-                                                    return (<option key={pub.publisherId} value={pub.publisherId}>{pub.publisherName}</option>)
-                                                })
-                                            }
-                                        </select>
+                                        <div>
+                                            {errors.publisherId && <p className="text-red-500 text-sm">{errors.publisherId}</p>}
+
+                                            <select onChange={(e) => setBookDetail({ ...bookDetail, publisherId: e.target.value })} name="publisher" id="publisher"
+                                                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                                                <option value="">Select Publisher</option>
+                                                {
+                                                    publishers.map(pub => {
+                                                        return (<option key={pub.publisherId} value={pub.publisherId}>{pub.publisherName}</option>)
+                                                    })
+                                                }
+                                            </select>
+                                        </div>
                                         :
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
                                             {bookDetail.publisher}
@@ -190,7 +252,12 @@ function BookDetailComponent() {
                                 </dt>
                                 {
                                     isEdit ?
-                                        <input value={bookDetail.publicationYear} onChange={(e) => setBookDetail({ ...bookDetail, publicationYear: e.target.value })} className='"w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md'></input>
+                                        <div>
+                                            {errors.publicationYear && <p className="text-red-500 text-sm">{errors.publicationYear}</p>}
+
+
+                                            <input value={bookDetail.publicationYear} onChange={(e) => setBookDetail({ ...bookDetail, publicationYear: e.target.value })} className='"w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md'></input>
+                                        </div>
                                         :
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
                                             {bookDetail.publicationYear}
@@ -203,7 +270,10 @@ function BookDetailComponent() {
                                 </dt>
                                 {
                                     isEdit ?
-                                        <input value={bookDetail.copies} onChange={(e) => setBookDetail({ ...bookDetail, copies: e.target.value })} className='"w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md'></input>
+                                        <div>
+                                            {errors.copies && <p className="text-red-500 text-sm">{errors.copies}</p>}
+                                            <input value={bookDetail.copies} onChange={(e) => setBookDetail({ ...bookDetail, copies: e.target.value })} className='"w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md'></input>
+                                        </div>
                                         :
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
                                             {bookDetail.copies}
@@ -216,7 +286,11 @@ function BookDetailComponent() {
                                 </dt>
                                 {
                                     isEdit ?
-                                        <textarea rows={5} value={bookDetail.description} onChange={(e) => setBookDetail({ ...bookDetail, description: e.target.value })} className='"w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md'></textarea>
+                                        <div>
+                                            {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
+                                            <textarea rows={5} value={bookDetail.description} onChange={(e) => setBookDetail({ ...bookDetail, description: e.target.value })} className='"w-max rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md'></textarea>
+
+                                        </div>
                                         :
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
                                             {bookDetail.description}
@@ -266,7 +340,7 @@ function BookDetailComponent() {
                         </dl>
                     </div>
                     <div className='w-full'>
-                        <img className='w-full' src={'https://drive.google.com/thumbnail?id=' + bookDetail.imageUrl.split('id=')[1]+'&sz=w1000'}></img>
+                        <img className='w-full' src={'https://drive.google.com/thumbnail?id=' + bookDetail.imageUrl.split('id=')[1] + '&sz=w1000'}></img>
                         <button className='font-semibold capitalize text-red-700' onClick={(e) => handleButtonClick(e)}>edit book cover</button>
                         <input
                             id="fileInput"

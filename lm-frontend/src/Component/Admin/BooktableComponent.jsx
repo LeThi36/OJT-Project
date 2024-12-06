@@ -17,6 +17,7 @@ function BooktableComponent({ data, title, elementId }) {
         confirm: false,
         bookId: 0
     })
+    const [errors, setErrors] = useState({})
 
     const queryClient = useQueryClient();
 
@@ -61,10 +62,25 @@ function BooktableComponent({ data, title, elementId }) {
     }
 
     const handleSubmit = (updatedCategory) => {
-        console.log(updatedCategory);
-
-        updateCategory(updatedCategory).then(res => { alert("update successfully"); setIsEdit(false) }).catch(err => alert("something went wrong"))
+        if (validateCategoryForm()) {
+            updateCategory(updatedCategory).then(res => { alert("update successfully"); setIsEdit(false) }).catch(err => alert("something went wrong"))
+        }
     }
+
+    const validateCategoryForm = () => {
+        const newErrors = {};
+
+        if (!updatedCategory.categoryName || updatedCategory.categoryName.trim() === "") {
+            newErrors.categoryName = "Category name is required."
+        } else if (updatedCategory.categoryName.length < 3) {
+            newErrors.categoryName = "Category name must be at least 3 characters long."
+        }
+
+        setErrors(newErrors)
+
+        return Object.keys(newErrors).length === 0
+    }
+
 
     return (
         <div >
@@ -81,6 +97,9 @@ function BooktableComponent({ data, title, elementId }) {
                                 isEdit ? (<>
                                     <input type="text" className='ms-2 text-sm rounded-md text-black' placeholder='edit this name' onChange={(e) => { setUpdatedCategory({ ...updatedCategory, categoryName: e.target.value }) }} />
                                     <button className='me-2 ms-2 text-emerald-400' onClick={() => handleSubmit(updatedCategory)}>submit</button>
+                                    {errors.categoryName && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.categoryName}</p>
+                                    )}
                                 </>) : (<></>)
                             }
                             <Link className="ms-4 font-bold text-emerald-400 " to='/admin/book/add-new-book'>add new Book!</Link>
@@ -176,7 +195,7 @@ function BooktableComponent({ data, title, elementId }) {
                     })
                 }
             </div>
-            
+
             <div className={`${!isConfirm.confirm ? 'hidden overflow-y-hidden' : 'block overflow-y-hidden'} fixed inset-0 overflow-y-auto h-fullfull w-auto px-4 `}>
                 <div className="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
 

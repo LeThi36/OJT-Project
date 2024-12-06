@@ -15,6 +15,8 @@ function AuthorTableComponent() {
         confirm: false,
         authorId: 0
     })
+    const [error, setError] = useState("");
+
 
     useEffect(() => {
         countAuthor().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 10)) })
@@ -29,7 +31,10 @@ function AuthorTableComponent() {
     }
 
     const addAuthor = (authorName) => {
-        createAuthor(authorName).then(res => { alert("add author sucessfully"); refetch() }).catch(err => alert("some thing went wrong"))
+        if (validateAuthorName()) {
+
+            createAuthor(authorName).then(res => { alert("add author sucessfully"); refetch() }).catch(err => alert("some thing went wrong"))
+        }
 
     }
 
@@ -44,6 +49,18 @@ function AuthorTableComponent() {
             authorId: 0
         })
     }
+    const validateAuthorName = () => {
+        if (!authorName.authorName || authorName.authorName.trim() === "") {
+            setError("Author name is required.")
+            return false
+        } else if (authorName.authorName.length < 3) {
+            setError("Author name must be at least 3 characters long.")
+            return false;
+        }
+        setError("")
+        return true
+    };
+
 
 
     return (
@@ -66,6 +83,7 @@ function AuthorTableComponent() {
                                     }}>
                                         cancle
                                     </button>
+                                    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
                                 </>
 
                                 ) : (<>

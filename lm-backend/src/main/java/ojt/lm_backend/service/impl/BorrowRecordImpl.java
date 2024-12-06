@@ -39,7 +39,7 @@ public class BorrowRecordImpl implements BorrowRecordService {
 
     @Override
     public List<BorrowRecordDetailDto> getAllBorrowRecord() {
-        List<BorrowRecord> borrowRecordList = borrowRecordRepository.findAll();
+        List<BorrowRecord> borrowRecordList = borrowRecordRepository.findAllByOrderByBorrowIdDesc();
         return borrowRecordList.
                 stream().
                 map(b -> modelMapper.

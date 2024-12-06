@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 function BooksComponent({data}) {
 
     if (!Array.isArray(data) || data.length === 0) {
-        return <div>No books available</div>;
+        return <div className='flex justify-center my-6 text-xl font-semibold'>No books available</div>;
     }
 
     return (

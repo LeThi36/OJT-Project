@@ -7,15 +7,30 @@ function ForgotPasswordComopent() {
 
   const [isLoading, setIsLoading] = useState(false)
 
+  const [errors, setErrors] = useState({})
+
+  const isValidate = () => {
+    const newErrors = {}
+    if (!email || email.trim() === "") {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Email is not valid"
+    }
+    setErrors(newErrors)
+    return Object.values(newErrors).length === 0
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setIsLoading(true)
-    try {
-      await resetPasswordRequest({ email: email }).then(res => alert(res.data)).catch(err => alert(err))
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false)
+    if (isValidate()) {
+      setIsLoading(true)
+      try {
+        await resetPasswordRequest({ email: email }).then(res => alert(res.data)).catch(err => alert(err))
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
@@ -43,6 +58,9 @@ function ForgotPasswordComopent() {
                   <label htmlFor="email" className="text-gray-700 text-lg font-bold mb-2">
                     Email
                   </label>
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                   <div className="mt-1 relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                       <svg className="h-5 w-5 text-gray-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>

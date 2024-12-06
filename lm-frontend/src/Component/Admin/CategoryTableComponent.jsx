@@ -13,6 +13,7 @@ function CategoryTableComponent() {
         confirm: false,
         categoryId: 0
     })
+    const [error, setError] = useState("")
 
 
     const { data: categories, isLoading, refetch } = useQuery({
@@ -22,7 +23,10 @@ function CategoryTableComponent() {
 
 
     const handleAdd = (categoryName) => {
-        addCategory(categoryName).then(res => { alert("add category sucessfully"); refetch() }).catch(err => alert("some thing went wrong"))
+        if (validateCategoryName()) {
+
+            addCategory(categoryName).then(res => { alert("add category sucessfully"); refetch() }).catch(err => alert("some thing went wrong"))
+        }
     }
 
     const handleCancle = () => {
@@ -35,10 +39,23 @@ function CategoryTableComponent() {
     const handleConfirm = () => {
         deleteCategoryById(isConfirmCategory.categoryId).then(res => { alert(res.data); refetch() }).catch(err => alert(err))
         setIsConfirmCategory({
-            confirm:false,
+            confirm: false,
             categoryId: 0
         })
     }
+
+    const validateCategoryName = () => {
+        if (!categoryName.categoryName || categoryName.categoryName.trim() === "") {
+            setError("Category name is required.");
+            return false;
+        } else if (categoryName.categoryName.length < 3) {
+            setError("Category name must be at least 3 characters long.");
+            return false;
+        }
+        setError("")
+        return true;
+    };
+
 
 
     if (isLoading) {
@@ -62,6 +79,7 @@ function CategoryTableComponent() {
                                     <button className='text-red-700 ms-2' onClick={() => handleCancle()}>
                                         cancle
                                     </button>
+                                    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
                                 </>) : (<></>)
                             }
                         </caption>

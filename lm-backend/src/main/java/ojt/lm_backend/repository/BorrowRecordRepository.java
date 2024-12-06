@@ -45,4 +45,6 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord,Integ
             "GROUP BY c.id " +
             "ORDER BY c.id ASC")
     List<Long> findCategoryBorrowCount();
+
+    List<BorrowRecord> findAllByOrderByBorrowIdDesc();
 }

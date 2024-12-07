@@ -94,4 +94,10 @@ public class UserController {
         System.out.println(res);
         return res;
     }
+
+    @GetMapping("/search/{emailOrUsername}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserDto>> getUserList(@PathVariable String emailOrUsername){
+        return new ResponseEntity<>(userService.getUserByEmailOrUsername(emailOrUsername),HttpStatus.OK);
+    }
 }

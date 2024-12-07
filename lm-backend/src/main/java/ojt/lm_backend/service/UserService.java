@@ -13,4 +13,5 @@ public interface UserService {
     Long userCount();
     UserDto updateRoleLib(Long id);
     UserDto updateRoleUse(Long id);
+    List<UserDto> getUserByEmailOrUsername(String emailOrUsername);
 }

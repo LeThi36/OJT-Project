@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import SidebarComopnent from './SidebarComopnent'
-import { getAllUser, userCount } from '../../Services/UserService'
+import { getAllUser, searchUser, userCount } from '../../Services/UserService'
 import { Link } from 'react-router-dom'
 import { useQuery, useQueryClient } from 'react-query'
 import { getAllAuthor } from '../../Services/AuthorService'
@@ -28,6 +28,8 @@ function UserTableComponent() {
     borrowDurationDays: null,
   })
   const [isCreating, setIsCreating] = useState(false)
+  const [usernameOrEmail, setUsernameOrEmail] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
 
   useEffect(() => {
     userCount().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 8)) })
@@ -46,8 +48,8 @@ function UserTableComponent() {
   })
 
   const { data: users, isLoading: isLoadingUser } = useQuery({
-    queryFn: () => getAllUser().then(response => response.data),
-    queryKey: ["users", currentPage]
+    queryFn: () => isSearching ? searchUser(usernameOrEmail).then(res => res.data) : getAllUser().then(response => response.data),
+    queryKey: ["users", currentPage, isSearching]
   })
 
 
@@ -69,6 +71,11 @@ function UserTableComponent() {
 
   }
 
+  const handleSearchUser = () => {
+    setIsSearching(!isSearching)
+  }
+
+
   if (loadingBookBook || erroBook || isLoadingUser || loadingAuthors) {
     return <p>Loading data or an error occurred...</p>;
   }
@@ -82,9 +89,9 @@ function UserTableComponent() {
             <div className='text-start'>
               <h2>Search for username or Email</h2>
               <div className=''>
-                <input type='text' className='rounded-lg align-middle text-black'>
+                <input type='text' className='rounded-lg align-middle text-black' onChange={(e) => setUsernameOrEmail(e.target.value)}>
                 </input>
-                <button className='ms-3 bg-indigo-600 rounded-xl px-3 py-2 align-middle '>search</button>
+                <button className='ms-3 bg-indigo-600 rounded-xl px-3 py-2 align-middle ' onClick={() => handleSearchUser()}>{isSearching ? "cancle" : "search"}</button>
               </div>
             </div>
           </caption>

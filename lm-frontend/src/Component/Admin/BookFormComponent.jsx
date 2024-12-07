@@ -55,7 +55,6 @@ function BookFormComponent() {
 
             try {
                 const response = await addNewBook(formData);
-                console.log(response);
                 alert("Book added successfully!");
                 navigate("/admin/book");
             } catch (error) {
@@ -225,7 +224,6 @@ function BookFormComponent() {
                 <div className='mb-5 pt-3'>
                     <input type='file' className='rounded-md file:mr-3 border w-full text-[#6B7280] font-medium file:font-medium '
                         onChange={(event) => {
-                            console.log(event.target.files[0]); // Log the selected file
                             setSelectedImage(event.target.files[0]); // Update the state with the selected file
                         }}></input>
                 </div>

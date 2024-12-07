@@ -57,7 +57,6 @@ function Register() {
         if (isValidate()) {
             const register = { username, password_hash, email, address, phonenumber }
             registerAPICall(register).then(response => {
-                console.log(response.data)
                 alert(response.data)
             }).catch(error => {
                 console.error(error);

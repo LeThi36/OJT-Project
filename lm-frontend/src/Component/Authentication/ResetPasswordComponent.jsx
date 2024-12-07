@@ -33,7 +33,6 @@ function ResetPasswordComponent() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(requestObj);
 
         if (resetPassword.rsPass !== resetPassword.comfirmRsPass) {
             alert("confirm password does not match!")
@@ -48,7 +47,6 @@ function ResetPasswordComponent() {
                 setIsLoading(true)
                 await resetPasswordAPICall(requestObj).then(res => alert(res.data))
             } catch (error) {
-                console.log(error);
             } finally {
                 setIsLoading(false)
                 navigate('/login')

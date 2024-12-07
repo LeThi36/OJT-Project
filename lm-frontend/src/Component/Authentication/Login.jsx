@@ -64,7 +64,6 @@ function Login() {
             const token = 'Bearer ' + response.data.accessToken
             storeToken(token)
             saveLoggedInUser(usernameOrEmail, role, userId)
-            console.log(response.data);
 
 
             if (role == "ROLE_ADMIN") {

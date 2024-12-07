@@ -53,19 +53,16 @@ function UserTableComponent() {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    console.log(books);
     queryClient.invalidateQueries(['searchbook'])
   }
 
   const handleCreateBorrowRecord = async (e) => {
     e.preventDefault()
 
-    console.log(borrowRequest);
     setIsCreating(true)
     try {
       await createBorrowRecord(borrowRequest).then(res => alert("create borrow request successfully")).catch(err => alert("some thing went wrong"))
     } catch (error) {
-      console.log(error);
     } finally {
       setIsCreating(false)
     }

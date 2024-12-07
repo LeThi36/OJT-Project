@@ -41,3 +41,13 @@
         }
     }
 }
+
+.text-shadow:hover {
+    text-shadow: 1px 0px 10px black;
+    transition: 0.3s ease;
+}
+
+.text-shadow-logout:hover {
+    text-shadow: 1px 0px 10px red;
+    transition: 0.3s ease;
+}

@@ -27,7 +27,6 @@ function ForgotPasswordComopent() {
       try {
         await resetPasswordRequest({ email: email }).then(res => alert(res.data)).catch(err => alert(err))
       } catch (error) {
-        console.log(error);
       } finally {
         setIsLoading(false)
       }

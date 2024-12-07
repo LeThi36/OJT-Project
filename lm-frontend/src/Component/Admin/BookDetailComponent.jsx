@@ -65,7 +65,6 @@ function BookDetailComponent() {
     const handleSubmit = () => {
         if (validateForm()) {
             updateBook(bookDetail, id).then(res => {
-                console.log(res.data)
                 refetch()
                 setIsEdit(false)
             }).catch(err => alert(err))
@@ -81,7 +80,6 @@ function BookDetailComponent() {
         formData.append('image', file)
         try {
             const response = await updateBookImage(formData, id)
-            console.log("Response:", response)
             alert("Book Image update successfully!")
             refetch()
         } catch (error) {

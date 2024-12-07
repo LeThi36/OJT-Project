@@ -14,7 +14,7 @@ function CategoryComponent() {
             const count = res.data
             setTotalPage(Math.ceil(count / 6))
         }
-        ).catch(err => console.log(err))
+        ).catch(err => alert(err))
     }, [])
 
 

@@ -59,7 +59,6 @@ function UserProfileComponent() {
 
         try {
             const response = await updateUserImage(formData, id)
-            console.log("Response:", response)
             alert("Avatar uploaded successfully!")
             refetch()
         } catch (error) {

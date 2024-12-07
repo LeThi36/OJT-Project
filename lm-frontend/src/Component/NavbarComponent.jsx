@@ -28,16 +28,16 @@ function NavbarComponent() {
                         isAuth &&
                         <div className="hidden lg:block">
                             <ul className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
+                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600 text-shadow">
                                     <a href="/books" className="flex items-center">Books</a>
                                 </li>
-                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
+                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600 text-shadow">
                                     <a href="/category" className="flex items-center">Category</a>
                                 </li>
-                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
+                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600 text-shadow">
                                     <a href="/favorite" className="flex items-center">Favortie books</a>
                                 </li>
-                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
+                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600 text-shadow">
                                     <a href="#" className="flex items-center">Docs</a>
                                 </li>
                             </ul>
@@ -50,17 +50,17 @@ function NavbarComponent() {
                                 {
                                     role == "ROLE_ADMIN" &&
                                     <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                        <a href='/admin' className="flex items-center">Admin Page</a>
+                                        <a href='/admin' className="flex items-center text-shadow">Admin Page</a>
                                     </li>
                                 }
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href={`/user/${userId}`} className="flex items-center">Account</a>
+                                    <a href={`/user/${userId}`} className="flex items-center text-shadow">Account</a>
+                                </li>
+                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600 ">
+                                    <a href="/cart" className="flex items-center text-shadow">Cart</a>
                                 </li>
                                 <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <a href="/cart" className="flex items-center">Cart</a>
-                                </li>
-                                <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
-                                    <button onClick={handleLogout} className="flex items-center">Logout</button>
+                                    <button onClick={handleLogout} className="flex items-center text-shadow">Logout</button>
                                 </li>
                             </ul>
                         </div>

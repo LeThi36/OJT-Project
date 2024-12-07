@@ -71,7 +71,6 @@ function CartComponent() {
         let validDates = true;
         const newCartInfo = cartInfo.map((item) => {
             const valid = checkDateInterval(item.startDate, item.endDate);
-            console.log(valid)
             validDates &= valid;
             return {
                 ...item,

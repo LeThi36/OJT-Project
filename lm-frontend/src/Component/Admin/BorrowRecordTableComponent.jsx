@@ -14,8 +14,8 @@ function BorrowRecordTableComponent() {
     });
 
     useEffect(() => {
-        countBorrowedRecord().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 12)); console.log(res.data);
-         }).catch(err => console.log(err)
+        countBorrowedRecord().then(res => { const count = res.data; setTotalPage(Math.ceil(count / 12))
+         }).catch(
         )
     }, [])
 

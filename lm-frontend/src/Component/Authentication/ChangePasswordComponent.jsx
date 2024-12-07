@@ -14,8 +14,6 @@ function ChangePasswordComponent() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(user);
-    console.log(confirmPassword);
     if (user.newPassword === confirmPassword) {
       changePasswordAPICall(user).then(response => {
         alert(response.data)

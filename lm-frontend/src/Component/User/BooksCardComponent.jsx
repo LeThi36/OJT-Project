@@ -24,7 +24,7 @@ function BooksCardComponent() {
                     const count = res.data;
                     setTotalPage(Math.ceil(count / 8))
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => alert(err))
         }
 
     }, [isSearching])

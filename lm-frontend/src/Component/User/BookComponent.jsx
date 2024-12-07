@@ -131,7 +131,6 @@ function BookComponent() {
                 alert('Book added to cart')
             }
             if (redirect) {
-                console.log('add to cart product', product)
                 navigate('/cart')
             }
         } else {
@@ -151,7 +150,7 @@ function BookComponent() {
             }
             )
                 ; refetch()
-        }).catch(err => console.log(err))
+        }).catch(err => alert(err))
     }
 
     const handleConfirm = () => {

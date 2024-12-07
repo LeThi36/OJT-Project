@@ -35,3 +35,5 @@ export const updateUserImage = (formData, id) => axios.post(USER_REST_API_BASE_U
         'Content-Type': 'multipart/form-data',
     },
 })
+
+export const searchUser = (usernameOrEmail) => axios.get(USER_REST_API_BASE_URL + '/search/' + usernameOrEmail)

@@ -108,4 +108,10 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public List<UserDto> getUserByEmailOrUsername(String emailOrUsername) {
+        List<User> list = userRepository.findByContent(emailOrUsername,emailOrUsername);
+        return list.stream().map(u -> modelMapper.map(u,UserDto.class)).collect(Collectors.toList());
+    }
+
 }
